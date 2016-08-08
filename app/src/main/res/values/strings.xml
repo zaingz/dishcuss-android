@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">DishCuss</string>
+    <string name="runtime_permissions_txt">Please enable ALL permissions from app settings.</string>
+
+
+    <string name="cheese_ipsum">Jarlsberg lancashire edam. Dolcelatte hard cheese brie st. agur blue
+    cheese caerphilly bavarian bergkase cheese and biscuits mascarpone. Cheeseburger swiss bavarian
+    bergkase cream cheese fromage frais cheesy feet port-salut airedale. St. agur blue cheese rubber
+    cheese caerphilly cheddar cheesecake cream cheese manchego lancashire. Roquefort squirty cheese
+    the big cheese.</string>
+
+
+
+
+    <string name="tab_1">Label 1</string>
+    <string name="tab_2">Label 2</string>
+    <string name="tab_3">Label 3</string>
+    <string name="tab_4">Label 4</string>
+    <string name="tab_5">Label 5</string>
+
+    <string name="menu_1">Home</string>
+    <string name="menu_2">Nearby</string>
+    <string name="menu_3">Profile</string>
+    <string name="menu_4">Explore</string>
+    <string name="menu_5">Account</string>
+
+
+
+
+    <!--Api Keys-->
+
+    <string name="facebook_app_id">225220431205544</string>
+    <string name="google_map_id">AIzaSyDZDxSg90EM27DOHGNEnmyt6g5RXjZY8-M</string>
+
+</resources>

@@ -1,0 +1,73 @@
+<android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_awesome_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:layout_collapseMode="pin"
+    android:minHeight="?attr/actionBarSize"
+    app:layout_scrollFlags="scroll|enterAlways|snap"
+    android:background="?attr/colorPrimary">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/header_border"
+            android:id="@+id/header">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The Pundits"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+
+            <ImageView
+                android:id="@+id/image_dropdown"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/dropdown"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image_search"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_search"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/image_bell"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_bell"
+            android:layout_toLeftOf="@id/image_search"
+            />
+
+        <ImageView
+            android:id="@+id/image_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_item"
+            android:layout_toLeftOf="@id/image_bell" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

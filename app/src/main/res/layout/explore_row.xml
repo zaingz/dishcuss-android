@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="1dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="3dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="60dp"
+                    android:id="@+id/explore_restaurant_image_layout"
+                    android:layout_height="60dp"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardCornerRadius="6dp"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:id="@+id/explore_restaurant_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_intro"/>
+
+                </android.support.v7.widget.CardView>
+
+
+
+                <LinearLayout
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/explore_restaurant_image_layout"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/explore_restaurant_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Liali Cafe"
+                        android:textColor="@color/black_1"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/explore_restaurant_address"
+                        android:layout_width="wrap_content"
+                        android:textColor="@color/black_2"
+                        android:text="Fortress Square, Lahore Cantt"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/explore_restaurant_rating"
+                    android:layout_width="50dp"
+                    android:layout_height="20dp"
+                    android:text="4.5"
+                    android:textColor="#fff"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/feature_button_corner"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Type: "
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginLeft="3dp"
+                    android:id="@+id/explore_type"
+                    android:layout_width="wrap_content"
+                    android:text="Restaurant"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Cost:  Rs"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/explore_restaurant_cost"
+                android:layout_width="wrap_content"
+                android:text=" 1500/head"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Cousine: "
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginLeft="3dp"
+                android:id="@+id/explore_restaurant_cousine"
+                android:layout_width="wrap_content"
+                android:text="Chinees,Italian"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="#c0c0c0"
+                android:layout_marginBottom="10dp"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardCornerRadius="6dp"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_intro"/>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardCornerRadius="6dp"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_intro"/>
+
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardCornerRadius="6dp"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_intro"/>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="75dp"
+                    android:layout_height="match_parent"
+                    card_view:cardUseCompatPadding="true"
+                    card_view:cardCornerRadius="6dp"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_intro"/>
+
+                </android.support.v7.widget.CardView>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp">
+
+                <LinearLayout
+                    android:layout_marginLeft="1dp"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="12dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/feature_button_corner">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/call_now_image"/>
+
+                    <TextView
+                        android:layout_marginLeft="4dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#fff"
+                        android:textStyle="bold"
+                        android:text="Call Now"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/button_with_light_bg">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/explore_image_count"/>
+
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="1211"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="80dp"
+                    android:layout_height="30dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/button_with_light_bg">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/followers_count"/>
+
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="121"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

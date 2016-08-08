@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e4770a</color>
+    <color name="colorPrimaryDark">#FFE4770A</color>
+    <color name="colorAccent">#FFE4770A</color>
+    <color name="textColorPrimary">#000</color>
+    <color name="windowBackground">#000</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="genre">#666666</color>
+    <color name="year">#888888</color>
+    <color name="list_divider">#d9d9d9</color>
+    <color name="list_row_start_color">#ffffff</color>
+    <color name="list_row_end_color">#ffffff</color>
+    <color name="list_row_hover_start_color">#ebeef0</color>
+    <color name="list_row_hover_end_color">#ebeef0</color>
+    <color name="button_bg">#f1a103</color>
+
+    <color name="black_1">#4d4d4d</color>
+    <color name="black_2">#666666</color>
+    <color name="black_3">#787878</color>
+    <color name="view_line">#dedede</color>
+    <color name="windowBackground1">#232323</color>
+
+
+
+
+
+
+    <color name="color_tab_1">#455C65</color>
+    <color name="color_tab_2">#00886A</color>
+    <color name="color_tab_3">#8B6B62</color>
+    <color name="color_tab_4">#6C4A42</color>
+    <color name="color_tab_5">#F63D2B</color>
+
+    <array name="tab_colors">
+        <item name="tab_1">#455C65</item>
+        <item name="tab_2">#00886A</item>
+        <item name="tab_3">#8B6B62</item>
+        <item name="tab_4">#6C4A42</item>
+        <item name="tab_5">#2b86f6</item>
+    </array>
+
+</resources>

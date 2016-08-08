@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_intro"
+            android:layout_weight="73">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                    <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/dots"
+                    android:layout_marginRight="20dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginBottom="30dp"/>
+
+                <TextView
+                    android:id="@+id/skip_login_tv"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Skip Login"
+                    android:gravity="right"
+                    android:textStyle="bold"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@android:color/white"/>
+
+
+            </FrameLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="27">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Welcome to Dishcuss"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:text="Register or sign up with socail media account"
+                android:gravity="center"
+                android:textSize="18dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                android:layout_gravity="center">
+
+                <com.facebook.login.widget.LoginButton
+                    android:visibility="gone"
+                    android:id="@+id/facebook_login_button_invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp" />
+
+                <Button
+                    android:id="@+id/facebook_login_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/facebook_icon"/>
+                <Button
+                    android:id="@+id/twitter_login_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/twitter_icon"/>
+                <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                    android:visibility="gone"
+                    android:id="@+id/twitterLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+                <Button
+                    android:id="@+id/google_login_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/google_icon"/>
+                <Button
+                    android:id="@+id/native_login_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/mail_icon"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

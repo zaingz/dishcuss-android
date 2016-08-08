@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/app_toolbar"
+        android:id="@+id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to"
+                android:textSize="17dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Dish Cuss"
+                android:textColor="@color/colorAccent"
+                android:textSize="17dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"/>
+
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="2dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="User Name"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/edt_username"
+                            android:layout_width="match_parent"
+                            android:hint="Naeem057"
+                            android:inputType="text"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Full Name"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/edt_user_full_name"
+                            android:layout_width="match_parent"
+                            android:hint="Naeem Ibrahim"
+                            android:inputType="text"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Email"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/edt_user_email"
+                            android:layout_width="match_parent"
+                            android:hint="4343969@gmail.com"
+                            android:inputType="textEmailAddress"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Location"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/edt_user_location"
+                            android:layout_width="match_parent"
+                            android:hint="Lahore, Pakistan"
+                            android:inputType="text"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gender"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"
+                            android:layout_marginBottom="4dp"/>
+
+                        <EditText
+                            android:id="@+id/edt_user_gender"
+                            android:layout_width="match_parent"
+                            android:hint="male"
+                            android:inputType="text"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Password"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"/>
+
+
+                        <EditText
+                            android:id="@+id/edt_user_password"
+                            android:layout_width="match_parent"
+                            android:inputType="textPassword"
+                            android:hint="Password"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Re-type Password"
+                            android:textColor="@color/black_1"
+                            android:textSize="17dp"/>
+
+
+                        <EditText
+                            android:id="@+id/edt_user_retype_password"
+                            android:layout_width="match_parent"
+                            android:inputType="textPassword"
+                            android:hint="Re-type Password"
+                            android:textColor="@color/colorAccent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/sign_up_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/login_button_border"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="50dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SIGNUP"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20dp"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/back_to_sign_in_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Already have Account!"
+                            android:textSize="15dp"/>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" Back to"
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
+                           />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Signin page"
+                        android:textSize="15dp"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

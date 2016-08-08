@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "236923129670",
+    "project_id": "dishcuss-1381"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236923129670:android:29fd281531f8940e",
+        "android_client_info": {
+          "package_name": "com.holygon.dishcuss"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236923129670-lvrcpqkultusdl4hn8rc388p0dqtr2s3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.holygon.dishcuss",
+            "certificate_hash": "AE48C4CF97AE24C36008CCF5982A44B25496739B"
+          }
+        },
+        {
+          "client_id": "236923129670-lhon4spubi50igosur6q6na2dvjc7278.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP0nUXxVfESLY9jv5ZDTwPrgL99aKV7Ps"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
