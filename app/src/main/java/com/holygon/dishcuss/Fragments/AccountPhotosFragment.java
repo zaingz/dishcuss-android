@@ -33,9 +33,10 @@ public class AccountPhotosFragment extends Fragment {
     RecyclerView nearbySearchRecyclerView;
     private GridLayoutManager gridLayout;
     ArrayList<String> itemsData = new ArrayList<>();
+    int restaurantID;
 
-    public AccountPhotosFragment() {
-
+    public AccountPhotosFragment(int restaurantID) {
+        this.restaurantID=restaurantID;
     }
 
     @Override
@@ -67,22 +68,21 @@ public class AccountPhotosFragment extends Fragment {
 
 
     void SetImageURL(){
-        // Get a Realm instance for this thread
+
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Restaurant> restaurantRealmResults=realm.where(Restaurant.class).findAll();
+        RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
         realm.beginTransaction();
-        RealmList<FoodItems> foodItems =restaurantRealmResults.get(0).getFoodItemsArrayList();
-        Log.e("FoodItems : ",""+foodItems.size());
+        RealmList<FoodItems> foodItems =restaurants.get(0).getFoodItemsArrayList();
+//        Log.e("FoodItems : ",""+foodItems.size());
         for(int i=0;i<foodItems.size();i++){
 
             RealmList<PhotoModel> photoModels=foodItems.get(i).getPhotoModels();
 
-            Log.e("photoModels : ",""+photoModels.size());
+//            Log.e("photoModels : ",""+photoModels.size());
 
             for (int j=0;j<photoModels.size();j++){
-                Log.e("Photo ID : ",""+photoModels.get(j).getId());
-                Log.e("Photo URL : ",""+photoModels.get(j).getUrl());
-
+//                Log.e("Photo ID : ",""+photoModels.get(j).getId());
+//                Log.e("Photo URL : ",""+photoModels.get(j).getUrl());
                 itemsData.add(photoModels.get(j).getUrl());
             }
         }

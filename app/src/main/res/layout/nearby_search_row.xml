@@ -21,6 +21,7 @@
             android:paddingBottom="3dp">
 
             <RelativeLayout
+                android:id="@+id/nearby_search_layout_recycler_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -151,6 +152,7 @@
                 android:layout_marginBottom="10dp">
 
                 <LinearLayout
+                    android:id="@+id/nearby_search_call_layout"
                     android:layout_width="100dp"
                     android:layout_height="30dp"
                     android:paddingLeft="10dp"
@@ -190,6 +192,7 @@
                         android:background="@drawable/explore_image_count"/>
 
                     <TextView
+                        android:id="@+id/nearby_search_photos_count"
                         android:layout_marginLeft="10dp"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
@@ -215,6 +218,7 @@
                         android:background="@drawable/followers_count"/>
 
                     <TextView
+                        android:id="@+id/nearby_search_likes_count"
                         android:layout_marginLeft="10dp"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"

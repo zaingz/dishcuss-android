@@ -53,7 +53,7 @@ public class AccountPhotosAdapter extends RecyclerView.Adapter<AccountPhotosAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
 //        holder.imageView.setImageResource(imageViewArrayList.get(position));
         String imageUri = imageViewArrayList.get(position);
-        Log.e("ImageUri",imageUri);
+//        Log.e("ImageUri",imageUri);
         Picasso.with(mContext).load(imageUri).into(holder.imageView);
     }
 

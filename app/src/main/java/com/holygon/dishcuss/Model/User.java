@@ -17,7 +17,6 @@ public class User extends RealmObject{
     String token;
     String referral_code;
 
-
     public User() {
     }
 

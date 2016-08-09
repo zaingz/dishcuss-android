@@ -50,8 +50,8 @@ public class StatusActivity extends Activity {
         RealmList<FoodItems> foodItems =restaurantRealmResults.get(0).getFoodItemsArrayList();
 
         for(int i=0;i<foodItems.size();i++){
-            Log.e("Name : ",""+foodItems.get(i).getName());
-            Log.e("ID : ",""+foodItems.get(i).getFoodID());
+//            Log.e("Name : ",""+foodItems.get(i).getName());
+//            Log.e("ID : ",""+foodItems.get(i).getFoodID());
             RealmList<FoodsCategory> foodsCategories=foodItems.get(i).getFoodsCategories();
 
             Log.e("FoodsCategories ",""+foodsCategories.size());
@@ -59,8 +59,8 @@ public class StatusActivity extends Activity {
 //
 //            }
             for (int j=0;j<foodsCategories.size();j++){
-                Log.e("CAT ID : ",""+foodsCategories.get(j).getId());
-                Log.e("CAT NAME : ",""+foodsCategories.get(j).getCategoryName());
+//                Log.e("CAT ID : ",""+foodsCategories.get(j).getId());
+//                Log.e("CAT NAME : ",""+foodsCategories.get(j).getCategoryName());
             }
         }
 

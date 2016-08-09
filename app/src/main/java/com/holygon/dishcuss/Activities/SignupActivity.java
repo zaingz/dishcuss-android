@@ -2,21 +2,35 @@ package com.holygon.dishcuss.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.holygon.dishcuss.Adapters.PlaceArrayAdapter;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
@@ -41,13 +55,16 @@ import okhttp3.Response;
 /**
  * Created by Naeem Ibrahim on 7/30/2016.
  */
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
 
     LinearLayout back_to_sign_in_layout;
     TextView headerName;
 
-    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userLocation,userGender;
+    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender;
+    AutoCompleteTextView userLocation;
     String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender;
 
     OkHttpClient client;
@@ -55,6 +72,17 @@ public class SignupActivity extends AppCompatActivity {
 
     Realm realm;
     String message="";
+
+
+    //Location Auto Selection
+    private GoogleApiClient mGoogleApiClient;
+    private PlaceArrayAdapter mPlaceArrayAdapter;
+    private GoogleApiClient mGoogleApiClientLoction;
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+            new LatLng(31.5497, 74.3436), new LatLng(31.5497, 74.3436));
+    String loc="";
+    private static final int GOOGLE_API_CLIENT_ID = 0;
+    //Location Auto Selection
 
 
 
@@ -84,10 +112,20 @@ public class SignupActivity extends AppCompatActivity {
         client = new OkHttpClient();
         FindViewsByID();
         OnClickItems();
+
+        if(Constants.checkPlayServices(this)) {
+            buildGoogleApiClient();
+        }
     }
 
 
     void FindViewsByID(){
+        mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
+                BOUNDS_MOUNTAIN_VIEW, null);
+
+
+
+
         back_to_sign_in_layout=(LinearLayout)findViewById(R.id.back_to_sign_in_layout);
         signUpLayout=(LinearLayout)findViewById(R.id.sign_up_layout);
         headerName=(TextView)findViewById(R.id.app_toolbar_name);
@@ -95,11 +133,23 @@ public class SignupActivity extends AppCompatActivity {
         userFullName=(EditText) findViewById(R.id.edt_user_full_name);
         userName=(EditText) findViewById(R.id.edt_username);
         userEmail=(EditText) findViewById(R.id.edt_user_email);
-        userLocation=(EditText) findViewById(R.id.edt_user_location);
+
+        userLocation=(AutoCompleteTextView) findViewById(R.id.edt_user_location);
+
         userPassword=(EditText) findViewById(R.id.edt_user_password);
         userConfirmPassword=(EditText) findViewById(R.id.edt_user_retype_password);
         userGender=(EditText) findViewById(R.id.edt_user_gender);
 
+
+        userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
+        userLocation.setTextSize(20);
+        userLocation.setThreshold(3);
+        userLocation.setTextColor(Color.parseColor("#FFE4770A"));
+        userLocation.setAdapter(mPlaceArrayAdapter);
+
+        if(!loc.equals("")){
+            userLocation.setText(loc);
+        }
 
     }
 
@@ -305,4 +355,73 @@ public class SignupActivity extends AppCompatActivity {
                 .create();
         return gson;
     }
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+
+
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mPlaceArrayAdapter.setGoogleApiClient(null);
+        mGoogleApiClientLoction.connect();
+    }
+
+
+
+    /**
+     * Creating google api client object
+     * */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClientLoction = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(SignupActivity.this)
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
+                .addConnectionCallbacks(this)
+                .build();
+    }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallbackUserLocation);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallbackUserLocation
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                return;
+            }
+            // Selecting the first object buffer.
+            final Place place = places.get(0);
+            CharSequence attributions = places.getAttributions();
+            userLocation.setText(place.getAddress());
+            userLocation.dismissDropDown();
+            userLocation.setSelection(place.getAddress().length());
+            loc=place.getName().toString();
+        }
+    };
 }

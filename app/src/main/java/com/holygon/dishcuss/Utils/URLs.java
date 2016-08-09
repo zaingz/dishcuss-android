@@ -13,6 +13,8 @@ public class URLs {
     public static String Follow_User="http://dishcuss-api.herokuapp.com/user/follow/";
     public static String UnFollow_User="http://dishcuss-api.herokuapp.com/user/unfollow/";
     public static String Get_Restaurant_data="http://dishcuss-api.herokuapp.com/restaurants/social/";
+    public static String Get_All_Restaurants_data="http://dishcuss-api.herokuapp.com/restaurants/explore";
+    public static String Get_nearby_restaurants="http://dishcuss-api.herokuapp.com/restaurants/nearby?";
 
 
 }

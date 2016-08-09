@@ -10,7 +10,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -18,6 +22,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -114,10 +120,33 @@ public final class Constants{
     }
 
 
+    public static void PicassoImageSrc(String URL, ImageView imageView, final Context context){
+        if(URL!=null && !URL.equals("")){
+            Picasso.with(context).load(URL).into(imageView);
+        }
+    }
 
+    public static void PicassoImageBackground(String URL, final ImageView imageView, final Context context){
+        if(URL!=null && !URL.equals("")){
+            Picasso.with(context).load(URL).into(new Target(){
 
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                }
 
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                }
 
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                }
+            });
+        }
+    }
 
 
     Date GetDate(String date){
@@ -130,9 +159,12 @@ public final class Constants{
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println(convertedDate);
+      //  System.out.println(convertedDate);
         return convertedDate;
     }
+
+
+
 
     List<Object> Merge(RealmList<LocalFeedReview> A, RealmList<LocalFeedCheckIn> B) {
 

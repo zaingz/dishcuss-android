@@ -63,8 +63,8 @@ public class AccountFragment extends Fragment {
         viewPager.setAdapter(null);
         adapter = new Adapter(getActivity().getSupportFragmentManager());
 //        adapter.addFragment(new AccountReviewsFragment(1), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(), "Photos");
+        adapter.addFragment(new AccountPhotosFragment(0), "Reviews");
+        adapter.addFragment(new AccountPhotosFragment(0), "Photos");
         adapter.addFragment(new AccountFollowersFragment(), "Followers");
         adapter.addFragment(new AccountFollowersFragment(), "Following");
         adapter.addFragment(new AccountBeenThereFragment(), "Been There");

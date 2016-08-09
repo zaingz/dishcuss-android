@@ -302,7 +302,18 @@ public class HomeFragment extends Fragment {
                         myFeedsArrayList.add(myFeeds);
                     }
 
-                   getActivity().runOnUiThread(new Runnable() {
+                    try
+                    {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    /** check if activity still exist */
+                    if (getActivity() == null) {
+                        return;
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             homeMyFeedsAdapter1 = new HomeMyFeedsAdapter1(myFeedsArrayList,getActivity());
@@ -324,7 +335,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-
     void FeaturedRestaurantData(final View view){
 
         OkHttpClient client = new OkHttpClient();
@@ -343,6 +353,16 @@ public class HomeFragment extends Fragment {
 
                 final String objStr=response.body().string();
 
+                try
+                {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /** check if activity still exist */
+                if (getActivity() == null) {
+                    return;
+                }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -402,7 +422,7 @@ public class HomeFragment extends Fragment {
                                 e.printStackTrace();
                             }
                             realm.close();
-                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
+//                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
 
                             NUM_PAGES=featuredRestaurantArrayList.size();
                             addDots(view);
@@ -428,7 +448,7 @@ public class HomeFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.LocalFeeds_Restaurant_URL)
-                .addHeader("Authorization", "Token token=EAADM1jfMVKgBAPferax53OKvY39usRolF6O2p3KpUpDNHvyQzqVNlySqwYXM7K57Di8EMDgsZCMovL2BpnJpZAZAFGYRvur9XpKt1RRIJjgt6WEpdZB6xdjpCAN6tZC4oEugljOzGbXwqdUEDNgYaY7Sjmln88ycrobXRXn8K3xmql6EjJE33iMFETJuHSErm8aIMh5d7zj7i8gzlftUA")
+                .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -442,12 +462,28 @@ public class HomeFragment extends Fragment {
 
                 final String objStr=response.body().string();
 
+                try
+                {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /** check if activity still exist */
+                if (getActivity() == null) {
+                    return;
+                }
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+                                return;
+                            }
+
                             JSONArray jsonDataReviewsArray=jsonObj.getJSONArray("review");
                             JSONArray jsonDataCheckInArray=jsonObj.getJSONArray("checkin");
 

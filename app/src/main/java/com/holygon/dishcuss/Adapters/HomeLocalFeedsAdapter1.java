@@ -1,20 +1,22 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
-import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.R;
-import com.squareup.picasso.Picasso;
+import com.holygon.dishcuss.Utils.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,11 +39,6 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
     RealmList<LocalFeedCheckIn> localFeedCheckInRealmList;
 
     List<Object> objects=new ArrayList<>();
-    List<Object> sortedObjects=new ArrayList<>();
-
-
-//    int reviewListCount=0;
-//    int checkInListCount=0;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName,restaurantAddress,status;
@@ -49,6 +46,7 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
         public TextView review_likes_count_tv,review_comments_count_tv,review_share_count_tv;
         public ImageView local_feeds_restaurant_image;
         public de.hdodenhof.circleimageview.CircleImageView profileImage;
+        public RelativeLayout local_feeds_restaurant_relative_layout;
 
         public ViewHolder(View v) {
             super(v);
@@ -62,6 +60,8 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
             status = (TextView) v.findViewById(R.id.review_or_checkin_status);
             local_feeds_restaurant_image = (ImageView) v.findViewById(R.id.local_feeds_restaurant_image);
             profileImage = (de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.local_feeds_profile_image);
+
+            local_feeds_restaurant_relative_layout=(RelativeLayout) v.findViewById(R.id.local_feeds_restaurant_relative_layout);
         }
     }
 
@@ -99,10 +99,10 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-                Log.e("LocalFeed",objects.get(position).getClass().getName());
+//                Log.e("LocalFeed",objects.get(position).getClass().getName());
 
                 if (objects.get(position).getClass().equals(io.realm.LocalFeedReviewRealmProxy.class)){
-                    LocalFeedReview localFeedReview= (LocalFeedReview) objects.get(position);
+                    final LocalFeedReview localFeedReview= (LocalFeedReview) objects.get(position);
 
                     holder.restaurantName.setText(localFeedReview.getReviewOnName());
                     holder.restaurantAddress.setText(localFeedReview.getReviewOnLocation());
@@ -116,13 +116,22 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
 
                     holder.status.setText(localFeedReview.getSummary());
 
-                    PicassoImage(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image);
-                    PicassoImage(localFeedReview.getReviewerAvatar(),holder.profileImage);
+                    Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image,mContext);
+                    Constants.PicassoImageSrc(localFeedReview.getReviewerAvatar(),holder.profileImage,mContext);
+
+                    holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, RestaurantDetailActivity.class);
+                            intent.putExtra("RestaurantID", localFeedReview.getReviewOnID());
+                            mContext.startActivity(intent);
+                        }
+                    });
 
                 }
                 else if(objects.get(position).getClass().equals(io.realm.LocalFeedCheckInRealmProxy.class))
                 {
-                    LocalFeedCheckIn localFeedCheckIn= (LocalFeedCheckIn) objects.get(position);
+                    final LocalFeedCheckIn localFeedCheckIn= (LocalFeedCheckIn) objects.get(position);
                     holder.restaurantName.setText(localFeedCheckIn.getCheckInOnName());
                     holder.restaurantAddress.setText(localFeedCheckIn.getCheckInOnLocation());
 
@@ -135,10 +144,17 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
 
                     holder.status.setText(localFeedCheckIn.getCheckInStatus());
 
-                    PicassoImage(localFeedCheckIn.getCheckInImage(),holder.local_feeds_restaurant_image);
-                    PicassoImage(localFeedCheckIn.getCheckInWriterAvatar(),holder.profileImage);
+                    Constants.PicassoImageBackground(localFeedCheckIn.getCheckInImage(),holder.local_feeds_restaurant_image,mContext);
+                    Constants.PicassoImageSrc(localFeedCheckIn.getCheckInWriterAvatar(),holder.profileImage,mContext);
 
-
+                    holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, RestaurantDetailActivity.class);
+                            intent.putExtra("RestaurantID", localFeedCheckIn.getCheckInOnID());
+                            mContext.startActivity(intent);
+                        }
+                    });
                 }
                 else
                 {
@@ -153,11 +169,9 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
     }
 
 
-    void PicassoImage(String URL,ImageView imageView){
-        if(URL!=null && !URL.equals("")){
-            Picasso.with(mContext).load(URL).into(imageView);
-        }
-    }
+
+
+
 
 
     Date GetDate(String date){
@@ -170,7 +184,7 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println(convertedDate);
+      //  System.out.println(convertedDate);
         return convertedDate;
     }
 

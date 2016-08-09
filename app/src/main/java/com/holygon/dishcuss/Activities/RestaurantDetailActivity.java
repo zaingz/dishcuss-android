@@ -1,14 +1,18 @@
 package com.holygon.dishcuss.Activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -115,9 +119,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         restaurant_call_now.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RestaurantDetailActivity.this,StatusActivity.class);
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +restaurant.getNumbers()));
+                if ( ContextCompat.checkSelfPermission( RestaurantDetailActivity.this, Manifest.permission.CALL_PHONE ) != PackageManager.PERMISSION_GRANTED ) {
+                    return;
+                }
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -150,12 +156,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
             @Override
             public void onBitmapFailed(final Drawable errorDrawable) {
-                Log.d("TAG", "FAILED");
+//                Log.d("TAG", "FAILED");
             }
 
             @Override
             public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                Log.d("TAG", "Prepare Load");
+//                Log.d("TAG", "Prepare Load");
             }
         });
         if (viewPager != null) {
@@ -172,7 +178,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         viewPager.setAdapter(null);
         adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new AccountReviewsFragment(restaurantID), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(), "Photos");
+        adapter.addFragment(new AccountPhotosFragment(restaurantID), "Photos");
         adapter.addFragment(new StickyHeaderFragment(), "Menu");
         viewPager.setAdapter(adapter);
     }
@@ -263,6 +269,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
                                     JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
                                     JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
+                                    JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
+
+
                                     reviewsCount=jsonDataReviewsArray.length();
                                     bookmarksCount=jsonDataLikesArray.length();
                                     beenHereCount=jsonDataCheckInsArray.length();
@@ -293,6 +302,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 //                                        realmRestaurant.setCheck_Ins_user_ID(checkInsObjUser.getInt("id"));
 //                                        realmRestaurant.setCheck_Ins_restaurant_ID(checkInsObjRestaurant.getInt("id"));
 //                                    }
+
+                                for (int c = 0; c < jsonDataCallsArray.length();c++) {
+
+                                    JSONObject callObj = jsonDataCallsArray.getJSONObject(c);
+                                    realmRestaurant.setNumbers(callObj.getString("number"));
+                                }
 
                                     for (int r = 0; r < jsonDataReviewsArray.length();r++) {
 

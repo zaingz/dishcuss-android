@@ -1,8 +1,6 @@
 package com.holygon.dishcuss.Adapters;
 
-/**
- * Created by ARBI on 10/02/2016.
- */
+
 import android.content.Context;
 import android.text.style.CharacterStyle;
 import android.util.Log;

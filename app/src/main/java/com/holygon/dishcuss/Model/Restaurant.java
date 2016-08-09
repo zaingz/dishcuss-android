@@ -10,14 +10,13 @@ import io.realm.annotations.PrimaryKey;
  * Created by Naeem Ibrahim on 8/1/2016.
  */
 public class Restaurant extends RealmObject {
-    @PrimaryKey
-    int id;
 
+    int id;
     String name;
     String opening_time;
     String closing_time;
     String location;
-    int ratting;
+    double ratting;
 //    "like": [],
 //    "follow": [],
     int cover_image_id;
@@ -40,6 +39,8 @@ public class Restaurant extends RealmObject {
     int bookmark_count;
     int been_here_count;
 
+    String numbers;
+
 
     // Reviews
     RealmList<ReviewModel> reviewModels;
@@ -55,6 +56,14 @@ public class Restaurant extends RealmObject {
 
 
     public Restaurant() {
+    }
+
+    public String getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(String numbers) {
+        this.numbers = numbers;
     }
 
     public int getReview_count() {
@@ -161,11 +170,11 @@ public class Restaurant extends RealmObject {
         this.location = location;
     }
 
-    public int getRatting() {
+    public double getRatting() {
         return ratting;
     }
 
-    public void setRatting(int ratting) {
+    public void setRatting(double ratting) {
         this.ratting = ratting;
     }
 

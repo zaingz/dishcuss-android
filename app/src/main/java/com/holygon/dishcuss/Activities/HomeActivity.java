@@ -49,6 +49,7 @@ public class HomeActivity extends RuntimePermissionsActivity {
         super.onCreate(savedInstanceState);
         HomeActivity.super.requestAppPermissions(new
                         String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.CALL_PHONE,
                         Manifest.permission.ACCESS_FINE_LOCATION}, R.string.runtime_permissions_txt
                 , REQUEST_PERMISSIONS);
         setContentView(R.layout.activity_home);
@@ -89,8 +90,8 @@ public class HomeActivity extends RuntimePermissionsActivity {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
 
-                if (position == 1) {
-                    bottomNavigation.setNotification("", 1);
+                if (position == 0) {
+                    bottomNavigation.setNotification("", 0);
 
                     floatingActionButton.setVisibility(View.VISIBLE);
                     floatingActionButton.setAlpha(0f);
@@ -164,7 +165,7 @@ public class HomeActivity extends RuntimePermissionsActivity {
                         currentFragment=new HomeFragment();
                         break;
                     case 1:
-                      //  currentFragment=new NearbyFragment();
+                        currentFragment=new NearbyFragment();
                         break;
                     case 2:
                         //currentFragment=new AccountFragment();

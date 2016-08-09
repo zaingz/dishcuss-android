@@ -18,7 +18,7 @@
         android:layout_marginBottom="72dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/ic_content_add"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"

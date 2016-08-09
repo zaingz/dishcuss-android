@@ -62,12 +62,12 @@ public class HomeViewPagerFragment extends Fragment {
 
             @Override
             public void onBitmapFailed(final Drawable errorDrawable) {
-                Log.d("TAG", "FAILED");
+//                Log.d("TAG", "FAILED");
             }
 
             @Override
             public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                Log.d("TAG", "Prepare Load");
+//                Log.d("TAG", "Prepare Load");
             }
         });
 
