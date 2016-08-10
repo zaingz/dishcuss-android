@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,10 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
         holder.nearby_search_photos_count.setText(""+itemsData.size());
 
         Constants.PicassoImageBackground(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
+
+
+        Log.e("Lat",""+restaurantRealmList.get(position).getRestaurantLat());
+        Log.e("Long",""+restaurantRealmList.get(position).getRestaurantLong());
 
 
         holder.callLayout.setOnClickListener(new View.OnClickListener() {

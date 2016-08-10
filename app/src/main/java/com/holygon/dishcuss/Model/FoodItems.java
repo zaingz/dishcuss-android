@@ -15,6 +15,7 @@ public class FoodItems extends RealmObject {
     int foodID;
     String name;
     int Price;
+    String sections_Title;
 
     RealmList<FoodsCategory> foodsCategories;
     RealmList<PhotoModel> photoModels;
@@ -24,6 +25,15 @@ public class FoodItems extends RealmObject {
 
     }
 
+    public String getSections_Title() {
+        return sections_Title;
+    }
+
+    public void setSections_Title(String sections_Title) {
+        this.sections_Title = sections_Title;
+    }
+
+
     public RealmList<FoodsCategory> getFoodsCategories() {
         return foodsCategories;
     }
@@ -31,6 +41,7 @@ public class FoodItems extends RealmObject {
     public void setFoodsCategories(RealmList<FoodsCategory> foodsCategories) {
         this.foodsCategories = foodsCategories;
     }
+
 
     public RealmList<PhotoModel> getPhotoModels() {
         return photoModels;
