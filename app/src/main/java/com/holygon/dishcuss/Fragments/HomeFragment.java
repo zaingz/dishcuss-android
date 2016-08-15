@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Fragments;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.SearchBarActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter1;
 import com.holygon.dishcuss.Adapters.HomeMyFeedsAdapter1;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
@@ -69,6 +71,8 @@ public class HomeFragment extends Fragment {
     HomeMyFeedsAdapter1 homeMyFeedsAdapter1;
     HomeLocalFeedsAdapter1 homeLocalFeedsAdapter1;
 
+    ImageView home_fragment_image_search;
+
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
 
@@ -85,6 +89,8 @@ public class HomeFragment extends Fragment {
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
+
+        home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
 
 //        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -180,6 +186,15 @@ public class HomeFragment extends Fragment {
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getActivity(), SearchBarActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
@@ -568,7 +583,8 @@ public class HomeFragment extends Fragment {
 
                                     LocalFeedCheckIn localFeedCheckIn=realm.createObject(LocalFeedCheckIn.class);
 
-                                    localFeedCheckIn.setCheckInID(checkinObj.getInt("id"));
+//                                    localFeedCheckIn.setCheckInID(checkinObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInID(jsonDataCheckInObj.getInt("id"));
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));

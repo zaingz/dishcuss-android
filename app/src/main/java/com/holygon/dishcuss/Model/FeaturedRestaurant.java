@@ -13,7 +13,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class FeaturedRestaurant extends RealmObject {
 
-    @PrimaryKey
     int id;
 
     String name;

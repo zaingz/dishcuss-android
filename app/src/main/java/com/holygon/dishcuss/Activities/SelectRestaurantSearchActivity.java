@@ -1,22 +1,14 @@
-package com.holygon.dishcuss.Fragments;
+package com.holygon.dishcuss.Activities;
 
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantActivity;
-import com.holygon.dishcuss.Adapters.ExploreAdapter;
 import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
@@ -34,7 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -42,73 +33,70 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 7/22/2016.
+ * Created by Naeem Ibrahim on 8/11/2016.
  */
-public class ExploreFragment extends Fragment{
+public class SelectRestaurantSearchActivity extends AppCompatActivity {
 
-    AppCompatActivity activity;
-    RecyclerView exploreRecyclerView;
-    private RecyclerView.LayoutManager exploreLayoutManager;
+    RecyclerView selectRestaurantRecyclerView;
+    private RecyclerView.LayoutManager selectRestaurantLayoutManager;
     Realm realm;
-    int reviewsCount=0,bookmarksCount=0,beenHereCount=0;
 
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
 
+    String categoryName="";
 
-    Button category_button_1;
 
-    public ExploreFragment() {
 
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(this);
+        mSpinner.setTitle(title);
+        mSpinner.show();
     }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+
+//*******************PROGRESS******************************
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.select_a_restaurant);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
+        headerName.setText("Select A Restaurant");
+
+
+        selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
+        selectRestaurantLayoutManager = new LinearLayoutManager(this);
+        selectRestaurantRecyclerView.setLayoutManager(selectRestaurantLayoutManager);
+        selectRestaurantRecyclerView.setNestedScrollingEnabled(false);
+
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            categoryName = bundle.getString("CategoryName");
+
+        }
+
+        RestaurantData(categoryName);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.explore_fragment, container, false);
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-
-        exploreRecyclerView = (RecyclerView) rootView.findViewById(R.id.explore_recycler_view);
-
-
-        category_button_1 = (Button) rootView.findViewById(R.id.category_button_1);
-
-        realm = Realm.getDefaultInstance();
-
-
-        exploreLayoutManager = new LinearLayoutManager(activity);
-        exploreRecyclerView.setLayoutManager(exploreLayoutManager);
-//        ArrayList<String> itemsData = new ArrayList<>();
-//        for (int i = 0; i < 50; i++) {
-//            itemsData.add("Local Feeds " + i + " / Item " + i);
-//        }
-        exploreRecyclerView.setNestedScrollingEnabled(false);
-        RestaurantData();
-
-
-        category_button_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), SelectRestaurantActivity.class);
-                intent.putExtra("CategoryName",category_button_1.getText().toString());
-                startActivity(intent);
-            }
-        });
-
-        return rootView;
-    }
-
-    void RestaurantData() {
-
+    void RestaurantData(String type) {
+        showSpinner("Loading...");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.Get_All_Restaurants_data)
+                .url(URLs.Select_Search_restaurants+type)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -121,30 +109,18 @@ public class ExploreFragment extends Fragment{
             public void onResponse(Call call, Response response) throws IOException {
 
                 final String objStr = response.body().string();
-
-                try
-                {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                /** check if activity still exist */
-                if (getActivity() == null) {
-                    return;
-                }
-
-                getActivity().runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
-                             JSONArray jsonDataArray = jsonObj.getJSONArray("restaurants");
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("restaurants");
 
-
+                            realm = Realm.getDefaultInstance();
 
                             for (int i = 0; i < jsonDataArray.length(); i++)
-                          //  if(jsonObj.has("restaurant"))
+                            //  if(jsonObj.has("restaurant"))
                             {
                                 JSONObject restaurantObj = jsonDataArray.getJSONObject(i);
 
@@ -175,13 +151,9 @@ public class ExploreFragment extends Fragment{
                                 JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                reviewsCount=jsonDataReviewsArray.length();
-                                bookmarksCount=jsonDataLikesArray.length();
-                                beenHereCount=jsonDataCheckInsArray.length();
-
-                                realmRestaurant.setReview_count(reviewsCount);
-                                realmRestaurant.setBookmark_count(bookmarksCount);
-                                realmRestaurant.setBeen_here_count(beenHereCount);
+                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
+                                realmRestaurant.setBookmark_count(jsonDataLikesArray.length());
+                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
 
                                 if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
@@ -328,9 +300,9 @@ public class ExploreFragment extends Fragment{
                                 restaurantRealmList.add(realmRestaurant);
                             }
 
-
-                            ExploreAdapter adapter = new ExploreAdapter(restaurantRealmList,getActivity());
-                            exploreRecyclerView.setAdapter(adapter);
+                            SelectRestaurantAdapter adapter = new SelectRestaurantAdapter(restaurantRealmList,SelectRestaurantSearchActivity.this);
+                            selectRestaurantRecyclerView.setAdapter(adapter);
+                            DismissSpinner();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

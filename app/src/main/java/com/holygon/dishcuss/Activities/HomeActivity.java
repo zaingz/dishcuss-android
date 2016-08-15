@@ -5,14 +5,11 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -20,10 +17,10 @@ import android.view.animation.OvershootInterpolator;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
-import com.holygon.dishcuss.Fragments.AccountFragment;
 import com.holygon.dishcuss.Fragments.ExploreFragment;
 import com.holygon.dishcuss.Fragments.HomeFragment;
 import com.holygon.dishcuss.Fragments.NearbyFragment;
+import com.holygon.dishcuss.Posts.PostSelectionActivity;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.RuntimePermissionsActivity;
 
@@ -50,6 +47,8 @@ public class HomeActivity extends RuntimePermissionsActivity {
         HomeActivity.super.requestAppPermissions(new
                         String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.CALL_PHONE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION}, R.string.runtime_permissions_txt
                 , REQUEST_PERMISSIONS);
         setContentView(R.layout.activity_home);
@@ -214,10 +213,8 @@ public class HomeActivity extends RuntimePermissionsActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent=new Intent(HomeActivity.this,RestaurantDetailActivity.class);
+                Intent intent=new Intent(HomeActivity.this,PostSelectionActivity.class);
                 startActivity(intent);
-
             }
         });
 

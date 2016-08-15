@@ -10,6 +10,7 @@ public class ReviewModel extends RealmObject {
 
 
     int review_ID;
+    String updated_at;
     String review_title;
     String review_summary;
     int reviewable_id;
@@ -23,6 +24,15 @@ public class ReviewModel extends RealmObject {
     int review_shares_count;
 
     public ReviewModel() {
+    }
+
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 
     public int getReview_ID() {

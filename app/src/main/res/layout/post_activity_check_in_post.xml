@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/post_toolbar"
+        android:id="@+id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="3dp">
+
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/check_in_user_profile_image"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/bg_intro"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FF000000"/>
+
+                <TextView
+                    android:id="@+id/check_in_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="6dp"
+                    android:text="Sikander Ali"
+                    android:layout_toRightOf="@id/check_in_user_profile_image"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_toRightOf="@id/check_in_user_name"
+                    android:id="@+id/check_in_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="   Check in to "
+                    android:textColor="@color/black_2"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/check_in_tv"
+                    android:orientation="horizontal"
+                    android:layout_toRightOf="@id/check_in_user_profile_image"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:background="@android:color/transparent"
+                        android:id="@+id/checkIn_address_auto"
+                        android:layout_marginLeft="6dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="wrap_content"
+                        android:hint="Liali Cafe,Lahore"
+                        android:textColor="@color/colorAccent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/post_status"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:layout_width="wrap_content"
+                android:textColor="@color/black_2"
+                android:textSize="18dp"
+                android:layout_height="wrap_content"
+                android:hint="Whats in your plate"/>
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imageView_pic_upload_check_in"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="3dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:gravity="bottom">
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"
+                android:layout_marginBottom="1dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_restaurant"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:layout_height="wrap_content"
+                    android:text="Restaurant"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"
+                android:layout_marginBottom="1dp"/>
+
+
+            <LinearLayout
+                android:id="@+id/select_photo_layout_checkIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_camera"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:layout_height="wrap_content"
+                    android:text="Photo"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"
+                android:layout_marginBottom="1dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/location_marker"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:layout_height="wrap_content"
+                    android:text="Check In"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/view_line"
+                android:layout_marginBottom="1dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

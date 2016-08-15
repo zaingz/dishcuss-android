@@ -32,7 +32,7 @@ import io.realm.RealmResults;
 /**
  * Created by Naeem Ibrahim on 7/22/2016.
  */
-public class ExploreAdapter  extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
+public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHolder> {
 
     private ArrayList<Restaurant> restaurantRealmList;
     Context context;

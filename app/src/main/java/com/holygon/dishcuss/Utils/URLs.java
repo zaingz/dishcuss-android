@@ -15,6 +15,12 @@ public class URLs {
     public static String Get_Restaurant_data="http://dishcuss-api.herokuapp.com/restaurants/social/";
     public static String Get_All_Restaurants_data="http://dishcuss-api.herokuapp.com/restaurants/explore";
     public static String Get_nearby_restaurants="http://dishcuss-api.herokuapp.com/restaurants/nearby?";
-
-
+    public static String Select_restaurants="http://dishcuss-api.herokuapp.com/restaurants/categories/search?name=";
+    public static String Select_Search_restaurants="http://dishcuss-api.herokuapp.com//restaurants/search?name=";
+    public static String Posts="http://dishcuss-api.herokuapp.com/user/posts";
+    public static String Restaurant_Review="http://dishcuss-api.herokuapp.com/restaurants/reviews";
+    public static String Follow_Restaurant="http://dishcuss-api.herokuapp.com/user/follow/";
+    public static String UnFollow_Restaurant="http://dishcuss-api.herokuapp.com/restaurants/unfollow/";
+    public static String Like_="http://dishcuss-api.herokuapp.com/user/like/";
+    public static String DisLike_="http://dishcuss-api.herokuapp.com/user/dislike/";
 }

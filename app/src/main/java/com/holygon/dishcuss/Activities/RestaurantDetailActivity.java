@@ -21,6 +21,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.holygon.dishcuss.Fragments.AccountFollowersFragment;
 import com.holygon.dishcuss.Fragments.AccountPhotosFragment;
 import com.holygon.dishcuss.Fragments.AccountReviewsFragment;
@@ -32,6 +34,7 @@ import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -73,6 +76,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
 
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton callNow, follow, like;
 
 
 
@@ -95,11 +100,17 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
 
+
         review_count = (TextView) findViewById(R.id.reviews_Count);
         bookmark_count = (TextView) findViewById(R.id.bookmark_Count);
         been_here_count = (TextView) findViewById(R.id.been_here_Count);
 
         restaurant_call_now = (LinearLayout) findViewById(R.id.restaurant_call_now_button);
+
+        materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
+        callNow = (FloatingActionButton) findViewById(R.id.material_design_floating_action_call_now);
+        like = (FloatingActionButton) findViewById(R.id.material_design_floating_action_like);
+        follow = (FloatingActionButton) findViewById(R.id.material_design_floating_action_follow);
 
 
 
@@ -108,13 +119,14 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             restaurantID = bundle.getInt("RestaurantID");
-            restaurant=GetRestaurantData(restaurantID);
 
-            if(restaurant!=null){
-                SetValues();
-            }else {
-                Log.e("","ELSE");
-            }
+        //    restaurant=GetRestaurantData(restaurantID);
+
+//            //if(restaurant!=null){
+//                SetValues();
+//            }else {
+//                Log.e("","ELSE");
+//            }
             if(!dataAlreadyExists)
                 RestaurantData();
 
@@ -128,6 +140,32 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     return;
                 }
                 startActivity(intent);
+            }
+        });
+
+
+        callNow.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu first item clicked
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +restaurant.getNumbers()));
+                if ( ContextCompat.checkSelfPermission( RestaurantDetailActivity.this, Manifest.permission.CALL_PHONE ) != PackageManager.PERMISSION_GRANTED ) {
+                    return;
+                }
+                startActivity(intent);
+            }
+        });
+
+        like.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                GenericRoutes.Like(restaurantID,"restaurant");
+            }
+        });
+
+        follow.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu third item clicked
+                GenericRoutes.FollowRestaurant(restaurantID);
             }
         });
 
@@ -328,12 +366,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     for (int r = 0; r < jsonDataReviewsArray.length();r++) {
 
                                         JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
                                         ReviewModel reviewModel=new ReviewModel();
 
                                         reviewModel.setReview_ID(reviewObj.getInt("id"));
                                         reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
                                         reviewModel.setReview_title(reviewObj.getString("title"));
+                                        reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
                                         reviewModel.setReview_summary(reviewObj.getString("summary"));
                                         reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
 

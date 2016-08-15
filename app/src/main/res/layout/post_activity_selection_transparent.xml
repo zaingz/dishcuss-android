@@ -15,6 +15,7 @@
         android:gravity="center">
 
         <LinearLayout
+            android:id="@+id/write_review_layout"
             android:layout_marginBottom="40dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,7 +24,6 @@
             android:paddingTop="15dp"
             android:paddingBottom="15dp"
             android:orientation="horizontal"
-
             android:background="@drawable/layout_border">
 
             <ImageView
@@ -54,6 +54,7 @@
 
 
         <LinearLayout
+            android:id="@+id/upload_photo_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -89,6 +90,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/check_in_layout"
             android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -134,7 +136,7 @@
 
 
         <ImageView
-            android:id="@+id/cross_button"
+            android:id="@+id/post_cross_button"
             android:layout_width="80dp"
             android:layout_gravity="bottom"
             android:layout_height="80dp"

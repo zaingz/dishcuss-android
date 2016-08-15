@@ -2,16 +2,12 @@ package com.holygon.dishcuss.Activities;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
-import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 
 import io.realm.Realm;
@@ -28,7 +24,7 @@ public class StatusActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_in);
+        setContentView(R.layout.post_activity_check_in_google_api);
 
         //imageView=(ImageView) findViewById(R.id.cross_button);
 //        imageView.setOnClickListener(new View.OnClickListener() {

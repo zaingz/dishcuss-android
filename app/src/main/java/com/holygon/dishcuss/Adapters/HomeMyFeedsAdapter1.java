@@ -155,6 +155,7 @@ public class HomeMyFeedsAdapter1 extends RecyclerView.Adapter<HomeMyFeedsAdapter
         while (message==null){
 //            Log.e("Loop","Working");
         }
+        realm.commitTransaction();
         if (message.equals("Successfully followed!")) {
             return true;
         }
@@ -205,6 +206,7 @@ public class HomeMyFeedsAdapter1 extends RecyclerView.Adapter<HomeMyFeedsAdapter
         while (message==null){
 //            Log.e("Loop","Working");
         }
+        realm.commitTransaction();
         if (message.equals("Successfully unfollowed!"))
         {
             return true;

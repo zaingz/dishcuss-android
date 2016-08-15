@@ -41,7 +41,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/image_search"
+            android:id="@+id/home_fragment_image_search"
             android:layout_width="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
@@ -56,7 +56,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_bell"
-            android:layout_toLeftOf="@id/image_search"
+            android:layout_toLeftOf="@id/home_fragment_image_search"
             />
 
         <ImageView

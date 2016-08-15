@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
+import com.holygon.dishcuss.Utils.GenericRoutes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +50,8 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
         public de.hdodenhof.circleimageview.CircleImageView profileImage;
         public RelativeLayout local_feeds_restaurant_relative_layout;
 
+        LinearLayout layout_like;
+
         public ViewHolder(View v) {
             super(v);
             restaurantName = (TextView) v.findViewById(R.id.local_feeds_restaurant_name);
@@ -62,6 +66,8 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
             profileImage = (de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.local_feeds_profile_image);
 
             local_feeds_restaurant_relative_layout=(RelativeLayout) v.findViewById(R.id.local_feeds_restaurant_relative_layout);
+
+            layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
         }
     }
 
@@ -97,7 +103,7 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder,final int position) {
 
 //                Log.e("LocalFeed",objects.get(position).getClass().getName());
 
@@ -128,6 +134,15 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
                         }
                     });
 
+                    holder.layout_like.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(GenericRoutes.Like(localFeedReview.getReviewID(),"review")){
+                                int prev=Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                holder.review_likes_count_tv.setText(""+prev+1);
+                            }
+                        }
+                    });
                 }
                 else if(objects.get(position).getClass().equals(io.realm.LocalFeedCheckInRealmProxy.class))
                 {
@@ -155,11 +170,13 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
                             mContext.startActivity(intent);
                         }
                     });
+
                 }
                 else
                 {
                     Log.e("LocalFeed","Why so?");
                 }
+
 
     }
 
