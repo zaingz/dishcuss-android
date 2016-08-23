@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.holygon.dishcuss.Activities.ScanQRCodeActivity;
 import com.holygon.dishcuss.R;
 
 /**
@@ -16,6 +17,8 @@ public class PostSelectionActivity extends Activity {
 
     LinearLayout writeReview,uploadPhoto,CheckIn;
     ImageView crossButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,8 @@ public class PostSelectionActivity extends Activity {
         writeReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,WriteReviewPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                intent.putExtra("PostCategory",CheckInPostActivity.Review);
                 startActivity(intent);
                 finish();
             }
@@ -46,7 +50,8 @@ public class PostSelectionActivity extends Activity {
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,PhotoPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                intent.putExtra("PostCategory",CheckInPostActivity.UploadPic);
                 startActivity(intent);
                 finish();
             }
@@ -55,11 +60,11 @@ public class PostSelectionActivity extends Activity {
         CheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,ScanQRCodeActivity.class);
+//                intent.putExtra("PostCategory",CheckInPostActivity.CheckIn);
                 startActivity(intent);
                 finish();
             }
         });
-
     }
 }

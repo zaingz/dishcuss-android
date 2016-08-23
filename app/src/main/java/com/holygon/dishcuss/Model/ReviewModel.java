@@ -1,12 +1,12 @@
 package com.holygon.dishcuss.Model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
  * Created by Naeem Ibrahim on 8/4/2016.
  */
 public class ReviewModel extends RealmObject {
-
 
 
     int review_ID;
@@ -23,9 +23,19 @@ public class ReviewModel extends RealmObject {
     int review_comments_count;
     int review_shares_count;
 
+    RealmList<Comment> commentRealmList;
+
     public ReviewModel() {
     }
 
+
+    public RealmList<Comment> getCommentRealmList() {
+        return commentRealmList;
+    }
+
+    public void setCommentRealmList(RealmList<Comment> commentRealmList) {
+        this.commentRealmList = commentRealmList;
+    }
 
     public String getUpdated_at() {
         return updated_at;

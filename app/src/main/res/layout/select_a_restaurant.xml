@@ -6,7 +6,6 @@
 
     <include layout="@layout/app_toolbar"
         android:id="@+id/toolbar"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/select_restaurant_recycler_view"
         android:layout_marginTop="0dp"

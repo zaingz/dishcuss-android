@@ -17,6 +17,7 @@ import android.view.animation.OvershootInterpolator;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.holygon.dishcuss.Fragments.AccountFragment;
 import com.holygon.dishcuss.Fragments.ExploreFragment;
 import com.holygon.dishcuss.Fragments.HomeFragment;
 import com.holygon.dishcuss.Fragments.NearbyFragment;
@@ -173,7 +174,7 @@ public class HomeActivity extends RuntimePermissionsActivity {
                         currentFragment=new ExploreFragment();
                         break;
                     case 4:
-                        //currentFragment=new AccountFragment();
+                        currentFragment=new AccountFragment();
                         break;
                     default:
                         //currentFragment=new NearbyFragment();

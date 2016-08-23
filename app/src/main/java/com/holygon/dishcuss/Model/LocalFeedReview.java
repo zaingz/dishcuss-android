@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -33,10 +34,21 @@ public class LocalFeedReview extends RealmObject {
     int reviewCommentCount;
     int reviewSharesCount;
 
+    RealmList<Comment> commentRealmList;
+
+
+
     public LocalFeedReview(){
 
     }
 
+    public RealmList<Comment> getCommentRealmList() {
+        return commentRealmList;
+    }
+
+    public void setCommentRealmList(RealmList<Comment> commentRealmList) {
+        this.commentRealmList = commentRealmList;
+    }
 
     public int getReviewID() {
         return reviewID;

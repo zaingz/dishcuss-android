@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -85,26 +86,11 @@ public class CheckInPostActivity extends AppCompatActivity {
     ArrayList<Double> placeLong;
 
     ArrayAdapter<String> placeAdapter;
+    String postCategory,setPostURL;
 
-
-
-
-    //*******************PROGRESS******************************
-    private ProgressDialog mSpinner;
-
-    private void showSpinner(String title) {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle(title);
-        mSpinner.show();
-    }
-
-    private void DismissSpinner(){
-        if(mSpinner!=null){
-            mSpinner.dismiss();
-        }
-    }
-
-//*******************PROGRESS******************************
+    public static String Review="Review";
+    public static String UploadPic="UploadPic";
+    public static String CheckIn="CheckIn";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +106,28 @@ public class CheckInPostActivity extends AppCompatActivity {
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
+
+
         headerName.setText("Check In");
+
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            postCategory = bundle.getString("PostCategory");
+        }
+
+        if(postCategory.equals(CheckInPostActivity.Review)){
+
+            headerName.setText("Write a review");
+            setPostURL=URLs.Restaurant_Review;
+        }else if(postCategory.equals(CheckInPostActivity.UploadPic)){
+            headerName.setText("Upload a photo");
+            setPostURL=URLs.Posts;
+
+        }else if(postCategory.equals(CheckInPostActivity.CheckIn)){
+            headerName.setText("Check In");
+            setPostURL=URLs.Posts;
+        }
 
         postClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,6 +152,20 @@ public class CheckInPostActivity extends AppCompatActivity {
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
             = new AdapterView.OnItemClickListener() {
         @Override
@@ -156,7 +177,6 @@ public class CheckInPostActivity extends AppCompatActivity {
         }
     };
     void SendDataOnServer(){
-        showSpinner("Please wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -192,7 +212,7 @@ public class CheckInPostActivity extends AppCompatActivity {
         }
 
         Request request = new Request.Builder()
-                .url(URLs.Posts)
+                .url(setPostURL)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .post(requestBody)
                 .build();
@@ -216,14 +236,9 @@ public class CheckInPostActivity extends AppCompatActivity {
                     else  if(jsonObject.has("message")){
                         Log.e("","Not Posted");
                     }
-                    DismissSpinner();
                     finish();
                 }catch (Exception e){
                     Log.i("Exception ::",""+ e.getMessage());
-                }
-                finally
-                {
-                    DismissSpinner();
                 }
 
             }
@@ -321,7 +336,7 @@ public class CheckInPostActivity extends AppCompatActivity {
 
         public void afterTextChanged(Editable s) {
             Log.e("AutoComplete :: ",""+s.length());
-            if(s.length()>=2){
+            if(s.length()>0){
                 RestaurantData(s.toString());
             }
             if(s.length()==0){
@@ -340,6 +355,7 @@ public class CheckInPostActivity extends AppCompatActivity {
 
 
     void RestaurantData(String type) {
+
 
         Log.e("RES DATA","Called");
 

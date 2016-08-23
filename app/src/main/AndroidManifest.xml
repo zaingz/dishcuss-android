@@ -13,6 +13,7 @@
         android:protectionLevel="signature" />
     <uses-permission android:name="com.holygon.dishcuss.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -52,18 +53,21 @@
             android:theme="@style/MyMaterialTheme"/>
 
         <activity
-            android:name=".Activities.SearchBarActivity"
-            android:theme="@style/MyMaterialTheme"/>
-
-        <activity
             android:name=".Activities.SelectRestaurantActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Activities.HomeActivity"/>
+            android:theme="@style/MyMaterialTheme" />
 
         <activity
             android:name=".Activities.SelectRestaurantSearchActivity"
+            android:theme="@style/MyMaterialTheme" />
+        <activity
+            android:name=".Chat.ChatScreenActivity"
             android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Activities.HomeActivity"/>
+            android:windowSoftInputMode="adjustPan"/>
+
+
+        <activity
+            android:name=".Activities.NotificationActivity"
+            android:theme="@style/MyMaterialTheme" />
 
         <activity
             android:name=".Activities.HomeActivity"
@@ -71,8 +75,14 @@
 
         <activity
             android:name=".Activities.RestaurantDetailActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Activities.HomeActivity"/>
+            android:theme="@style/MyMaterialTheme" />
+        <activity
+            android:name=".Activities.ScanQRCodeActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.ProfilesDetailActivity"
+            android:theme="@style/MyMaterialTheme" />
 
         <activity
             android:name=".Activities.StatusActivity"
@@ -80,20 +90,16 @@
 
         <activity
             android:name=".Posts.WriteReviewPostActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Posts.PostSelectionActivity"/>
+            android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".Posts.CheckInPostActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Posts.PostSelectionActivity"/>
+            android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".Posts.CheckInPostGoogleApiActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Posts.PostSelectionActivity"/>
+            android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".Posts.PhotoPostActivity"
-            android:theme="@style/MyMaterialTheme"
-            android:parentActivityName=".Posts.PostSelectionActivity"/>
+            android:theme="@style/MyMaterialTheme" />
 
         <!--<activity-->
             <!--android:name=".Activities.StatusActivity"-->
@@ -102,6 +108,9 @@
         <activity
             android:name=".Posts.PostSelectionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+        <activity
+            android:name=".Activities.PunditSelectionActivity"
+            android:theme="@style/MyMaterialTheme"/>
 
 
         <activity android:name="com.facebook.FacebookActivity"

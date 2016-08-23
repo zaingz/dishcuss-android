@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -61,7 +62,6 @@ import okhttp3.Response;
  */
 public class PhotoPostActivity extends AppCompatActivity {
 
-
     OkHttpClient client;
     AutoCompleteTextView userLocation;
     EditText status;
@@ -86,25 +86,6 @@ public class PhotoPostActivity extends AppCompatActivity {
 
     ArrayAdapter<String> placeAdapter;
 
-
-
-
-    //*******************PROGRESS******************************
-    private ProgressDialog mSpinner;
-
-    private void showSpinner(String title) {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle(title);
-        mSpinner.show();
-    }
-
-    private void DismissSpinner(){
-        if(mSpinner!=null){
-            mSpinner.dismiss();
-        }
-    }
-
-//*******************PROGRESS******************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +126,20 @@ public class PhotoPostActivity extends AppCompatActivity {
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
             = new AdapterView.OnItemClickListener() {
         @Override
@@ -156,7 +151,6 @@ public class PhotoPostActivity extends AppCompatActivity {
         }
     };
     void SendDataOnServer(){
-        showSpinner("Please wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -216,14 +210,12 @@ public class PhotoPostActivity extends AppCompatActivity {
                     else  if(jsonObject.has("message")){
                         Log.e("","Not Posted");
                     }
-                    DismissSpinner();
                     finish();
                 }catch (Exception e){
                     Log.i("Exception ::",""+ e.getMessage());
                 }
                 finally
                 {
-                    DismissSpinner();
                 }
 
             }

@@ -5,41 +5,38 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.holygon.dishcuss.Adapters.AccountReviewsAdapter;
-import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Adapters.ReviewsAdapter;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
- * Created by Naeem Ibrahim on 7/23/2016.
+ * Created by Naeem Ibrahim on 8/17/2016.
  */
 public class AccountReviewsFragment extends Fragment {
 
     AppCompatActivity activity;
     RecyclerView reviewRecyclerView;
     private RecyclerView.LayoutManager reviewLayoutManager;
-    Restaurant restaurant=new Restaurant();
+    UserProfile userProfile=new UserProfile();
     Realm realm;
-    int restaurantID;
+    int userID;
     RealmList<ReviewModel> reviewModels;
 
-
-    public AccountReviewsFragment(int restaurantID) {
-
-        this.restaurantID=restaurantID;
-
+    public AccountReviewsFragment(int userID) {
+        this.userID=userID;
     }
 
     @Override
@@ -55,8 +52,8 @@ public class AccountReviewsFragment extends Fragment {
 
         reviewRecyclerView = (RecyclerView) rootView.findViewById(R.id.simple_recycler_view_for_all);
 
-        restaurant=GetRestaurantData(restaurantID);
-        if(restaurant!=null){
+        userProfile=GetUserData(userID);
+        if(userProfile!=null){
             GetReviewsData();
         }
 
@@ -65,27 +62,47 @@ public class AccountReviewsFragment extends Fragment {
         reviewRecyclerView.setHasFixedSize(true);
         reviewRecyclerView.setNestedScrollingEnabled(false);
 
-        AccountReviewsAdapter adapter = new AccountReviewsAdapter(reviewModels);
-        reviewRecyclerView.setAdapter(adapter);
 
+        ReviewsAdapter adapter = new ReviewsAdapter(reviewModels,getActivity());
+        reviewRecyclerView.setAdapter(adapter);
 
         return rootView;
     }
 
 
-    Restaurant GetRestaurantData(int rID){
+    UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
-        RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", rID).findAll();
-        if(restaurants.size()>0){
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
+        if(userProfiles.size()>0){
             realm.beginTransaction();
             realm.commitTransaction();
-            return restaurants.get(0);
+            return userProfiles.get(0);
         }
         return null;
     }
 
 
     void GetReviewsData(){
-        reviewModels =restaurant.getReviewModels();
+        reviewModels =userProfile.getReviewModelRealmList();
+
+//        Collections.sort(reviewModels, new Comparator<ReviewModel>() {
+//            @Override
+//            public int compare(ReviewModel lhs, ReviewModel rhs) {
+//                return GetDate(rhs.getUpdated_at()).compareTo(GetDate(lhs.getUpdated_at()));
+//            }
+//        });
+    }
+    Date GetDate(String date){
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //  System.out.println(convertedDate);
+        return convertedDate;
     }
 }

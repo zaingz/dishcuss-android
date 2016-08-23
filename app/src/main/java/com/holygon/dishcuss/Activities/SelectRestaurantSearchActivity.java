@@ -7,7 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
@@ -44,38 +49,13 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
 
     String categoryName="";
-
-
-
-    //*******************PROGRESS******************************
-    private ProgressDialog mSpinner;
-
-    private void showSpinner(String title) {
-        mSpinner = new ProgressDialog(this);
-        mSpinner.setTitle(title);
-        mSpinner.show();
-    }
-
-    private void DismissSpinner(){
-        if(mSpinner!=null){
-            mSpinner.dismiss();
-        }
-    }
-
-//*******************PROGRESS******************************
+    EditText searchEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.select_a_restaurant);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
-        headerName.setText("Select A Restaurant");
-
+        setContentView(R.layout.search_bar_activity);
+        searchEditText=(EditText)findViewById(R.id.search_bar_edit_text);
 
         selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
         selectRestaurantLayoutManager = new LinearLayoutManager(this);
@@ -83,17 +63,35 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
         selectRestaurantRecyclerView.setNestedScrollingEnabled(false);
 
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            categoryName = bundle.getString("CategoryName");
+        searchEditText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    restaurantRealmList=new ArrayList<>();
+                    categoryName=searchEditText.getText().toString();
+                    RestaurantData(categoryName);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        RestaurantData(categoryName);
     }
 
     void RestaurantData(String type) {
-        showSpinner("Loading...");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Select_Search_restaurants+type)
@@ -302,7 +300,6 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
 
                             SelectRestaurantAdapter adapter = new SelectRestaurantAdapter(restaurantRealmList,SelectRestaurantSearchActivity.this);
                             selectRestaurantRecyclerView.setAdapter(adapter);
-                            DismissSpinner();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

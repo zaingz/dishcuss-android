@@ -149,7 +149,7 @@ public final class Constants{
     }
 
 
-    Date GetDate(String date){
+    public static Date GetDate(String date){
         String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date convertedDate = new Date();

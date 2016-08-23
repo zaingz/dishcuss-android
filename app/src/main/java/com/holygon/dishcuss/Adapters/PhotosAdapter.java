@@ -1,20 +1,14 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -22,7 +16,7 @@ import java.util.ArrayList;
  * Created by Naeem Ibrahim on 7/25/2016.
  */
 
-public class AccountPhotosAdapter extends RecyclerView.Adapter<AccountPhotosAdapter.ViewHolder> {
+public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder> {
 
     private ArrayList<String> imageViewArrayList=new ArrayList<>();
     Context mContext;
@@ -37,7 +31,7 @@ public class AccountPhotosAdapter extends RecyclerView.Adapter<AccountPhotosAdap
         }
     }
 
-    public AccountPhotosAdapter(ArrayList<String> imageView,Context context) {
+    public PhotosAdapter(ArrayList<String> imageView, Context context) {
         imageViewArrayList.addAll(imageView);
         mContext=context;
     }

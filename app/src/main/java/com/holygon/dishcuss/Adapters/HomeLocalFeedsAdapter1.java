@@ -7,18 +7,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
+import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
+import com.holygon.dishcuss.Utils.URLs;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +44,7 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
     private Context mContext;
     RealmList<LocalFeedReview> localFeedReviewRealmList;
     RealmList<LocalFeedCheckIn> localFeedCheckInRealmList;
+    RealmList<Comment> commentRealmList;
 
     List<Object> objects=new ArrayList<>();
 
@@ -49,8 +55,13 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
         public ImageView local_feeds_restaurant_image;
         public de.hdodenhof.circleimageview.CircleImageView profileImage;
         public RelativeLayout local_feeds_restaurant_relative_layout;
-
         LinearLayout layout_like;
+        LinearLayout layout_comment;
+        LinearLayout user_profile_layout;
+
+        //Comments Data
+        public LinearLayout comments_row;
+
 
         public ViewHolder(View v) {
             super(v);
@@ -68,6 +79,13 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
             local_feeds_restaurant_relative_layout=(RelativeLayout) v.findViewById(R.id.local_feeds_restaurant_relative_layout);
 
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
+            layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
+            user_profile_layout=(LinearLayout)v.findViewById(R.id.user_profile_layout);
+
+
+            comments_row=(LinearLayout)v.findViewById(R.id.comments_);
+
+
         }
     }
 
@@ -143,6 +161,73 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
                             }
                         }
                     });
+
+                    holder.layout_comment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.comments_row.getVisibility() == View.VISIBLE){
+                                holder.comments_row.setVisibility(View.GONE);
+                            }else {
+                                holder.comments_row.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+
+                    holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                            intent.putExtra("UserID", localFeedReview.getReviewerID());
+                            mContext.startActivity(intent);
+                        }
+                    });
+
+                    commentRealmList=localFeedReview.getCommentRealmList();
+
+
+                    LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    for (int i=0;i<commentRealmList.size();i++) {
+
+                        View child = inflater.inflate(R.layout.comment_row, null);
+                        TextView commentatorName=(TextView)child.findViewById(R.id.commentator_name);
+                        TextView commentatorComment=(TextView)child.findViewById(R.id.commentator_comment);
+                        TextView commentTime=(TextView)child.findViewById(R.id.comment_time);
+                        TextView commentLikesCount=(TextView)child.findViewById(R.id.comment_likes_count);
+
+                        commentatorName.setText(commentRealmList.get(i).getCommentatorName());
+                        commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
+                        Date date= GetDate(commentRealmList.get(i).getCommentUpdated_at());
+
+                        SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
+                        String time = localDateFormatForTime.format(date);
+                        SimpleDateFormat localDateFormatForDay = new SimpleDateFormat("EEE");
+                        String day = localDateFormatForDay.format(date);
+                        SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
+                        String dates = localDateFormatForDate.format(date);
+
+                        commentTime.setText(dates+" "+time);
+                        commentLikesCount.setText("  "+commentRealmList.get(i).getCommentLikesCount());
+                        holder.comments_row.addView(child);
+
+                    }
+
+                    View child = inflater.inflate(R.layout.add_comment_row, null);
+
+                    final EditText message=(EditText) child.findViewById(R.id.message);
+                    Button sendButton=(Button)child.findViewById(R.id.btn_send);
+                    holder.comments_row.addView(child);
+                    sendButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String comment=message.getText().toString();
+                            if(!comment.equals("")){
+                                if(GenericRoutes.ReviewComment(""+localFeedReview.getReviewID(),"",comment,"", URLs.Add_Comment_Review)){
+                                    Log.e("Post","Success");
+                                    message.setText("");
+                                }
+                            }
+                        }
+                    });
                 }
                 else if(objects.get(position).getClass().equals(io.realm.LocalFeedCheckInRealmProxy.class))
                 {
@@ -171,6 +256,72 @@ public class HomeLocalFeedsAdapter1 extends RecyclerView.Adapter<HomeLocalFeedsA
                         }
                     });
 
+                    holder.layout_comment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(holder.comments_row.getVisibility() == View.VISIBLE){
+                                holder.comments_row.setVisibility(View.GONE);
+                            }else {
+                                holder.comments_row.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
+
+
+
+                    holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                            intent.putExtra("UserID", localFeedCheckIn.getCheckInWriterID());
+                            mContext.startActivity(intent);
+                        }
+                    });
+
+                    commentRealmList=localFeedCheckIn.getCommentRealmList();
+
+                    LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    for (int i=0;i<commentRealmList.size();i++) {
+
+                        View child = inflater.inflate(R.layout.comment_row, null);
+                        TextView commentatorName=(TextView)child.findViewById(R.id.commentator_name);
+                        TextView commentatorComment=(TextView)child.findViewById(R.id.commentator_comment);
+                        TextView commentTime=(TextView)child.findViewById(R.id.comment_time);
+                        TextView commentLikesCount=(TextView)child.findViewById(R.id.comment_likes_count);
+
+                        commentatorName.setText(commentRealmList.get(i).getCommentatorName());
+                        commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
+                        Date date= GetDate(commentRealmList.get(i).getCommentUpdated_at());
+
+                        SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
+                        String time = localDateFormatForTime.format(date);
+                        SimpleDateFormat localDateFormatForDay = new SimpleDateFormat("EEE");
+                        String day = localDateFormatForDay.format(date);
+                        SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
+                        String dates = localDateFormatForDate.format(date);
+
+
+                        commentTime.setText(dates+" "+time);
+                        commentLikesCount.setText("  "+commentRealmList.get(i).getCommentLikesCount());
+                        holder.comments_row.addView(child);
+                    }
+                    View child = inflater.inflate(R.layout.add_comment_row, null);
+
+                    final EditText message=(EditText) child.findViewById(R.id.message);
+                    Button sendButton=(Button)child.findViewById(R.id.btn_send);
+                    holder.comments_row.addView(child);
+                    sendButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String comment=message.getText().toString();
+                            if(!comment.equals("")){
+                                if(GenericRoutes.CheckInComment(""+localFeedCheckIn.getCheckInID(),"",comment,"", URLs.Add_Comment_Post)){
+                                    Log.e("Post","Success");
+                                    message.setText("");
+                                }
+                            }
+                        }
+                    });
                 }
                 else
                 {

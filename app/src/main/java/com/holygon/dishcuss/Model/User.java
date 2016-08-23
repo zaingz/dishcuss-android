@@ -12,12 +12,22 @@ public class User extends RealmObject{
     String name;
     String username;
     String email;
+    String avatar;
     String gender;
     String provider;
     String token;
     String referral_code;
 
     public User() {
+    }
+
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getId() {

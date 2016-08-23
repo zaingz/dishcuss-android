@@ -1,33 +1,41 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Model.Comment;
+import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.R;
 
 import java.util.ArrayList;
+
+import io.realm.RealmList;
 
 /**
  * Created by Naeem Ibrahim on 7/24/2016.
  */
 public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollowerAdapter.ViewHolder> {
 
-    private ArrayList<String> mDataset = new ArrayList<>();
-
+    RealmList<UserFollowing> userFollowings;
+    Context mContext;
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+        public TextView user_profile_follower_user_name,user_profile_follower_user_followers_count;
+
         public ViewHolder(View v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.account_follower_user_name);
+            user_profile_follower_user_name = (TextView)v.findViewById(R.id.user_profile_follower_user_name);
+            user_profile_follower_user_followers_count = (TextView)v.findViewById(R.id.user_profile_follower_user_followers_count);
         }
     }
 
-    public AccountFollowerAdapter(ArrayList<String> dataset) {
-        mDataset.clear();
-        mDataset.addAll(dataset);
+    public AccountFollowerAdapter(RealmList<UserFollowing> userFollowings,Context mContext) {
+        this.userFollowings=userFollowings;
+        this.mContext=mContext;
     }
 
     @Override
@@ -39,12 +47,12 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset.get(position));
-
+        holder.user_profile_follower_user_name.setText(userFollowings.get(position).getName());
+        holder.user_profile_follower_user_followers_count.setText(""+userFollowings.get(position).getFollowerCount());
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return userFollowings.size();
     }
 }

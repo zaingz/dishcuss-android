@@ -9,20 +9,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:orientation="vertical">
-
+        android:layout_weight="10"
+        android:background="@color/colorAccent">
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="The Pundits"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/tw__composer_white"/>
     </LinearLayout>
 
+
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
+        android:layout_weight="78"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:orientation="vertical"
         android:weightSum="100">
 
 
         <LinearLayout
+            android:id="@+id/Desi_pundit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
@@ -35,7 +47,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="25dp">
+                android:padding="20dp">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -58,21 +70,19 @@
                 android:layout_marginLeft="15dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp"
+                    android:text="Desi Pundit"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:text="Specially for desi food guidance"/>
 
             </LinearLayout>
 
@@ -92,7 +102,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="25dp">
+                android:padding="20dp">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -118,18 +128,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@android:color/white"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:textSize="18dp"
+                    android:text="Sasta Pundit"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@color/colorAccent"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:text="Specially for sasti food guidance"/>
 
             </LinearLayout>
 
@@ -148,7 +155,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="25dp">
+                android:padding="20dp">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -174,18 +181,67 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@android:color/white"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:textSize="18dp"
+                    android:text="Fast Food Pundit"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@color/colorAccent"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:text="Specially for fast food guidance"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/pundits_image_circle"
+                android:gravity="center"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/location_marker"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="1dp"
+                android:layout_height="30dp"
+                android:background="@android:color/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="17dp"
+                    android:text="Continental Food Pundit"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:text="Specially for Continental  food guidance           "/>
 
             </LinearLayout>
 
@@ -204,7 +260,7 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="25dp">
+                android:padding="20dp">
 
                 <ImageView
                     android:layout_width="30dp"
@@ -230,74 +286,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@android:color/white"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:textSize="18dp"
+                    android:text="Foreign Food Pundit"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:textColor="@color/colorAccent"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="20"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/pundits_image_circle"
-                android:gravity="center"
-                android:padding="25dp">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
-
-            </LinearLayout>
-
-            <View
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="5dp"
-                android:layout_width="1dp"
-                android:layout_height="30dp"
-                android:background="@android:color/white" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="15dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15dp"
-                    android:text="Check In          "/>
+                    android:text="Specially for foreign food guidance"/>
 
             </LinearLayout>
 
@@ -310,16 +307,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="15"
+        android:layout_weight="12"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
-
         <ImageView
-            android:id="@+id/cross_button"
-            android:layout_width="80dp"
-            android:layout_gravity="bottom"
-            android:layout_height="80dp"
+            android:id="@+id/pundits_screens_cross_button"
+            android:layout_width="60dp"
+            android:layout_gravity="center"
+            android:layout_height="60dp"
             android:src="@drawable/icon_cross"/>
     </LinearLayout>
 

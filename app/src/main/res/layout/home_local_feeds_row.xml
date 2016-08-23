@@ -103,6 +103,7 @@
                     app:civ_border_color="#FF000000"/>
 
                 <LinearLayout
+                    android:id="@+id/user_profile_layout"
                     android:layout_marginTop="12dp"
                     android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
@@ -287,6 +288,15 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/comments_"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="1dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

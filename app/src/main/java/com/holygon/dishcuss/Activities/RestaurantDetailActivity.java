@@ -16,18 +16,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.holygon.dishcuss.Fragments.AccountFollowersFragment;
-import com.holygon.dishcuss.Fragments.AccountPhotosFragment;
-import com.holygon.dishcuss.Fragments.AccountReviewsFragment;
+import com.holygon.dishcuss.Fragments.RestaurantPhotosFragment;
+import com.holygon.dishcuss.Fragments.RestaurantReviewsFragment;
 import com.holygon.dishcuss.Fragments.StickyHeaderFragment;
-import com.holygon.dishcuss.Model.FeaturedRestaurant;
+import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
@@ -65,7 +64,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TabLayout tabLayout;
     int restaurantID;
     Toolbar restaurant_details_awesome_toolbar;
-    LinearLayout restaurant_call_now;
+    LinearLayout restaurant_call_now,bookmark_button_layout,follow_button_layout;
+    TextView bookmark_button_text,follow_button_text;
     Realm realm;
     boolean dataAlreadyExists = false;
     Restaurant restaurant=new Restaurant();
@@ -81,7 +81,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
 
-    int reviewsCount=0,bookmarksCount=0,beenHereCount=0;  // bookmarksCount(Likes)  beenHereCount(Checkins)
+    int reviewsCount=0,bookmarksCount=0,beenHereCount=0;  // followersCount(Likes)  commentsCount(Checkins)
 
     TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count;
 
@@ -95,7 +95,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         restaurant_details_awesome_toolbar = (Toolbar) findViewById(R.id.restaurant_details_awesome_toolbar);
         setSupportActionBar(restaurant_details_awesome_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
         cafeName = (TextView) findViewById(R.id.restaurant_detail_restaurant_name);
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
@@ -106,6 +105,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         been_here_count = (TextView) findViewById(R.id.been_here_Count);
 
         restaurant_call_now = (LinearLayout) findViewById(R.id.restaurant_call_now_button);
+        follow_button_layout = (LinearLayout) findViewById(R.id.follow_button_layout);
+        bookmark_button_layout = (LinearLayout) findViewById(R.id.bookmark_button_layout);
+        bookmark_button_text=(TextView)findViewById(R.id.bookmark_button_text);
+        follow_button_text=(TextView)findViewById(R.id.follow_button_text);
 
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
         callNow = (FloatingActionButton) findViewById(R.id.material_design_floating_action_call_now);
@@ -143,32 +146,70 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             }
         });
 
-
-        callNow.setOnClickListener(new View.OnClickListener() {
+        bookmark_button_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +restaurant.getNumbers()));
-                if ( ContextCompat.checkSelfPermission( RestaurantDetailActivity.this, Manifest.permission.CALL_PHONE ) != PackageManager.PERMISSION_GRANTED ) {
-                    return;
+                if(bookmark_button_text.getText().toString().equals("  Bookmark")){
+                    bookmark_button_text.setText("Bookmarked");
+                }else {
+                    bookmark_button_text.setText("  Bookmark");
                 }
-                startActivity(intent);
-            }
-        });
-
-        like.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu second item clicked
                 GenericRoutes.Like(restaurantID,"restaurant");
             }
         });
 
-        follow.setOnClickListener(new View.OnClickListener() {
+        follow_button_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                //TODO something when floating action menu third item clicked
+                if(follow_button_text.getText().toString().equals("   Follow")) {
+                    follow_button_text.setText("Unfollow");
+                }else {
+                    follow_button_text.setText("   Follow");
+                }
                 GenericRoutes.FollowRestaurant(restaurantID);
+
             }
         });
 
+
+//        callNow.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //TODO something when floating action menu first item clicked
+//                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +restaurant.getNumbers()));
+//                if ( ContextCompat.checkSelfPermission( RestaurantDetailActivity.this, Manifest.permission.CALL_PHONE ) != PackageManager.PERMISSION_GRANTED ) {
+//                    return;
+//                }
+//                startActivity(intent);
+//            }
+//        });
+//
+//        like.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //TODO something when floating action menu second item clicked
+//                GenericRoutes.Like(restaurantID,"restaurant");
+//            }
+//        });
+//
+//        follow.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //TODO something when floating action menu third item clicked
+//                GenericRoutes.FollowRestaurant(restaurantID);
+//            }
+//        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     void SetValues() {
@@ -212,6 +253,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -219,8 +261,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         adapter.clearAll();
         viewPager.setAdapter(null);
         adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new AccountReviewsFragment(restaurantID), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(restaurantID), "Photos");
+        adapter.addFragment(new RestaurantReviewsFragment(restaurantID), "Reviews");
+        adapter.addFragment(new RestaurantPhotosFragment(restaurantID), "Photos");
         adapter.addFragment(new StickyHeaderFragment(), "Menu");
         viewPager.setAdapter(adapter);
     }
@@ -366,7 +408,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     for (int r = 0; r < jsonDataReviewsArray.length();r++) {
 
                                         JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-                                        ReviewModel reviewModel=new ReviewModel();
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+                                        ReviewModel reviewModel=realm.createObject(ReviewModel.class);
 
                                         reviewModel.setReview_ID(reviewObj.getInt("id"));
                                         reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
@@ -390,8 +434,39 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                         reviewModel.setReview_comments_count(reviewCommentsArray.length());
                                         reviewModel.setReview_shares_count(reviewShareArray.length());
 
-                                        final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
 
+
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for (int c = 0; c < reviewCommentsArray.length(); c++) {
+
+                                            JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+
+                                            Comment comment=realm.createObject(Comment.class);
+
+                                            comment.setCommentID(commentObj.getInt("id"));
+                                            comment.setCommentTitle(commentObj.getString("title"));
+                                            comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                            comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                            JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                            comment.setCommentatorID(commentatorObj.getInt("id"));
+                                            comment.setCommentatorName(commentatorObj.getString("name"));
+                                            comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                            JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                            comment.setCommentLikesCount(commentLikeArray.length());
+
+                                            final Comment managedComment = realm.copyToRealm(comment);
+                                            reviewModel.getCommentRealmList().add(managedComment);
+                                        }
+
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
                                         realmRestaurant.getReviewModels().add(managedReviewModel);
 
                                     }
@@ -439,8 +514,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                                 foodsCategory.setId(foodCategory.getInt("id"));
                                                 foodsCategory.setCategoryName(foodCategory.getString("name"));
 
-                                                Log.e("ID", "" + foodsCategory.getId());
-                                                Log.e("Name", "" + foodsCategory.getCategoryName());
+//                                                Log.e("ID", "" + foodsCategory.getId());
+//                                                Log.e("Name", "" + foodsCategory.getCategoryName());
 //                                            // Persist unmanaged objects
                                                 final FoodsCategory managedFoodsCategory = realm.copyToRealm(foodsCategory);
                                                 foodItems.getFoodsCategories().add(managedFoodsCategory);

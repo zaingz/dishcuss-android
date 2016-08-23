@@ -183,37 +183,35 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:visibility="gone"
             android:layout_marginBottom="5dp">
 
             <LinearLayout
+                android:id="@+id/follow_button_layout"
                 android:layout_marginRight="10dp"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:orientation="horizontal"
-                android:background="@drawable/button_with_light_bg">
+                android:background="@drawable/feature_button_corner">
 
                 <TextView
-                    android:layout_marginRight="8dp"
+                    android:id="@+id/follow_button_text"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textColor="@color/black_2"
-                    android:text="Been Here"/>
+                    android:textSize="15dp"
+                    android:layout_marginLeft="12dp"
+                    android:textColor="#FFF"
+                    android:text="   Follow"
+                    />
 
-                <ImageView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/explore_image_count"/>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginLeft="5dp"
+                android:id="@+id/bookmark_button_layout"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
                 android:paddingLeft="10dp"
@@ -221,16 +219,16 @@
                 android:orientation="horizontal"
                 android:background="@drawable/button_with_light_bg">
 
-
-
                 <TextView
+                    android:id="@+id/bookmark_button_text"
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
+                    android:textSize="12dp"
                     android:textColor="@color/black_2"
-                    android:text="Bookmark"/>
+                    android:text="  Bookmark"/>
 
             </LinearLayout>
 

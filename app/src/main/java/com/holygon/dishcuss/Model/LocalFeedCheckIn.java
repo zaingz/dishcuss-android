@@ -35,9 +35,18 @@ public class LocalFeedCheckIn extends RealmObject{
     int reviewCommentCount;
     int reviewSharesCount;
 
+    RealmList<Comment> commentRealmList;
 
     public LocalFeedCheckIn() {
 
+    }
+
+    public RealmList<Comment> getCommentRealmList() {
+        return commentRealmList;
+    }
+
+    public void setCommentRealmList(RealmList<Comment> commentRealmList) {
+        this.commentRealmList = commentRealmList;
     }
 
     public int getCheckInID() {

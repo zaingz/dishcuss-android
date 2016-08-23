@@ -26,7 +26,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/account_follower_profile_image"
+                    android:id="@+id/user_profile_follower_profile_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/bg_intro"
@@ -34,16 +34,16 @@
                     app:civ_border_color="#FF000000"/>
 
                 <LinearLayout
-                    android:id="@+id/account_follower_user_followers_layout"
+                    android:id="@+id/user_profile_follower_user_followers_layout"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/account_follower_profile_image"
+                    android:layout_toRightOf="@id/user_profile_follower_profile_image"
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/account_follower_user_name"
+                        android:id="@+id/user_profile_follower_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sikander Ali"
@@ -57,7 +57,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/account_follower_user_followers"
+                            android:id="@+id/user_profile_follower_user_followers_count"
                             android:layout_width="wrap_content"
                             android:text="123"
                             android:layout_height="wrap_content" />
@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginTop="1dp"
-                    android:layout_below="@id/account_follower_user_followers_layout"
+                    android:layout_below="@id/user_profile_follower_user_followers_layout"
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal">
 

@@ -28,7 +28,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/account_main_profile_image"
+                    android:id="@+id/user_profile_image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:src="@drawable/bg_intro"
@@ -40,12 +40,12 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/account_main_profile_image"
+                    android:layout_toRightOf="@id/user_profile_image"
                     android:orientation="vertical">
 
                     <TextView
 
-                        android:id="@+id/account_main_user_name"
+                        android:id="@+id/user_profile_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sikander Ali"
@@ -64,7 +64,7 @@
                             android:background="@drawable/location_marker"/>
 
                         <TextView
-                            android:id="@+id/account_main_user_location"
+                            android:id="@+id/user_profile_user_location"
                             android:layout_width="wrap_content"
                             android:text="Lahore"
                             android:textColor="@color/black_3"
@@ -80,7 +80,7 @@
                         android:orientation="horizontal">
 
                         <RatingBar
-                            android:id="@+id/ratingBar"
+                            android:id="@+id/user_profile_ratingBar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:numStars="5"
@@ -89,7 +89,7 @@
                             style="?android:attr/ratingBarStyleSmall"/>
 
                         <TextView
-                            android:id="@+id/account_main_user_ratting"
+                            android:id="@+id/user_profile_user_ratting"
                             android:layout_width="wrap_content"
                             android:text="Big Foodie"
                             android:textColor="@color/black_3"
@@ -137,6 +137,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/user_profile_review_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1211"
@@ -168,6 +169,7 @@
 
 
                 <TextView
+                    android:id="@+id/user_profile_followers_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="222"
@@ -197,6 +199,7 @@
 
 
                 <TextView
+                    android:id="@+id/user_profile_comments_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1231"

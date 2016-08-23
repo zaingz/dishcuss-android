@@ -90,6 +90,7 @@
         fab:menu_shadowRadius="4dp"
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="4dp"
+        android:visibility="gone"
         fab:menu_showShadow="true">
 
         <com.github.clans.fab.FloatingActionButton

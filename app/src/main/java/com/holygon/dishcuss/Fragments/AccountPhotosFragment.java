@@ -5,17 +5,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.holygon.dishcuss.Adapters.AccountBeenThereAdapter;
-import com.holygon.dishcuss.Adapters.AccountPhotosAdapter;
+import com.holygon.dishcuss.Adapters.PhotosAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
- * Created by Naeem Ibrahim on 7/25/2016.
+ * Created by Naeem Ibrahim on 8/17/2016.
  */
 public class AccountPhotosFragment extends Fragment {
 
@@ -33,10 +31,10 @@ public class AccountPhotosFragment extends Fragment {
     RecyclerView nearbySearchRecyclerView;
     private GridLayoutManager gridLayout;
     ArrayList<String> itemsData = new ArrayList<>();
-    int restaurantID;
+    int userID;
 
-    public AccountPhotosFragment(int restaurantID) {
-        this.restaurantID=restaurantID;
+    public AccountPhotosFragment(int userID) {
+        this.userID =userID;
     }
 
     @Override
@@ -59,7 +57,7 @@ public class AccountPhotosFragment extends Fragment {
         SetImageURL();
 
         nearbySearchRecyclerView.setNestedScrollingEnabled(false);
-        AccountPhotosAdapter adapter = new AccountPhotosAdapter(itemsData,getActivity());
+        PhotosAdapter adapter = new PhotosAdapter(itemsData,getActivity());
         nearbySearchRecyclerView.setAdapter(adapter);
 
 
@@ -70,25 +68,17 @@ public class AccountPhotosFragment extends Fragment {
     void SetImageURL(){
 
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", userID).findAll();
         realm.beginTransaction();
-        RealmList<FoodItems> foodItems =restaurants.get(0).getFoodItemsArrayList();
-//        Log.e("FoodItems : ",""+foodItems.size());
-        for(int i=0;i<foodItems.size();i++){
 
-            RealmList<PhotoModel> photoModels=foodItems.get(i).getPhotoModels();
-
-//            Log.e("photoModels : ",""+photoModels.size());
+        RealmList<PhotoModel> photoModels=userProfiles.get(0).getPhotoModelRealmList();
 
             for (int j=0;j<photoModels.size();j++){
-//                Log.e("Photo ID : ",""+photoModels.get(j).getId());
-//                Log.e("Photo URL : ",""+photoModels.get(j).getUrl());
                 itemsData.add(photoModels.get(j).getUrl());
             }
-        }
-
         realm.commitTransaction();
         realm.close();
 
     }
+
 }

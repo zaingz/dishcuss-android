@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -115,6 +116,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         client = new OkHttpClient();
         userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
         imageView= (ImageView) findViewById(R.id.imageView_pic_upload_write_reviewer);
@@ -147,6 +149,20 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
 
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
             = new AdapterView.OnItemClickListener() {
         @Override

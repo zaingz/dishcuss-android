@@ -22,17 +22,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Activities.SearchBarActivity;
+import com.holygon.dishcuss.Activities.NotificationActivity;
+import com.holygon.dishcuss.Activities.PunditSelectionActivity;
+import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter1;
 import com.holygon.dishcuss.Adapters.HomeMyFeedsAdapter1;
+import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.MyFeeds;
+import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -55,6 +60,8 @@ import okhttp3.Response;
  * Created by Naeem Ibrahim on 7/21/2016.
  */
 public class HomeFragment extends Fragment {
+
+    BadgeView badge;
     Realm realm;
     private ViewPager viewPager;
     AppCompatActivity activity;
@@ -70,6 +77,7 @@ public class HomeFragment extends Fragment {
     private List<ImageView> dots;
     HomeMyFeedsAdapter1 homeMyFeedsAdapter1;
     HomeLocalFeedsAdapter1 homeLocalFeedsAdapter1;
+
 
     ImageView home_fragment_image_search;
 
@@ -190,7 +198,33 @@ public class HomeFragment extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SearchBarActivity.class);
+                Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
+//        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
+        badge = new BadgeView(getActivity(), target);
+        Notifications();
+
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NotificationActivity.notificationsArrayList.size()>0) {
+                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
+        LinearLayout pundit_linear_layout=(LinearLayout) rootView.findViewById(R.id.pundit_linear_layout);
+
+        pundit_linear_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PunditSelectionActivity.class);
                 startActivity(intent);
             }
         });
@@ -252,7 +286,6 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i < NUM_PAGES; i++) {
             ImageView dot = new ImageView(getActivity());
             dot.setImageDrawable(getResources().getDrawable(R.drawable.pager_dot_not_selected2));
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -269,85 +302,6 @@ public class HomeFragment extends Fragment {
             Drawable drawable = res.getDrawable(drawableId);
             dots.get(i).setImageDrawable(drawable);
         }
-    }
-
-
-    void FetchMyFeedsData(){
-        // Get a Realm instance for this thread
-         realm = Realm.getDefaultInstance();
-        // Persist your data in a transaction
-
-        User user = realm.where(User.class).findFirst();
-        Log.e("",""+user.getToken());
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(URLs.MyFeed_Restaurant_URL)
-                .addHeader("Authorization", "Token token="+user.getToken())
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                String objStr=response.body().string();
-                try {
-                    JSONObject jsonObj = new JSONObject(objStr);
-                    JSONArray jsonDataArray=jsonObj.getJSONArray("users");
-
-                    for (int i = 0; i < jsonDataArray.length(); i++) {
-
-                        JSONObject c = jsonDataArray.getJSONObject(i);
-
-                        MyFeeds myFeeds=new MyFeeds();
-
-                        myFeeds.setId(c.getInt("id"));
-                        myFeeds.setName(c.getString("name"));
-                        myFeeds.setUsername(c.getString("username"));
-                        myFeeds.setAvatarPic(c.getString("avatar"));
-                        myFeeds.setLocation(c.getString("location"));
-                        myFeeds.setFollowing(c.getBoolean("follows"));
-                        myFeeds.setFollowers(c.getInt("followers"));
-
-                        myFeedsArrayList.add(myFeeds);
-                    }
-
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    /** check if activity still exist */
-                    if (getActivity() == null) {
-                        return;
-                    }
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            homeMyFeedsAdapter1 = new HomeMyFeedsAdapter1(myFeedsArrayList,getActivity());
-                            myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter1);
-                        }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                finally
-                {
-
-                }
-            }
-        });
-        realm.close();
-
-
     }
 
     void FeaturedRestaurantData(final View view){
@@ -534,7 +488,9 @@ public class HomeFragment extends Fragment {
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
-                                    localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
+                                    if(!jsonDataReviewObj.isNull("rating")){
+                                        localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
+                                    }
                                     localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
                                     localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
 
@@ -552,6 +508,36 @@ public class HomeFragment extends Fragment {
                                     localFeedReview.setReviewLikesCount(reviewLikesArray.length());
                                     localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
                                     localFeedReview.setReviewSharesCount(reviewShareArray.length());
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedReview.getCommentRealmList().add(managedComment);
+
+                                    }
+
+
 
                                     realm.commitTransaction();
                                     realm.beginTransaction();
@@ -623,6 +609,35 @@ public class HomeFragment extends Fragment {
                                     localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
                                     localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
 
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < checkinCommentsArray.length(); c++) {
+                                        JSONObject commentObj = checkinCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedCheckIn.getCommentRealmList().add(managedComment);
+                                    }
+
                                     realm.commitTransaction();
                                     realm.beginTransaction();
                                     localFeeds.getLocalFeedCheckInRealmList().add(localFeedCheckIn);
@@ -641,6 +656,174 @@ public class HomeFragment extends Fragment {
                 });
             }
         });
+    }
+
+
+    void FetchMyFeedsData(){
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+        Log.e("UserT",""+user.getToken());
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.MyFeed_Restaurant_URL)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                Log.e("ObjStr",""+objStr);
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+                    JSONArray jsonDataArray=jsonObj.getJSONArray("users");
+
+                    for (int i = 0; i < jsonDataArray.length(); i++) {
+
+                        JSONObject c = jsonDataArray.getJSONObject(i);
+
+                        MyFeeds myFeeds=new MyFeeds();
+
+                        myFeeds.setId(c.getInt("id"));
+                        myFeeds.setName(c.getString("name"));
+                        myFeeds.setUsername(c.getString("username"));
+                        myFeeds.setAvatarPic(c.getString("avatar"));
+                        myFeeds.setLocation(c.getString("location"));
+                        myFeeds.setFollowing(c.getBoolean("follows"));
+                        myFeeds.setFollowers(c.getInt("followers"));
+
+                        myFeedsArrayList.add(myFeeds);
+                    }
+
+                    try
+                    {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    /** check if activity still exist */
+                    if (getActivity() == null) {
+                        return;
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            homeMyFeedsAdapter1 = new HomeMyFeedsAdapter1(myFeedsArrayList,getActivity());
+                            myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter1);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                finally
+                {
+
+                }
+            }
+        });
+        realm.close();
+
+
+    }
+
+
+    void Notifications(){
+
+        NotificationActivity.notificationsArrayList=new ArrayList<>();
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Notification)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+                    JSONArray jsonDataArray=jsonObj.getJSONArray("users");
+
+                    for (int i = 0; i < jsonDataArray.length(); i++) {
+
+                        JSONObject c = jsonDataArray.getJSONObject(i);
+
+                        Notifications notification=new Notifications();
+
+                        notification.setId(c.getInt("id"));
+                        notification.setBody(c.getString("body"));
+
+                        if(!c.isNull("notifier")) {
+
+                            JSONObject notifier = c.getJSONObject("notifier");
+                            notification.setUserID(notifier.getInt("id"));
+                            notification.setUsername(notifier.getString("username"));
+                            notification.setAvatarPic(notifier.getString("avatar"));
+
+                        }
+
+                        NotificationActivity.notificationsArrayList.add(notification);
+                    }
+
+                    try
+                    {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if(getActivity()==null){
+                        return;
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(NotificationActivity.notificationsArrayList.size()>0) {
+                                badge.show(true);
+                                badge.setText("" + NotificationActivity.notificationsArrayList.size());
+                            }else {
+                                badge.hide(true);
+                            }
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                finally
+                {
+
+                }
+            }
+        });
+        realm.close();
+
+
     }
 
     void  Test(){

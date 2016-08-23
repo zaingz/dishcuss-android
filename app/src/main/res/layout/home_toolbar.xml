@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/header_border"
-            android:id="@+id/header">
+            android:id="@+id/pundit_linear_layout">
 
 
             <TextView
@@ -50,23 +50,22 @@
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:id="@+id/image_bell"
+            android:id="@+id/image_bookmark_icon"
+            android:layout_toLeftOf="@id/home_fragment_image_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_bell"
-            android:layout_toLeftOf="@id/home_fragment_image_search"
-            />
+            android:src="@drawable/ic_item"/>
 
         <ImageView
-            android:id="@+id/image_item"
+            android:id="@+id/image_notification"
+            android:layout_toLeftOf="@id/image_bookmark_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_item"
-            android:layout_toLeftOf="@id/image_bell" />
+            android:src="@drawable/ic_bell"/>
 
     </RelativeLayout>
 
