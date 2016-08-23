@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/app_toolbar"
+        android:id="@+id/toolbar"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_money"/>
+
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:text="Pile up your money"
+            android:textSize="22dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:text="Earn PKR 50 for referring your friend"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:text="Share your code"
+            android:textSize="22dp"
+            android:textStyle="bold"/>
+        <Button
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:text="TWSKLSHAKAHA"
+            android:layout_height="wrap_content" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center">
+
+
+            <Button
+                android:id="@+id/facebook_share_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/facebook_icon"/>
+
+            <Button
+                android:id="@+id/twitter_share_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/twitter_icon"/>
+
+            <Button
+                android:id="@+id/whatsApp_share_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/ic_whatsapp"/>
+
+
+            <Button
+                android:id="@+id/all_share_button"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/ic_sharing"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

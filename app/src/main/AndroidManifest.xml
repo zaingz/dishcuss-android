@@ -76,6 +76,12 @@
         <activity
             android:name=".Activities.RestaurantDetailActivity"
             android:theme="@style/MyMaterialTheme" />
+
+
+        <activity
+            android:name=".Activities.GetFreeFoodActivity"
+            android:theme="@style/MyMaterialTheme" />
+
         <activity
             android:name=".Activities.ScanQRCodeActivity"
             android:theme="@style/MyMaterialTheme" />
