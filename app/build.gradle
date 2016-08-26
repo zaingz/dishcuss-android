@@ -65,6 +65,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.0.0'
     compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'com.google.code.gson:gson:2.4'
+    compile 'com.github.nkzawa:socket.io-client:0.5.0'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.google.gms:google-services:2.0.0-beta5@pom'
     compile 'com.facebook.android:facebook-android-sdk:4.+'

@@ -45,7 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sikander Ali"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/colorAccent1"
                     android:textStyle="bold"/>
                 <TextView
                     android:id="@+id/my_feeds_user_review_time"

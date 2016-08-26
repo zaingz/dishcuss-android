@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +29,6 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.holygon.dishcuss.Adapters.PlaceArrayAdapter;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
@@ -53,24 +52,24 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 7/30/2016.
+ * Created by Naeem Ibrahim on 8/24/2016.
  */
-public class SignupActivity extends AppCompatActivity implements
+public class UpdateProfileActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
 
-    LinearLayout back_to_sign_in_layout;
     TextView headerName;
 
-    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender;
+    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender,userDOB;
     AutoCompleteTextView userLocation;
-    String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender;
+    String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender,strUserDOB;
 
     OkHttpClient client;
     LinearLayout signUpLayout;
 
     Realm realm;
+    User user;
     String message="";
 
 
@@ -106,10 +105,14 @@ public class SignupActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.update_user_profile_activity);
         final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         client = new OkHttpClient();
+        realm=Realm.getDefaultInstance();
+        user= realm.where(User.class).findFirst();
         FindViewsByID();
         OnClickItems();
 
@@ -123,22 +126,19 @@ public class SignupActivity extends AppCompatActivity implements
         mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
                 BOUNDS_MOUNTAIN_VIEW, null);
 
-
-
-
-        back_to_sign_in_layout=(LinearLayout)findViewById(R.id.back_to_sign_in_layout);
-        signUpLayout=(LinearLayout)findViewById(R.id.sign_up_layout);
+        signUpLayout=(LinearLayout)findViewById(R.id.update_layout);
         headerName=(TextView)findViewById(R.id.app_toolbar_name);
-        headerName.setText("Signup");
-        userFullName=(EditText) findViewById(R.id.edt_user_full_name);
-        userName=(EditText) findViewById(R.id.edt_username);
-        userEmail=(EditText) findViewById(R.id.edt_user_email);
+        headerName.setText("Update Profile");
+        userFullName=(EditText) findViewById(R.id.update_edt_user_full_name);
+        userName=(EditText) findViewById(R.id.update_edt_username);
+        userEmail=(EditText) findViewById(R.id.update_edt_user_email);
+        userDOB=(EditText) findViewById(R.id.update_edt_user_dob);
 
-        userLocation=(AutoCompleteTextView) findViewById(R.id.edt_user_location);
+        userLocation=(AutoCompleteTextView) findViewById(R.id.update_edt_user_location);
 
-        userPassword=(EditText) findViewById(R.id.edt_user_password);
-        userConfirmPassword=(EditText) findViewById(R.id.edt_user_retype_password);
-        userGender=(EditText) findViewById(R.id.edt_user_gender);
+        userPassword=(EditText) findViewById(R.id.update_edt_user_password);
+        userConfirmPassword=(EditText) findViewById(R.id.update_edt_user_retype_password);
+        userGender=(EditText) findViewById(R.id.update_edt_user_gender);
 
 
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
@@ -151,16 +151,22 @@ public class SignupActivity extends AppCompatActivity implements
             userLocation.setText(loc);
         }
 
+
+
+        User user = realm.where(User.class).findFirst();
+
+        userFullName.setText(user.getName());
+        userName.setText(user.getUsername());
+        userEmail.setText(user.getEmail());
+
+        userDOB.setText(""+user.getDob());
+        userLocation.setText(user.getLocation());
+        userGender.setText(user.getGender());
+
     }
 
     void OnClickItems(){
-        back_to_sign_in_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(SignupActivity.this,SignInActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         signUpLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +185,7 @@ public class SignupActivity extends AppCompatActivity implements
         strUserPassword = userPassword.getText().toString().trim();
         strUserConfirmPassword = userConfirmPassword.getText().toString().trim();
         strUserGender = userGender.getText().toString().trim();
+        strUserDOB = userDOB.getText().toString().trim();
         strUserLocation = userLocation.getText().toString().trim();
 
 
@@ -186,9 +193,10 @@ public class SignupActivity extends AppCompatActivity implements
 
             if(!strUserFullName.isEmpty() && !strUserFullName.equals("")){
 
-                if(!strUserEmail.isEmpty() && !strUserEmail.equals("")){
+                if(!strUserFullName.isEmpty() && !strUserFullName.equals("")){
 
-                    if(ValidateEmail(strUserEmail)){
+                    //if(ValidateEmail(strUserEmail))
+                    {
 
                         if(!strUserLocation.isEmpty() && !strUserLocation.equals("")){
 
@@ -204,47 +212,45 @@ public class SignupActivity extends AppCompatActivity implements
 
 
                                         }else {
-                                            Crouton.makeText(SignupActivity.this, "Password not matched", Style.ALERT).show();
+                                            Crouton.makeText(UpdateProfileActivity.this, "Password not matched", Style.ALERT).show();
                                         }
 
 
                                     }else {
-                                        Crouton.makeText(SignupActivity.this, "Confirm your Password", Style.ALERT).show();
+                                        Crouton.makeText(UpdateProfileActivity.this, "Confirm your Password", Style.ALERT).show();
                                     }
 
                                 }else {
-                                    Crouton.makeText(SignupActivity.this, "Enter Password for security", Style.ALERT).show();
+                                    Crouton.makeText(UpdateProfileActivity.this, "Enter Password for security", Style.ALERT).show();
                                 }
 
 
 
                             }else {
-                                Crouton.makeText(SignupActivity.this, "Gender field missing ", Style.ALERT).show();
+                                Crouton.makeText(UpdateProfileActivity.this, "Gender field missing ", Style.ALERT).show();
                             }
 
                         }else {
-                            Crouton.makeText(SignupActivity.this, "Provide your current Location", Style.ALERT).show();
+                            Crouton.makeText(UpdateProfileActivity.this, "Provide your current Location", Style.ALERT).show();
                         }
 
-                    }else {
-                        Crouton.makeText(SignupActivity.this, "Please Provide correct email", Style.ALERT).show();
                     }
 
                 }
                 else
                 {
-                    Crouton.makeText(SignupActivity.this, "Please Provide email", Style.ALERT).show();
+                    Crouton.makeText(UpdateProfileActivity.this, "User Full Name missing", Style.ALERT).show();
                 }
 
             }
             else
             {
-                Crouton.makeText(SignupActivity.this, "User Full Name missing", Style.ALERT).show();
+                Crouton.makeText(UpdateProfileActivity.this, "User Full Name missing", Style.ALERT).show();
             }
         }
         else
         {
-            Crouton.makeText(SignupActivity.this, "User Name missing", Style.ALERT).show();
+            Crouton.makeText(UpdateProfileActivity.this, "User Name missing", Style.ALERT).show();
         }
     }
 
@@ -274,17 +280,16 @@ public class SignupActivity extends AppCompatActivity implements
 
         FormBody body = new FormBody.Builder()
                 .add("user[name]",strUserFullName)
-                .add("user[email]", strUserEmail)
-                .add("user[username]", strUserName)
-                .add("user[avatar]", "")
                 .add("user[location]", strUserLocation)
                 .add("user[gender]", strUserGender)
+                .add("user[dob]", strUserDOB)
                 .add("user[password]", strUserPassword)
                 .build();
 
         Request request = new Request.Builder()
-                .url(URLs.Native_SignUp_URL)
-                .post(body)
+                .url(URLs.UPDATE_PROFILE)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .put(body)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -297,33 +302,27 @@ public class SignupActivity extends AppCompatActivity implements
 
                 try{
                     String obj=response.body().string();
-//                    Log.e("Obj",obj.toString());
+                    Log.e("Obj",obj.toString());
                     JSONObject jsonObject=new JSONObject(obj);
                     if(jsonObject.has("user")){
+
                         JSONObject usersJsonObject = jsonObject.getJSONObject("user");
 //                   // Get a Realm instance for this thread
-                        realm = Realm.getDefaultInstance();
                         // Persist your data in a transaction
-                        realm.beginTransaction();
-                        User user = realm.createObject(User.class); // Create managed objects directly
-                        user.setId(usersJsonObject.getInt("id"));
-                        user.setName(usersJsonObject.getString("name"));
-                        user.setDob(usersJsonObject.getString("date_of_birth"));
-                        user.setLocation(usersJsonObject.getString("location"));
-                        user.setUsername(usersJsonObject.getString("username"));
-                        user.setEmail(usersJsonObject.getString("email"));
-                        user.setGender(usersJsonObject.getString("gender"));
-                        user.setProvider(usersJsonObject.getString("provider"));
-                        user.setToken(usersJsonObject.getString("token"));
-                        user.setReferral_code(usersJsonObject.getString("referral_code"));
-                        realm.commitTransaction();
-                        realm.close();
 
-                        Intent intent=new Intent(SignupActivity.this,HomeActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        Constants.SetUserLoginStatus(SignupActivity.this,true);
+                        Realm realm1=Realm.getDefaultInstance();
+                        User user1 = realm1.where(User.class).equalTo("id", usersJsonObject.getInt("id")).findFirst(); // Create managed objects directly
+//                        User user1=new User();
+                        realm1.beginTransaction();
+                        user1.setName(usersJsonObject.getString("name"));
+                        user1.setDob(usersJsonObject.getString("date_of_birth"));
+                        user1.setLocation(usersJsonObject.getString("location"));
+                        user1.setGender(usersJsonObject.getString("gender"));
+//                        realm.copyToRealmOrUpdate(user1);
+                        realm1.commitTransaction();
+                        realm1.close();
                         finish();
+
                     }
                     else  if(jsonObject.has("message")){
                         message= jsonObject.getString("message");
@@ -339,7 +338,7 @@ public class SignupActivity extends AppCompatActivity implements
         });
 
         if(!message.isEmpty() && !message.equals("")){
-            Crouton.makeText(SignupActivity.this,message, Style.ALERT).show();
+            Crouton.makeText(UpdateProfileActivity.this,message, Style.ALERT).show();
         }
     }
 
@@ -390,7 +389,7 @@ public class SignupActivity extends AppCompatActivity implements
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API).build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(SignupActivity.this)
+        mGoogleApiClient = new GoogleApiClient.Builder(UpdateProfileActivity.this)
                 .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(this, GOOGLE_API_CLIENT_ID, this)
                 .addConnectionCallbacks(this)
@@ -427,4 +426,17 @@ public class SignupActivity extends AppCompatActivity implements
             loc=place.getName().toString();
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

@@ -16,6 +16,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/find_your_buddy_layout"
             android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
             android:background="#dcdcdc"/>
 
         <LinearLayout
+            android:id="@+id/khaba_history_layout"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,6 +76,7 @@
             android:background="#dcdcdc"/>
 
         <LinearLayout
+            android:id="@+id/my_wallet_layout"
             android:layout_marginTop="7dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -103,6 +106,7 @@
 
 
         <LinearLayout
+            android:id="@+id/offers_layout"
             android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,11 +166,11 @@
             android:background="#dcdcdc"/>
 
         <LinearLayout
+            android:id="@+id/update_user_profile"
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
 
             <ImageView
                 android:layout_width="50dp"
@@ -191,6 +195,7 @@
             android:background="#dcdcdc"/>
 
         <LinearLayout
+            android:id="@+id/sign_out_user_layout"
             android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

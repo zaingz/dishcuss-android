@@ -35,7 +35,6 @@ import okhttp3.Response;
  */
 public class SignInActivity extends AppCompatActivity {
 
-
     LinearLayout create_new_account_layout;
     TextView headerName;
 
@@ -156,6 +155,7 @@ public class SignInActivity extends AppCompatActivity {
                         realm.close();
 
                         Intent intent=new Intent(SignInActivity.this,HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         Constants.SetUserLoginStatus(SignInActivity.this,true);
                         finish();

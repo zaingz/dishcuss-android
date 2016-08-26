@@ -58,6 +58,7 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
             camera = null;
         }
 
+        QrScanners();
     }
 
     @Override
@@ -66,6 +67,16 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
     }
 
     public void QrScanner(View view){
+
+
+        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+        setContentView(mScannerView);
+
+        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+        mScannerView.startCamera();         // Start camera
+    }
+
+    void QrScanners(){
 
 
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view

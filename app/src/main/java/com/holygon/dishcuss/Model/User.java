@@ -14,6 +14,8 @@ public class User extends RealmObject{
     String email;
     String avatar;
     String gender;
+    String dob;
+    String location;
     String provider;
     String token;
     String referral_code;
@@ -21,6 +23,22 @@ public class User extends RealmObject{
     public User() {
     }
 
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
 
     public String getAvatar() {
         return avatar;

@@ -96,6 +96,8 @@ public class LoginActivity extends AppCompatActivity implements
 //    TwitterLoginButton twitterLogin;
     TwitterAuthClient mTwitterAuthClient;
 
+    boolean isFacebookCalled=false;
+
 
     Button nativeLoginButton;
     private ViewPager viewPager;
@@ -175,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 LoginManager.getInstance().logInWithReadPermissions(
                         LoginActivity.this,
-                        Arrays.asList("email", "public_profile"));
+                        Arrays.asList("email", "public_profile", "user_friends","user_location"));
                 fbButton.performClick();
                 fbButton.setPressed(true);
                 fbButton.invalidate();
@@ -184,9 +186,9 @@ public class LoginActivity extends AppCompatActivity implements
                 fbButton.invalidate();
             }
         });
-        fbButton.setReadPermissions("email");
-        fbButton.setReadPermissions(Arrays.asList("user_location"));
-        fbButton.setReadPermissions("public_profile", "email", "user_friends","user_location");
+//        fbButton.setReadPermissions("email");
+//        fbButton.setReadPermissions(Arrays.asList("user_location"));
+//        fbButton.setReadPermissions("public_profile", "email", "user_friends","user_location");
 
 
         //Google Login
@@ -320,11 +322,15 @@ public class LoginActivity extends AppCompatActivity implements
                                 provider="Facebook";
                                 profileURL="https://www.facebook.com/app_scoped_user_id/"+uid+"/";
                                 token=loginResult.getAccessToken().getToken();
+//                                token="Facebook"+uid;
+                                Log.e("Token ",""+token.length());
                                 gender=object.getString("gender").toString();
                                 expires_at="";
 
-
-                                SocialLoginSendDataOnServer();
+                                if(!isFacebookCalled){
+                                    SocialLoginSendDataOnServer();
+                                    isFacebookCalled=true;
+                                }
 
 //                                String imageUrl = "https://graph.facebook.com/"+ loginUser.loginID +"/picture?type=large";
                             } catch (Exception e) {
@@ -586,7 +592,6 @@ public class LoginActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 Intent intent=new Intent(LoginActivity.this, SignInActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }
@@ -634,6 +639,8 @@ public class LoginActivity extends AppCompatActivity implements
                         com.holygon.dishcuss.Model.User user = realm.createObject(com.holygon.dishcuss.Model.User.class); // Create managed objects directly
                         user.setId(usersJsonObject.getInt("id"));
                         user.setName(usersJsonObject.getString("name"));
+                        user.setDob(usersJsonObject.getString("date_of_birth"));
+                        user.setLocation(usersJsonObject.getString("location"));
                         user.setUsername(usersJsonObject.getString("username"));
                         user.setEmail(usersJsonObject.getString("email"));
                         user.setGender(usersJsonObject.getString("gender"));

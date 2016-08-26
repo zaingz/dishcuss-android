@@ -75,6 +75,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.notifierName.setText(notificationsArrayList.get(position).getUsername());
+
+//        if(notificationsArrayList.get(position).getUsername().isEmpty()) {
+//            holder.notifierName.setVisibility(View.GONE);
+//        }
         holder.body.setText(notificationsArrayList.get(position).getBody());
 
         Constants.PicassoImageBackground(notificationsArrayList.get(position).getAvatarPic(),holder.userAvatar,context);

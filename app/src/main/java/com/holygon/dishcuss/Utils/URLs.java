@@ -8,6 +8,8 @@ public class URLs {
     public static String Native_SignUp_URL="http://dishcuss-api.herokuapp.com/user/signup";
     public static String Native_SignIn_URL="http://dishcuss-api.herokuapp.com/user/signin";
 
+    public static String UPDATE_PROFILE="http://dishcuss-api.herokuapp.com/user";
+
     public static String Featured_Restaurant_URL="http://dishcuss-api.herokuapp.com/restaurants/featured";
     public static String MyFeed_Restaurant_URL="http://dishcuss-api.herokuapp.com//user/localfeed";
     public static String LocalFeeds_Restaurant_URL="http://dishcuss-api.herokuapp.com/user/newsfeed";
@@ -43,10 +45,20 @@ public class URLs {
     public static String Get_User_data="http://dishcuss-api.herokuapp.com/user/social/";
 
     //Notification
-
     public static String Get_Notification="http://dishcuss-api.herokuapp.com/user/notifications";
 
     //QR
     public static String QR="http://dishcuss-api.herokuapp.com/user/claim_credit";
+
+    //SignOUt
+    public static String SIGN_OUT="http://dishcuss-api.herokuapp.com/user/signout";
+
+    //Offers
+    public static String USER_OFFER="http://dishcuss-api.herokuapp.com/offers";
+    //Khaba_history
+    public static String KHABA_HISTORY_="http://dishcuss-api.herokuapp.com/user/khaba_history";
+
+    //My Wallet
+    public static String CREDITS="http://dishcuss-api.herokuapp.com/user/credits";
 
 }

@@ -1,21 +1,14 @@
 package com.holygon.dishcuss.Activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.holygon.dishcuss.Chat.ChatScreenActivity;
 import com.holygon.dishcuss.R;
-
-import java.io.File;
 
 /**
  * Created by Naeem Ibrahim on 8/23/2016.
@@ -29,6 +22,7 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         setContentView(R.layout.get_free_food);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
         header.setText("Get Free Food");
 
@@ -65,7 +59,6 @@ public class GetFreeFoodActivity extends AppCompatActivity {
                 share.setPackage("com.twitter.android");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(share, "Share"));
-
             }
         });
 

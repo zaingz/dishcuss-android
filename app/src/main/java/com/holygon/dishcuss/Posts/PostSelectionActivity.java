@@ -60,8 +60,8 @@ public class PostSelectionActivity extends Activity {
         CheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,ScanQRCodeActivity.class);
-//                intent.putExtra("PostCategory",CheckInPostActivity.CheckIn);
+                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                intent.putExtra("PostCategory",CheckInPostActivity.CheckIn);
                 startActivity(intent);
                 finish();
             }

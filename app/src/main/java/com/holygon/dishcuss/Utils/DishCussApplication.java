@@ -11,12 +11,15 @@ import android.widget.Button;
 import com.facebook.FacebookSdk;
 import com.facebook.login.widget.LoginButton;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
+import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -32,6 +35,21 @@ public class DishCussApplication extends Application {
 
 
     private static DishCussApplication mInstance;
+
+
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://192.168.10.3:8080/");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Socket getSocket() {
+        return mSocket;
+    }
 
 
     @Override

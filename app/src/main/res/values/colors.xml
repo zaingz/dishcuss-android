@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#e4770a</color>
     <color name="colorPrimaryDark">#FFE4770A</color>
-    <color name="colorAccent">#FFE4770A</color>
+    <color name="colorAccent">#c37626</color>
+    <color name="colorAccent1">#FFE4770A</color>
     <color name="textColorPrimary">#000</color>
     <color name="windowBackground">#000</color>
     <color name="navigationBarColor">#000000</color>

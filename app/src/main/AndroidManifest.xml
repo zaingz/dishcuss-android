@@ -77,6 +77,9 @@
             android:name=".Activities.RestaurantDetailActivity"
             android:theme="@style/MyMaterialTheme" />
 
+        <activity
+            android:name=".Activities.UpdateProfileActivity"
+            android:theme="@style/MyMaterialTheme" />
 
         <activity
             android:name=".Activities.GetFreeFoodActivity"
@@ -88,6 +91,22 @@
 
         <activity
             android:name=".Activities.ProfilesDetailActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.UserOffersActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.FindYourEatBuddiesActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.KhabaHistoryActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.MyWalletActivity"
             android:theme="@style/MyMaterialTheme" />
 
         <activity
