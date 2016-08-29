@@ -71,6 +71,7 @@
                         <EditText
                             android:id="@+id/update_edt_username"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Naeem057"
                             android:clickable="false"
                             android:cursorVisible="false"
@@ -98,6 +99,7 @@
                         <EditText
                             android:id="@+id/update_edt_user_full_name"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Naeem Ibrahim"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -122,6 +124,7 @@
                         <EditText
                             android:id="@+id/update_edt_user_email"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="4343969@gmail.com"
                             android:clickable="false"
                             android:cursorVisible="false"
@@ -151,6 +154,7 @@
                         <EditText
                             android:id="@+id/update_edt_user_dob"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="12-12-2002"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -174,6 +178,7 @@
                         <AutoCompleteTextView
                             android:id="@+id/update_edt_user_location"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Lahore, Pakistan"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -197,6 +202,7 @@
                         <EditText
                             android:id="@+id/update_edt_user_gender"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="male"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -222,6 +228,7 @@
                             android:id="@+id/update_edt_user_password"
                             android:layout_width="match_parent"
                             android:inputType="textPassword"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Password"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />
@@ -246,6 +253,7 @@
                             android:layout_width="match_parent"
                             android:inputType="textPassword"
                             android:hint="Re-type Password"
+                            android:textColorHint="@color/hint_color"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />
 

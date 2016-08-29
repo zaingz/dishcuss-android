@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,13 +14,14 @@ import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Fragments.ProfileFragment;
 import com.holygon.dishcuss.Fragments.ExploreFragment;
-import com.holygon.dishcuss.Fragments.HomeFragment;
 import com.holygon.dishcuss.Fragments.NearbyFragment;
 import com.holygon.dishcuss.Posts.PostSelectionActivity;
 import com.holygon.dishcuss.R;
@@ -62,6 +64,37 @@ public class HomeActivity extends RuntimePermissionsActivity {
 
     }
 
+
+
+    private boolean doubleBackToExitPressedOnce;
+    private Handler mHandler = new Handler();
+
+    private final Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            doubleBackToExitPressedOnce = false;
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mHandler != null) { mHandler.removeCallbacks(mRunnable); }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+
+        mHandler.postDelayed(mRunnable, 2000);
+    }
+
     /**
      * Init UI
      */
@@ -80,10 +113,11 @@ public class HomeActivity extends RuntimePermissionsActivity {
         bottomNavigation.setBackgroundColor (Color.BLACK);
 
 
-        currentFragment = new HomeFragment();
+        currentFragment = new HomeFragment2();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container_body, currentFragment);
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
@@ -162,7 +196,7 @@ public class HomeActivity extends RuntimePermissionsActivity {
 
                 switch(position) {
                     case 0:
-                        currentFragment=new HomeFragment();
+                        currentFragment=new HomeFragment2();
                         break;
                     case 1:
                         currentFragment=new NearbyFragment();
@@ -178,13 +212,13 @@ public class HomeActivity extends RuntimePermissionsActivity {
                         break;
                     default:
                         //currentFragment=new NearbyFragment();
-
                 }
 
                 if (currentFragment  != null) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.container_body, currentFragment);
+//                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
                 return true;

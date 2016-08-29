@@ -27,16 +27,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Dish Cuss"
+                android:text=" Dishcuss"
                 android:textColor="@color/colorAccent"
                 android:textSize="17dp"/>
 
         </LinearLayout>
 
         <ImageView
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:layout_height="100dp"/>
-
+            android:layout_height="70dp"
+            android:src="@drawable/dishcuss_icon"
+            android:layout_marginBottom="20dp"/>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -71,6 +73,7 @@
                         <EditText
                             android:id="@+id/edt_username"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Naeem057"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -95,6 +98,7 @@
                         <EditText
                             android:id="@+id/edt_user_full_name"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Naeem Ibrahim"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -119,6 +123,7 @@
                         <EditText
                             android:id="@+id/edt_user_email"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="4343969@gmail.com"
                             android:inputType="textEmailAddress"
                             android:textColor="@color/colorAccent"
@@ -143,6 +148,7 @@
                         <AutoCompleteTextView
                             android:id="@+id/edt_user_location"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="Lahore, Pakistan"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -166,6 +172,7 @@
                         <EditText
                             android:id="@+id/edt_user_gender"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:hint="male"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
@@ -190,6 +197,7 @@
                         <EditText
                             android:id="@+id/edt_user_password"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:inputType="textPassword"
                             android:hint="Password"
                             android:textColor="@color/colorAccent"
@@ -213,6 +221,7 @@
                         <EditText
                             android:id="@+id/edt_user_retype_password"
                             android:layout_width="match_parent"
+                            android:textColorHint="@color/hint_color"
                             android:inputType="textPassword"
                             android:hint="Re-type Password"
                             android:textColor="@color/colorAccent"

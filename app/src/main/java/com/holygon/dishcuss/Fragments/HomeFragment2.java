@@ -57,9 +57,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 7/21/2016.
+ * Created by Naeem Ibrahim on 8/29/2016.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment2 extends Fragment {
 
     BadgeView badge;
     Realm realm;
@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.home_fragment2, container, false);
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
@@ -123,7 +123,7 @@ public class HomeFragment extends Fragment {
 //        for (int i = 0; i < 50; i++) {
 //            itemsData.add("Local Feeds " + i + " / Item " + i);
 //        }
-        localFeedsRecyclerView.setNestedScrollingEnabled(false);
+//        localFeedsRecyclerView.setNestedScrollingEnabled(false);
 //        homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(emptyLocalFeeds,getActivity());
 //        localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
         FetchLocalFeedsData();
@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
         //My Feed
         myFeedsLayoutManager = new LinearLayoutManager(activity);
         myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
-        localFeedsRecyclerView.setNestedScrollingEnabled(true);
+//        localFeedsRecyclerView.setNestedScrollingEnabled(true);
         myFeedsArrayList=new ArrayList<>();
         homeMyFeedsAdapter = new HomeMyFeedsAdapter(myFeedsArrayList,getActivity());
         myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
@@ -155,7 +155,7 @@ public class HomeFragment extends Fragment {
         local_feeds_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                local_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                local_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
                 my_feeds_layout.setBackgroundColor(Color.WHITE);
                 local_feeds_text.setTextColor(Color.WHITE);
                 my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
@@ -168,7 +168,7 @@ public class HomeFragment extends Fragment {
         my_feeds_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                my_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                my_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
                 local_feeds_layout.setBackgroundColor(Color.WHITE);
                 my_feeds_text.setTextColor(Color.WHITE);
                 local_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
@@ -332,73 +332,73 @@ public class HomeFragment extends Fragment {
                 if (getActivity() == null) {
                     return;
                 }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
 
-                                JSONObject jsonObj = new JSONObject(objStr);
-                                JSONArray jsonDataArray=jsonObj.getJSONArray("restaurants");
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray=jsonObj.getJSONArray("restaurants");
 
-                                realm =Realm.getDefaultInstance();
+                            realm =Realm.getDefaultInstance();
 
 
 
-                                for (int i = 0; i < jsonDataArray.length(); i++) {
-                                    JSONObject featureRestaurantObj = jsonDataArray.getJSONObject(i);
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+                                JSONObject featureRestaurantObj = jsonDataArray.getJSONObject(i);
 
-                                    dataAlreadyExists=false;
+                                dataAlreadyExists=false;
 
-                                    for(int r=0;r<featuredRestaurantRealmResults.size();r++){
+                                for(int r=0;r<featuredRestaurantRealmResults.size();r++){
 
-                                        if(featuredRestaurantRealmResults.get(i).getId()==featureRestaurantObj.getInt("id")){
-                                            dataAlreadyExists=true;
-                                        }
-                                    }
-
-                                    if(!dataAlreadyExists){
-
-                                        realm.beginTransaction();
-                                        FeaturedRestaurant featuredRestaurant=realm.createObject(FeaturedRestaurant.class);
-                                        featuredRestaurant.setId(featureRestaurantObj.getInt("id"));
-                                        featuredRestaurant.setName(featureRestaurantObj.getString("name"));
-                                        featuredRestaurant.setLocation(featureRestaurantObj.getString("location"));
-
-                                        JSONObject featureRestaurantCoverImage = featureRestaurantObj.getJSONObject("cover_image");
-
-                                        featuredRestaurant.setCover_image_id(featureRestaurantCoverImage.getInt("id"));
-
-                                        JSONObject CoverImage = featureRestaurantCoverImage.getJSONObject("image");
-                                        JSONObject CoverImageURL = CoverImage.getJSONObject("image");
-
-                                        featuredRestaurant.setCover_image_url(CoverImageURL.getString("url"));
-
-                                        JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
-
-                                        featuredRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
-
-                                        JSONObject featureRestaurantOwner = featureRestaurantObj.getJSONObject("owner");
-
-                                        featuredRestaurant.setOwnerID(featureRestaurantOwner.getInt("id"));
-
-                                        Log.e("Loop","Loop"+i);
-                                        featuredRestaurantArrayList.add(featuredRestaurant);
-                                        realm.commitTransaction();
+                                    if(featuredRestaurantRealmResults.get(i).getId()==featureRestaurantObj.getInt("id")){
+                                        dataAlreadyExists=true;
                                     }
                                 }
 
-                            }catch (JSONException e) {
-                                e.printStackTrace();
+                                if(!dataAlreadyExists){
+
+                                    realm.beginTransaction();
+                                    FeaturedRestaurant featuredRestaurant=realm.createObject(FeaturedRestaurant.class);
+                                    featuredRestaurant.setId(featureRestaurantObj.getInt("id"));
+                                    featuredRestaurant.setName(featureRestaurantObj.getString("name"));
+                                    featuredRestaurant.setLocation(featureRestaurantObj.getString("location"));
+
+                                    JSONObject featureRestaurantCoverImage = featureRestaurantObj.getJSONObject("cover_image");
+
+                                    featuredRestaurant.setCover_image_id(featureRestaurantCoverImage.getInt("id"));
+
+                                    JSONObject CoverImage = featureRestaurantCoverImage.getJSONObject("image");
+                                    JSONObject CoverImageURL = CoverImage.getJSONObject("image");
+
+                                    featuredRestaurant.setCover_image_url(CoverImageURL.getString("url"));
+
+                                    JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
+
+                                    featuredRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
+
+                                    JSONObject featureRestaurantOwner = featureRestaurantObj.getJSONObject("owner");
+
+                                    featuredRestaurant.setOwnerID(featureRestaurantOwner.getInt("id"));
+
+                                    Log.e("Loop","Loop"+i);
+                                    featuredRestaurantArrayList.add(featuredRestaurant);
+                                    realm.commitTransaction();
+                                }
                             }
-                            realm.close();
+
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        realm.close();
 //                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
 
-                            NUM_PAGES=featuredRestaurantArrayList.size();
-                            addDots(view);
-                            setupViewPager(viewPager,featuredRestaurantArrayList);
-                            selectDot(0);
-                        }
-                    });
+                        NUM_PAGES=featuredRestaurantArrayList.size();
+                        addDots(view);
+                        setupViewPager(viewPager,featuredRestaurantArrayList);
+                        selectDot(0);
+                    }
+                });
             }
         });
     }
@@ -456,7 +456,7 @@ public class HomeFragment extends Fragment {
                             JSONArray jsonDataReviewsArray=jsonObj.getJSONArray("review");
                             JSONArray jsonDataCheckInArray=jsonObj.getJSONArray("checkin");
 
-                        //    realm =Realm.getDefaultInstance();
+                            //    realm =Realm.getDefaultInstance();
 
 
                             realm.beginTransaction();
@@ -824,32 +824,5 @@ public class HomeFragment extends Fragment {
         realm.close();
 
 
-    }
-
-    void  Test(){
-//        LocalFeedReview localFeedReview=realm.createObject(LocalFeedReview.class);
-//
-//        localFeedReview.setReviewID(checkinObj.getInt("id"));
-//        localFeedReview.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
-//        localFeedReview.setTitle(jsonDataCheckInObj.getString("title"));
-//        localFeedReview.setSummary(jsonDataCheckInObj.getString("status"));
-//        localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
-//        localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
-//        localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
-//
-//        localFeedReview.setReviewOnID(restaurantObj.getInt("id"));
-//        localFeedReview.setReviewOnName(restaurantObj.getString("name"));
-//        localFeedReview.setReviewOnLocation(restaurantObj.getString("location"));
-//
-//        localFeedReview.setReviewImage(checkinObj.getString("restaurant_image"));
-//
-//        localFeedReview.setReviewerID(writerObj.getInt("id"));
-//        localFeedReview.setReviewerName(writerObj.getString("name"));
-//        localFeedReview.setReviewerLocation(writerObj.getString("location"));
-//        localFeedReview.setReviewerAvatar(writerObj.getString("avatar"));
-//
-//        localFeedReview.setReviewLikesCount(checkinLikesArray.length());
-//        localFeedReview.setReviewCommentCount(checkinCommentsArray.length());
-//        localFeedReview.setReviewSharesCount(checkinPhotoArray.length());
     }
 }
