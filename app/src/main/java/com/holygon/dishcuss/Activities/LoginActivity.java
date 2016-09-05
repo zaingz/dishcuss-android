@@ -123,11 +123,6 @@ public class LoginActivity extends AppCompatActivity implements
 
         setContentView(R.layout.login_app_intro);
 
-        if(Constants.GetUserLoginStatus(LoginActivity.this)){
-            Intent intent=new Intent(LoginActivity.this,HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         TextView skipLogin=(TextView)findViewById(R.id.skip_login_tv);
 
@@ -223,11 +218,11 @@ public class LoginActivity extends AppCompatActivity implements
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro1_logo,R.drawable.intro1_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro2_logo,R.drawable.intro2_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro3_logo,R.drawable.intro3_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro4_logo,R.drawable.intro4_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro5_logo,R.drawable.intro5_bar));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro1_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro2_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro3_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro4_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro5_logo,R.drawable.ic_bell));
         viewPager.setAdapter(adapter);
     }
 
@@ -264,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements
 
         for (int i = 0; i < NUM_PAGES; i++) {
             ImageView dot = new ImageView(this);
-            dot.setImageDrawable(getResources().getDrawable(R.drawable.pager_dot_not_selected));
+            dot.setImageDrawable(getResources().getDrawable(R.drawable.pager_dot_not_selected2));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -280,7 +275,7 @@ public class LoginActivity extends AppCompatActivity implements
     public void selectDot(int idx) {
         Resources res = getResources();
         for(int i = 0; i < NUM_PAGES; i++) {
-            int drawableId = (i==idx)?(R.drawable.pager_dot_selected):(R.drawable.pager_dot_not_selected);
+            int drawableId = (i==idx)?(R.drawable.pager_dot_selected2):(R.drawable.pager_dot_not_selected2);
             Drawable drawable = res.getDrawable(drawableId);
             dots.get(i).setImageDrawable(drawable);
         }

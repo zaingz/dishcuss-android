@@ -101,7 +101,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public void remove(int position) {
 //        Log.e("Notification ID",""+notificationsArrayList.get(position).getId());
-        Notifications(notificationsArrayList.get(position).getId());
+        //Notifications(notificationsArrayList.get(position).getId());
         notificationsArrayList.remove(position);
         notifyItemRemoved(position);
     }

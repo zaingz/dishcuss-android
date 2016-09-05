@@ -7,7 +7,7 @@
     app:layout_collapseMode="pin"
     android:minHeight="?attr/actionBarSize"
     app:layout_scrollFlags="scroll|enterAlways|snap"
-    android:background="?attr/colorPrimary">
+    android:background="@drawable/toolbar_bg">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
                 android:id="@+id/image_dropdown"
                 android:layout_width="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:src="@drawable/dropdown"
                 android:layout_height="wrap_content" />
 

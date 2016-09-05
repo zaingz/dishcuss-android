@@ -86,8 +86,9 @@
 
                 <ImageView
                     android:id="@+id/account_reviews_likes_count"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="3dp"
                     android:background="@drawable/icon_likes_count"/>
 
                 <TextView
@@ -146,7 +147,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="7dp">
 
 
                 <LinearLayout
@@ -156,17 +158,16 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/icon_for_like"
-                        android:layout_marginBottom="5dp"/>
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/icon_for_like" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Like"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp" />
+                        android:layout_marginTop="3dp"
+                        android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
 
@@ -182,9 +183,8 @@
 
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginTop="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/icon_for_comment"/>
 
                     <TextView
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:text="Comment"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp" />
+                        />
 
                 </LinearLayout>
 
@@ -202,12 +202,13 @@
                     android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
 
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:background="@drawable/icon_for_share"/>
 
                     <TextView
@@ -215,7 +216,7 @@
                         android:layout_height="wrap_content"
                         android:text="Share"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp" />
+                        />
 
                 </LinearLayout>
 

@@ -38,11 +38,11 @@ public class HomeActivityss extends AppCompatActivity{
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro1_logo,R.drawable.intro1_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro2_logo,R.drawable.intro2_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro3_logo,R.drawable.intro3_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro4_logo,R.drawable.intro4_bar));
-        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro5_logo,R.drawable.intro5_bar));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro1_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro2_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro3_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro4_logo,R.drawable.ic_bell));
+        adapter.addFragment(LoginIntroFragment.newInstance(R.layout.login_intro_fragment,R.drawable.intro5_logo,R.drawable.ic_bell));
         viewPager.setAdapter(adapter);
     }
 

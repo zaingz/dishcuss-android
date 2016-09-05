@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.UserOffersAdapter;
@@ -37,6 +39,7 @@ public class UserOffersActivity extends AppCompatActivity {
     RecyclerView offerList;
     private GridLayoutManager gridLayout;
     ArrayList<UserOffersModel> itemsData = new ArrayList<>();
+    ProgressBar progressBar;
     int userID;
     Realm realm;
 
@@ -50,6 +53,7 @@ public class UserOffersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         header.setText("Offers");
 
         gridLayout = new GridLayoutManager(UserOffersActivity.this,2);
@@ -64,6 +68,7 @@ public class UserOffersActivity extends AppCompatActivity {
 
 
     void FetchMyFeedsData(){
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -129,6 +134,7 @@ public class UserOffersActivity extends AppCompatActivity {
                         public void run() {
                             UserOffersAdapter adapter = new UserOffersAdapter(itemsData,UserOffersActivity.this);
                             offerList.setAdapter(adapter);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
 

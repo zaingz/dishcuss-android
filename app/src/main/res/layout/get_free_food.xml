@@ -11,22 +11,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="100">
 
-        <ImageView
-            android:layout_marginTop="40dp"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_money"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="50">
 
+            <RelativeLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_money"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="50">
 
         <TextView
-            android:layout_marginTop="10dp"
+
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorAccent1"
             android:text="Pile up your money"
             android:textSize="22dp"
             android:textStyle="bold"/>
@@ -35,7 +55,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorAccent1"
             android:text="Earn PKR 50 for referring your friend"
             android:textSize="20dp"
             android:textStyle="bold"/>
@@ -46,14 +66,16 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/colorAccent1"
             android:text="Share your code"
             android:textSize="22dp"
             android:textStyle="bold"/>
         <Button
+            android:id="@+id/referral_code"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:text="TWSKLSHAKAHA"
+            android:textSize="12dp"
             android:layout_height="wrap_content" />
 
 
@@ -70,14 +92,14 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/facebook_icon"/>
+                android:background="@drawable/ic_facebook"/>
 
             <Button
                 android:id="@+id/twitter_share_button"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_margin="4dp"
-                android:background="@drawable/twitter_icon"/>
+                android:background="@drawable/ic_twitter"/>
 
             <Button
                 android:id="@+id/whatsApp_share_button"
@@ -94,6 +116,7 @@
                 android:layout_margin="4dp"
                 android:background="@drawable/ic_sharing"/>
 
+        </LinearLayout>
 
         </LinearLayout>
 

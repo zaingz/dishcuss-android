@@ -16,13 +16,17 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.NotificationAdapter;
+import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Helper.NotificationTouchHelper;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -47,11 +51,13 @@ public class NotificationActivity extends AppCompatActivity {
     RecyclerView notificationRecyclerView;
     private RecyclerView.LayoutManager notificationLayoutManager;
     Realm realm;
+    String message=null;
 
     NotificationAdapter notificationAdapter;
     private Paint p = new Paint();
 
     public static ArrayList<Notifications> notificationsArrayList;
+    ProgressBar progressBar;
 
 
     @Override
@@ -64,8 +70,9 @@ public class NotificationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         headerName.setText("Notifications");
-
+        progressBar.setVisibility(View.VISIBLE);
 
         notificationRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
         notificationLayoutManager = new LinearLayoutManager(this);
@@ -73,12 +80,16 @@ public class NotificationActivity extends AppCompatActivity {
         notificationRecyclerView.setNestedScrollingEnabled(false);
         notificationAdapter = new NotificationAdapter(notificationsArrayList,NotificationActivity.this);
         notificationRecyclerView.setAdapter(notificationAdapter);
-
+        progressBar.setVisibility(View.GONE);
 //        ItemTouchHelper.Callback callback = new NotificationTouchHelper(notificationAdapter);
 //        ItemTouchHelper helper = new ItemTouchHelper(callback);
 //        helper.attachToRecyclerView(notificationRecyclerView);
         initSwipe();
 
+        if(Read()){
+            NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
+        }
+//        NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
     }
 
     @Override
@@ -148,5 +159,58 @@ public class NotificationActivity extends AppCompatActivity {
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(notificationRecyclerView);
+    }
+
+
+    boolean Read(){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Notification+"/seen")
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+
+                    if(jsonObj.has("message")){
+                        message= jsonObj.getString("message");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+
+                }
+            }
+        });
+
+        while (message==null){
+        }
+        realm.commitTransaction();
+        if (message.equals("Notification Seen")) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

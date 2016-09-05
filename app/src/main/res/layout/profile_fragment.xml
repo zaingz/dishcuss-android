@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="Find Your Eat Buddies"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -65,7 +65,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="Khaba History"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -94,7 +94,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="My Wallet(150 PKR)"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -124,7 +124,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="The Offers"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -154,7 +154,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="Get Free Food"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -183,7 +183,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="Settings"
                 android:textSize="22dp"
                 android:textStyle="bold"/>
@@ -213,7 +213,7 @@
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/colorAccent1"
                 android:text="Sign Out"
                 android:textSize="22dp"
                 android:textStyle="bold"/>

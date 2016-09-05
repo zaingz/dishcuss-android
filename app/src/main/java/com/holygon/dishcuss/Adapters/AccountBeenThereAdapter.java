@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Model.UserBeenThere;
@@ -31,11 +32,13 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView user_profile_been_there_restaurant_name,user_profile_been_there_restaurant_address;
         public TextView user_profile_been_there_time;
+        public ImageView user_profile_been_there_restaurant_image;
         public ViewHolder(View v) {
             super(v);
             user_profile_been_there_restaurant_name = (TextView) v.findViewById(R.id.user_profile_been_there_restaurant_name);
             user_profile_been_there_restaurant_address = (TextView) v.findViewById(R.id.user_profile_been_there_restaurant_address);
             user_profile_been_there_time = (TextView) v.findViewById(R.id.user_profile_been_there_time);
+            user_profile_been_there_restaurant_image = (ImageView) v.findViewById(R.id.user_profile_been_there_restaurant_image);
         }
     }
 
@@ -55,6 +58,10 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.user_profile_been_there_restaurant_name.setText(userBeenTheres.get(position).getRestaurantName());
         holder.user_profile_been_there_restaurant_address.setText(userBeenTheres.get(position).getRestaurantLocation());
+//        if(!userBeenTheres.get(position).getCover_image_thumbnail().equals("")) {
+//            Constants.PicassoImageBackground(userBeenTheres.get(position).getCover_image_thumbnail(), holder.user_profile_been_there_restaurant_image, mContext);
+//        }
+
         Date date=Constants.GetDate(userBeenTheres.get(position).getBeenThereTime());
         SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
         String time = localDateFormatForTime.format(date);

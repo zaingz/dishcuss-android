@@ -21,9 +21,18 @@
         <!--app:layout_scrollFlags="scroll|enterAlways|snap" />-->
 
 
-        <include layout="@layout/activity_restaurant_detail_toolbar"
+        <LinearLayout
+            android:id="@+id/restaurant_details_awesome_toolbar_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:alpha="0.8"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+            android:background="@drawable/intro_bg">
+
+        <include layout="@layout/activity_restaurant_detail_toolbars"
             android:id="@+id/restaurant_details_awesome_toolbar"/>
 
+        </LinearLayout>
         <include layout="@layout/activity_restaurant_detail_lower_toolbar"
             android:id="@+id/toolbar_lower"/>
 
@@ -31,6 +40,7 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
+            app:tabIndicatorColor="@android:color/holo_blue_dark"
             android:layout_height="wrap_content"
             android:scrollbars="horizontal"/>
 

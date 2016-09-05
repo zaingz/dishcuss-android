@@ -45,7 +45,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     User user;
     Realm realm;
     String userJoinID;
-    private Boolean isConnected = true;
+    private Boolean isConnected = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,31 +96,38 @@ public class ChatScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String newMessage=chat_message.getText().toString();
-                if(!newMessage.equals("")){
-                    chat_message.setText("");
-                    ChatMessage message = new ChatMessage();
-                    message.setUserID(selfID);
-                    message.setMessage(newMessage);
+                if(isConnected) {
+                    if (!newMessage.equals("")) {
+                        chat_message.setText("");
+                        ChatMessage message = new ChatMessage();
+                        message.setUserID(selfID);
+                        message.setMessage(newMessage);
 
-                    chatMessageArrayList.add(message);
+                        chatMessageArrayList.add(message);
 
-                    JSONObject jsonObj=new JSONObject();
-                    try {
-                        jsonObj.put("id",userJoinID);
-                        jsonObj.put("msg",newMessage);
-                        jsonObj.put("user",user.getEmail());
-                        jsonObj.put("img","");
-                        jsonObj.put("room","pandit1");
-                        mSocket.emit("p1_msg_app",jsonObj.toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        JSONObject jsonObj = new JSONObject();
+                        try {
+                            jsonObj.put("id", userJoinID);
+                            jsonObj.put("msg", newMessage);
+                            jsonObj.put("user", user.getEmail());
+                            jsonObj.put("img", "");
+                            jsonObj.put("room", "pandit1");
+                            mSocket.emit("p1_msg_app", jsonObj.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        messageAdapter.notifyItemInserted(chatMessageArrayList.size() - 1);
+
+                        chatRecyclerView.scrollToPosition(chatMessageArrayList.size() - 1);
+
                     }
-
-
-                    messageAdapter.notifyItemInserted(chatMessageArrayList.size() - 1);
-
-                    chatRecyclerView.scrollToPosition(chatMessageArrayList.size()-1);
-
+                }
+                else
+                {
+                    Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
+                            "Pundit Busy Please Wait", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -166,8 +173,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                     if(!isConnected) {
                        // if(null!=mUsername)
 //                            mSocket.emit("add user", mUsername);
-                            Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
-                                    "connect", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
+//                                    "connect", Toast.LENGTH_LONG).show();
                         isConnected = true;
                     }
 
@@ -202,8 +209,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     isConnected = false;
-                    Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
-                            "disconnect", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
+//                            "disconnect", Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -215,8 +222,8 @@ public class ChatScreenActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
-                            "error_connect", Toast.LENGTH_LONG).show();
+//                    Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
+//                            "error_connect", Toast.LENGTH_LONG).show();
                 }
             });
         }

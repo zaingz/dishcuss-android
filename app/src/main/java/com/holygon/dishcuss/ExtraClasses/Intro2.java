@@ -31,7 +31,7 @@ public class Intro2 extends Fragment {
         imageViewBar=(ImageView)fragmentView.findViewById(R.id.intro_image_bar);
         imageViewLogo.setImageResource(R.drawable.intro2_logo);
         imageViewBar.setImageDrawable(null);
-        imageViewBar.setImageResource(R.drawable.intro2_bar);
+        imageViewBar.setImageResource(R.drawable.ic_bell);
         return fragmentView;
     }
 }

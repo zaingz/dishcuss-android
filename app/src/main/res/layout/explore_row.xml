@@ -56,7 +56,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Liali Cafe"
-                        android:textColor="@color/black_1"
+                        android:textColor="#0a459c"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -124,7 +124,7 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:text="Cousine: "
+                android:text="Cuisine: "
                 android:layout_height="wrap_content" />
             <TextView
                 android:layout_marginLeft="3dp"
@@ -236,6 +236,7 @@
 
                     <ImageView
                         android:layout_gravity="center"
+                        android:layout_marginTop="1dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/call_now_image"/>
@@ -267,12 +268,12 @@
 
                     <TextView
                         android:id="@+id/explore_restaurant_photos_count"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:text="1211"/>
+                        android:text="9998"/>
 
                 </LinearLayout>
 
@@ -293,12 +294,12 @@
 
                     <TextView
                         android:id="@+id/explore_restaurant_likes_counts"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:text="121"/>
+                        android:text="1211"/>
 
                 </LinearLayout>
 

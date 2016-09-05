@@ -8,7 +8,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+
+import io.realm.Realm;
 
 /**
  * Created by Naeem Ibrahim on 8/23/2016.
@@ -16,6 +20,10 @@ import com.holygon.dishcuss.R;
 public class GetFreeFoodActivity extends AppCompatActivity {
 
     Button facebookShareButton,twitterShareButton,whatsAppShareButton,localShareButton;
+    Button referral_code;
+    Realm realm;
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,12 +33,15 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
         header.setText("Get Free Food");
-
+        realm = Realm.getDefaultInstance();
+        user= realm.where(User.class).findFirst();
         localShareButton=(Button)findViewById(R.id.all_share_button);
         whatsAppShareButton=(Button)findViewById(R.id.whatsApp_share_button);
         twitterShareButton=(Button)findViewById(R.id.twitter_share_button);
         facebookShareButton=(Button)findViewById(R.id.facebook_share_button);
+        referral_code=(Button)findViewById(R.id.referral_code);
 
+        referral_code.setText(user.getReferral_code());
 
         whatsAppShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +116,7 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         Intent intent=new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
-        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy on https://play.google.com/store/apps/details?id=");
+        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is"+user.getReferral_code());
         startActivity(Intent.createChooser(intent, "Share Dishcuss With Friends"));
     }
 }

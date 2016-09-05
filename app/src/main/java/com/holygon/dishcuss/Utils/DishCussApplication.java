@@ -68,20 +68,20 @@ public class DishCussApplication extends Application {
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.holygon.dishcuss",  // replace with your unique package name
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
+//        try {
+//            PackageInfo info = getPackageManager().getPackageInfo(
+//                    "com.holygon.dishcuss",  // replace with your unique package name
+//                    PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                Log.i("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//        }
 
     }
 

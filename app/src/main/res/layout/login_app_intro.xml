@@ -35,7 +35,7 @@
                     android:id="@+id/dots"
                     android:layout_marginRight="20dp"
                     android:layout_gravity="right|bottom"
-                    android:layout_marginBottom="30dp"/>
+                    android:layout_marginBottom="10dp"/>
 
                 <TextView
                     android:id="@+id/skip_login_tv"
@@ -94,13 +94,13 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/facebook_icon"/>
+                    android:background="@drawable/ic_facebook"/>
                 <Button
                     android:id="@+id/twitter_login_button"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/twitter_icon"/>
+                    android:background="@drawable/ic_twitter"/>
                 <com.twitter.sdk.android.core.identity.TwitterLoginButton
                     android:visibility="gone"
                     android:id="@+id/twitterLogin"
@@ -112,7 +112,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/google_icon"/>
+                    android:background="@drawable/ic_google_plus"/>
                 <Button
                     android:id="@+id/native_login_button"
                     android:layout_width="60dp"

@@ -142,7 +142,9 @@ public class NearbyFragmentGoogleMap extends Fragment implements
             latLng = new LatLng(mLocations.get(loc).getLatitude(), mLocations.get(loc).getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
-            markerOptions.title(restaurantID.get(loc)+"");
+            markerOptions.title(restaurantName.get(loc));
+//            markerOptions.title(restaurantID.get(loc)+"");
+            markerOptions.snippet(restaurantID.get(loc)+"");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
             mCurrLocation = mGoogleMap.addMarker(markerOptions);
         }
@@ -155,7 +157,8 @@ public class NearbyFragmentGoogleMap extends Fragment implements
     @Override
     public boolean onMarkerClick(Marker marker) {
 
-        int resID= Integer.parseInt(marker.getTitle());
+//        int resID= Integer.parseInt(marker.getTitle());
+        int resID= Integer.parseInt(marker.getSnippet());
         Intent intent=new Intent(getActivity(), RestaurantDetailActivity.class);
         intent.putExtra("RestaurantID",resID);
         getActivity().startActivity(intent);

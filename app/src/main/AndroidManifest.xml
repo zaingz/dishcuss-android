@@ -38,13 +38,17 @@
         android:theme="@style/MyMaterialTheme">
 
 
-        <activity android:name=".Activities.LoginActivity">
+        <activity android:name=".Activities.SplashActivity"
+            android:theme="@style/MySplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+
+        <activity
+            android:name=".Activities.LoginActivity"/>
         <activity
             android:name=".Activities.SignInActivity"
             android:theme="@style/MyMaterialTheme"/>
@@ -54,6 +58,14 @@
 
         <activity
             android:name=".Activities.SelectRestaurantActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.BookmarkActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.ExploreSelectedCategoryActivity"
             android:theme="@style/MyMaterialTheme" />
 
         <activity
@@ -116,12 +128,15 @@
         <activity
             android:name=".Posts.WriteReviewPostActivity"
             android:theme="@style/MyMaterialTheme" />
+
         <activity
             android:name=".Posts.CheckInPostActivity"
             android:theme="@style/MyMaterialTheme" />
+
         <activity
             android:name=".Posts.CheckInPostGoogleApiActivity"
             android:theme="@style/MyMaterialTheme" />
+
         <activity
             android:name=".Posts.PhotoPostActivity"
             android:theme="@style/MyMaterialTheme" />
@@ -133,6 +148,7 @@
         <activity
             android:name=".Posts.PostSelectionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+
         <activity
             android:name=".Activities.PunditSelectionActivity"
             android:theme="@style/MyMaterialTheme"/>
@@ -148,6 +164,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_map_id"/>
@@ -159,6 +176,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="80eafe8e17874d3e025e50743e1de478e8ecb5df" />
+
     </application>
 
 </manifest>

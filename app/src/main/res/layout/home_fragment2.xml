@@ -18,7 +18,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="245dp"
+            android:layout_marginBottom="-4dp"
             app:layout_scrollFlags="scroll|enterAlways|snap">
 
             <android.support.v4.view.ViewPager
@@ -33,7 +34,7 @@
                 android:id="@+id/dots"
                 android:layout_marginRight="20dp"
                 android:layout_gravity="right|bottom"
-                android:layout_marginBottom="15dp"/>
+                android:layout_marginBottom="10dp"/>
 
         </FrameLayout>
 
@@ -75,6 +76,10 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_2"/>
 
             <RelativeLayout
                 android:id="@+id/my_feeds_layout"
@@ -94,6 +99,29 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/black_2"/>
+
+            <RelativeLayout
+                android:id="@+id/people_around_you_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/people_around_you"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="20dp"
+                    android:textColor="@color/black_3"
+                    android:text="Peoples"/>
+
+            </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
 
@@ -107,6 +135,17 @@
             android:paddingTop="2dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
+
+            <ProgressBar
+                android:id="@+id/native_progress_bar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/local_feeds_recycler_view"
                 android:layout_marginTop="1dp"
@@ -119,6 +158,16 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_feeds_recycler_view"
+                android:layout_marginTop="1dp"
+                android:scrollbars="vertical"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:layout_width="match_parent"
+                app:layout_scrollFlags="scroll"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="70dp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/people_around_you_RecyclerView"
                 android:layout_marginTop="1dp"
                 android:scrollbars="vertical"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"

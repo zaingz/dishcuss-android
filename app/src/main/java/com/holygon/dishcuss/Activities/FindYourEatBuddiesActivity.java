@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
@@ -41,6 +43,7 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
     ArrayList<UserOffersModel> itemsData = new ArrayList<>();
     int userID;
     Realm realm;
+    ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         header.setText("Find Your Eat Buddies");
 
         gridLayout = new LinearLayoutManager(this);
@@ -78,6 +82,7 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
 
 
     void FetchMyFeedsData(){
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -153,6 +158,8 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
                 {
 
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
         });
         realm.close();

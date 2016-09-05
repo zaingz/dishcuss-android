@@ -22,6 +22,10 @@
     </style>
 
 
+    <style name="WindowTitleBackground">
+        <item name="android:background">@drawable/toolbar_bg</item>
+    </style>
+
     <style name="MyMaterialTheme2" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -64,16 +68,14 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
+        <!--<item name="android:windowActionBar">false</item>-->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <!--<style name="Base.Widget.Design.TabLayout" parent="android:Widget">-->
-        <!--<item name="tabBackground">@drawable/tab_background</item>-->
-        <!--<item name="tabIndicatorColor">#0088ff</item>-->
-        <!--<item name="tabIndicatorHeight">2dp</item>-->
-
-    <!--</style>-->
+    <style name="MySplashTheme" parent="MyMaterialTheme.Base">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
 </resources>

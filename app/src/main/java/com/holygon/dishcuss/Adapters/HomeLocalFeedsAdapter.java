@@ -127,7 +127,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
     @Override
     public void onBindViewHolder(final ViewHolder holder,final int position) {
 
-//                Log.e("LocalFeed",objects.get(position).getClass().getName());
+//              Log.e("LocalFeed",objects.get(position).getClass().getName());
 
                 if (objects.get(position).getClass().equals(io.realm.LocalFeedReviewRealmProxy.class)){
                     final LocalFeedReview localFeedReview= (LocalFeedReview) objects.get(position);
@@ -171,7 +171,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         public void onClick(View v) {
                             if(holder.comments_row.getVisibility() == View.VISIBLE){
                                 holder.comments_row.setVisibility(View.GONE);
-                            }else {
+                            }
+                            else
+                            {
                                 holder.comments_row.setVisibility(View.VISIBLE);
                             }
                         }

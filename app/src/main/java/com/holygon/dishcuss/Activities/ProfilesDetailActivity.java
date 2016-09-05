@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.holygon.dishcuss.Fragments.AccountBeenThereFragment;
 import com.holygon.dishcuss.Fragments.AccountFollowersFragment;
@@ -17,12 +20,14 @@ import com.holygon.dishcuss.Fragments.AccountPhotosFragment;
 import com.holygon.dishcuss.Fragments.AccountReviewsFragment;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
+import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserBeenThere;
 import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -34,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -49,11 +55,32 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     TabLayout tabLayout;
     int userID;
     Realm realm;
+    de.hdodenhof.circleimageview.CircleImageView profileImage;
     UserProfile userProfile=new UserProfile();
+    boolean dataAlreadyExists = false;
 
     int reviewsCount=0, followersCount =0, commentsCount =0;
 
     TextView userName, userLocation, review_count, follower_count, comments_count;
+
+
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(this);
+        mSpinner.setTitle(title);
+        mSpinner.show();
+    }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+
+//*******************PROGRESS******************************
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +98,16 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             userID = bundle.getInt("UserID");
-            UserData();
+            userProfile=GetUserData(userID);
+
+            if(userProfile!=null){
+                SetValues();
+            }else {
+                Log.e("","ELSE");
+            }
+            if(!dataAlreadyExists)
+                UserData();
+
         }
     }
 
@@ -91,7 +127,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     void GetUI(){
         userName = (TextView) findViewById(R.id.user_profile_user_name);
         userLocation = (TextView) findViewById(R.id.user_profile_user_location);
-
+        profileImage=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.user_detail_profile_image);
         review_count = (TextView) findViewById(R.id.user_profile_review_count);
         comments_count = (TextView) findViewById(R.id.user_profile_comments_count);
         follower_count = (TextView) findViewById(R.id.user_profile_followers_count);
@@ -109,7 +145,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         review_count.setText(""+reviewsCount);
         comments_count.setText(""+commentsCount);
         follower_count.setText(""+followersCount);
-
+        Constants.PicassoImageSrc(userProfile.getAvatar(),profileImage,this);
         if (viewPager != null) {
             setupViewPager(viewPager);
         }
@@ -172,6 +208,8 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
     void UserData() {
 
+
+        showSpinner("Loading Data...");
         User user = realm.where(User.class).findFirst();
 
         OkHttpClient client = new OkHttpClient();
@@ -383,6 +421,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                 userProfile=userProfileRealm;
                                 realm.commitTransaction();
                                 SetValues();
+                                DismissSpinner();
                             }
 
                         } catch (JSONException e) {
@@ -393,5 +432,19 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    UserProfile GetUserData(int uid){
+        realm = Realm.getDefaultInstance();
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
+        Log.e("Count",""+userProfiles.size());
+        if(userProfiles.size()>0){
+            dataAlreadyExists=true;
+
+            realm.beginTransaction();
+            realm.commitTransaction();
+            return userProfiles.get(userProfiles.size()-1);
+        }
+        return null;
     }
 }

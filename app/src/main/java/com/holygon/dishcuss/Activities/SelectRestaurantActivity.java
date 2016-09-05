@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.ExploreAdapter;
@@ -47,6 +49,7 @@ public class SelectRestaurantActivity extends AppCompatActivity {
 
     String categoryName="";
 
+    ProgressBar progressBar;
 
 
     //*******************PROGRESS******************************
@@ -77,7 +80,7 @@ public class SelectRestaurantActivity extends AppCompatActivity {
 
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
         headerName.setText("Select A Restaurant");
-
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
 
         selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
         selectRestaurantLayoutManager = new LinearLayoutManager(this);
@@ -108,7 +111,7 @@ public class SelectRestaurantActivity extends AppCompatActivity {
     }
 
     void RestaurantData(String type) {
-        showSpinner("Loading...");
+        progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Select_restaurants+type)
@@ -317,11 +320,11 @@ public class SelectRestaurantActivity extends AppCompatActivity {
 
                             SelectRestaurantAdapter adapter = new SelectRestaurantAdapter(restaurantRealmList,SelectRestaurantActivity.this);
                             selectRestaurantRecyclerView.setAdapter(adapter);
-                            DismissSpinner();
+                            progressBar.setVisibility(View.GONE);
+                            realm.close();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
                     }
                 });
             }

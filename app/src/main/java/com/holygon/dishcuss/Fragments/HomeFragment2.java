@@ -19,14 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
-import com.holygon.dishcuss.Adapters.HomeMyFeedsAdapter;
+import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
@@ -61,25 +63,25 @@ import okhttp3.Response;
  */
 public class HomeFragment2 extends Fragment {
 
-    BadgeView badge;
+    public static BadgeView badge;
     Realm realm;
     private ViewPager viewPager;
     AppCompatActivity activity;
-    RecyclerView localFeedsRecyclerView,myFeedsRecyclerView;
-    private RecyclerView.LayoutManager localFeedsLayoutManager,myFeedsLayoutManager;
-    RelativeLayout local_feeds_layout,my_feeds_layout;
-    TextView local_feeds_text,my_feeds_text;
+    RecyclerView localFeedsRecyclerView,myFeedsRecyclerView,peopleAroundYouRecyclerView;
+    private RecyclerView.LayoutManager localFeedsLayoutManager,myFeedsLayoutManager,peopleAroundYouLayoutManager;
+    RelativeLayout local_feeds_layout,my_feeds_layout,people_around_you_layout;
+    TextView local_feeds_text,my_feeds_text,peopleAroundYouTextView;
 
-    ArrayList<MyFeeds> myFeedsArrayList;
+    ArrayList<MyFeeds> peopleAroundYouList;
     boolean dataAlreadyExists=false;
 
     private int NUM_PAGES =1;
     private List<ImageView> dots;
-    HomeMyFeedsAdapter homeMyFeedsAdapter;
+    HomePeopleAroundAdapter homePeopleAroundAdapter;
     HomeLocalFeedsAdapter homeLocalFeedsAdapter;
+    HomeLocalFeedsAdapter homeMyFeedsAdapter;
+    ProgressBar progressBar;
 
-
-    ImageView home_fragment_image_search;
 
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
@@ -98,7 +100,6 @@ public class HomeFragment2 extends Fragment {
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
 
-        home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
 
 //        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -107,37 +108,39 @@ public class HomeFragment2 extends Fragment {
 
         localFeedsRecyclerView = (RecyclerView) rootView.findViewById(R.id.local_feeds_recycler_view);
         myFeedsRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_feeds_recycler_view);
+        peopleAroundYouRecyclerView = (RecyclerView) rootView.findViewById(R.id.people_around_you_RecyclerView);
 
         local_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.local_feeds_layout);
         my_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.my_feeds_layout);
+        people_around_you_layout=(RelativeLayout)rootView.findViewById(R.id.people_around_you_layout);
 
         my_feeds_text=(TextView) rootView.findViewById(R.id.my_feeds_text);
         local_feeds_text=(TextView) rootView.findViewById(R.id.local_feeds_text);
+        peopleAroundYouTextView=(TextView) rootView.findViewById(R.id.people_around_you);
+
+        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
 
 
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
-//        ArrayList<String> itemsData = new ArrayList<>();
-//
-//        for (int i = 0; i < 50; i++) {
-//            itemsData.add("Local Feeds " + i + " / Item " + i);
-//        }
-//        localFeedsRecyclerView.setNestedScrollingEnabled(false);
-//        homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(emptyLocalFeeds,getActivity());
-//        localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
         FetchLocalFeedsData();
 
 
-
         //My Feed
+
         myFeedsLayoutManager = new LinearLayoutManager(activity);
         myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
-//        localFeedsRecyclerView.setNestedScrollingEnabled(true);
-        myFeedsArrayList=new ArrayList<>();
-        homeMyFeedsAdapter = new HomeMyFeedsAdapter(myFeedsArrayList,getActivity());
-        myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
         FetchMyFeedsData();
+
+
+        //People Around You
+        peopleAroundYouLayoutManager = new LinearLayoutManager(activity);
+        peopleAroundYouRecyclerView.setLayoutManager(peopleAroundYouLayoutManager);
+        peopleAroundYouList =new ArrayList<>();
+        homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
+        myFeedsRecyclerView.setAdapter(homePeopleAroundAdapter);
+        FetchPeoplesAroundYou();
 
 
         //Features Restaurant
@@ -152,30 +155,59 @@ public class HomeFragment2 extends Fragment {
         myFeedsRecyclerView.setVisibility(View.GONE);
         localFeedsRecyclerView.setVisibility(View.VISIBLE);
 
+
         local_feeds_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 local_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
                 my_feeds_layout.setBackgroundColor(Color.WHITE);
+                people_around_you_layout.setBackgroundColor(Color.WHITE);
+
                 local_feeds_text.setTextColor(Color.WHITE);
                 my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
                 myFeedsRecyclerView.setVisibility(View.GONE);
                 localFeedsRecyclerView.setVisibility(View.VISIBLE);
+                peopleAroundYouRecyclerView.setVisibility(View.GONE);
+            }
+        });
+
+
+        people_around_you_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                local_feeds_layout.setBackgroundColor(Color.WHITE);
+                my_feeds_layout.setBackgroundColor(Color.WHITE);
+                people_around_you_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
+
+                local_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                peopleAroundYouTextView.setTextColor(Color.WHITE);
+
+                myFeedsRecyclerView.setVisibility(View.GONE);
+                localFeedsRecyclerView.setVisibility(View.GONE);
+                peopleAroundYouRecyclerView.setVisibility(View.VISIBLE);
             }
         });
 
         my_feeds_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                my_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
-                local_feeds_layout.setBackgroundColor(Color.WHITE);
-                my_feeds_text.setTextColor(Color.WHITE);
-                local_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
 
+                local_feeds_layout.setBackgroundColor(Color.WHITE);
+                my_feeds_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
+                people_around_you_layout.setBackgroundColor(Color.WHITE);
+
+                local_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                my_feeds_text.setTextColor(Color.WHITE);
+                peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
                 myFeedsRecyclerView.setVisibility(View.VISIBLE);
                 localFeedsRecyclerView.setVisibility(View.GONE);
+                peopleAroundYouRecyclerView.setVisibility(View.GONE);
             }
         });
 
@@ -195,10 +227,21 @@ public class HomeFragment2 extends Fragment {
             }
         });
 
+
+        ImageView home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView image_bookmark_icon=(ImageView)rootView.findViewById(R.id.image_bookmark_icon);
+        image_bookmark_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getActivity(), BookmarkActivity.class);
                 startActivity(intent);
             }
         });
@@ -213,6 +256,7 @@ public class HomeFragment2 extends Fragment {
             public void onClick(View v) {
                 if(NotificationActivity.notificationsArrayList.size()>0) {
                     Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                    badge.hide(true);
                     startActivity(intent);
                 }
             }
@@ -405,7 +449,7 @@ public class HomeFragment2 extends Fragment {
 
 
     void FetchLocalFeedsData(){
-
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -646,12 +690,13 @@ public class HomeFragment2 extends Fragment {
                             }
                             homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
                             localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
-
+                            realm.commitTransaction();
+                            realm.close();
+                            progressBar.setVisibility(View.GONE);
                         }catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.commitTransaction();
-                        realm.close();
+
                     }
                 });
             }
@@ -659,7 +704,264 @@ public class HomeFragment2 extends Fragment {
     }
 
 
+    //
     void FetchMyFeedsData(){
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        User user = realm.where(User.class).findFirst();
+        Log.e("",""+user.getToken());
+        realm.commitTransaction();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.LocalFeeds_Restaurant_URL)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+                try
+                {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                /** check if activity still exist */
+                if (getActivity() == null) {
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+                                return;
+                            }
+
+                            JSONArray jsonDataReviewsArray=jsonObj.getJSONArray("review");
+                            JSONArray jsonDataCheckInArray=jsonObj.getJSONArray("checkin");
+
+                            //    realm =Realm.getDefaultInstance();
+
+
+                            realm.beginTransaction();
+                            LocalFeeds localFeeds=realm.createObject(LocalFeeds.class);
+
+
+
+                            for (int i = 0; i < jsonDataReviewsArray.length(); i++) {
+
+                                JSONObject jsonDataReviewObj = jsonDataReviewsArray.getJSONObject(i);
+
+                                JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
+
+                                JSONObject reviewerObj = jsonDataReviewObj.getJSONObject("reviewer");
+
+                                JSONArray reviewLikesArray = jsonDataReviewObj.getJSONArray("likes");
+                                JSONArray reviewCommentsArray = jsonDataReviewObj.getJSONArray("comments");
+                                JSONArray reviewShareArray = jsonDataReviewObj.getJSONArray("reports");
+
+
+//                                if(!dataAlreadyExists)
+                                {
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    LocalFeedReview localFeedReview=realm.createObject(LocalFeedReview.class);
+
+                                    localFeedReview.setReviewID(jsonDataReviewObj.getInt("id"));
+                                    localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
+                                    localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
+                                    localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
+                                    if(!jsonDataReviewObj.isNull("rating")){
+                                        localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
+                                    }
+                                    localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
+
+                                    localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
+                                    localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
+                                    localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+
+                                    localFeedReview.setReviewImage(jsonDataReviewObj.getString("image"));
+
+                                    localFeedReview.setReviewerID(reviewerObj.getInt("id"));
+                                    localFeedReview.setReviewerName(reviewerObj.getString("name"));
+                                    localFeedReview.setReviewerLocation(reviewerObj.getString("location"));
+                                    localFeedReview.setReviewerAvatar(reviewerObj.getString("avatar"));
+
+                                    localFeedReview.setReviewLikesCount(reviewLikesArray.length());
+                                    localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
+                                    localFeedReview.setReviewSharesCount(reviewShareArray.length());
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedReview.getCommentRealmList().add(managedComment);
+
+                                    }
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    localFeeds.getLocalFeedReviewRealmList().add(localFeedReview);
+                                }
+                            }
+
+
+                            for (int i = 0; i < jsonDataCheckInArray.length(); i++) {
+
+                                JSONObject jsonDataCheckInObj = jsonDataCheckInArray.getJSONObject(i);
+
+                                JSONObject writerObj = jsonDataCheckInObj.getJSONObject("writer");
+
+                                JSONObject checkinObj = jsonDataCheckInObj.getJSONObject("checkin");
+
+                                JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+
+                                JSONArray checkinLikesArray = jsonDataCheckInObj.getJSONArray("likes");
+                                JSONArray checkinCommentsArray = jsonDataCheckInObj.getJSONArray("comments");
+                                JSONArray checkinPhotoArray = jsonDataCheckInObj.getJSONArray("photos");
+
+
+//                                if(!dataAlreadyExists)
+                                {
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    LocalFeedCheckIn localFeedCheckIn=realm.createObject(LocalFeedCheckIn.class);
+
+//                                    localFeedCheckIn.setCheckInID(checkinObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInID(jsonDataCheckInObj.getInt("id"));
+                                    localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
+                                    localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
+                                    localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
+
+                                    if(!checkinObj.isNull("lat")){
+                                        localFeedCheckIn.setCheckInLat(checkinObj.getDouble("lat"));
+                                    }
+                                    if(!checkinObj.isNull("long")) {
+                                        localFeedCheckIn.setCheckInLong(checkinObj.getDouble("long"));
+                                    }
+
+                                    localFeedCheckIn.setCheckInWriterID(writerObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInWriterName(writerObj.getString("name"));
+                                    localFeedCheckIn.setCheckInWriterLocation(writerObj.getString("location"));
+                                    localFeedCheckIn.setCheckInWriterAvatar(writerObj.getString("avatar"));
+
+                                    localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
+                                    localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+
+                                    localFeedCheckIn.setCheckInImage(checkinObj.getString("restaurant_image"));
+
+                                    for (int p = 0; p < checkinPhotoArray.length(); p++) {
+
+                                        JSONObject photo = checkinPhotoArray.getJSONObject(p);
+
+                                        PhotoModel photoModel=new PhotoModel();
+                                        photoModel.setId(photo.getInt("id"));
+                                        photoModel.setUrl(photo.getString("image_url"));
+
+                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+                                        localFeedCheckIn.getPhotoModels().add(managedPhotoModel);
+                                    }
+
+                                    localFeedCheckIn.setReviewLikesCount(checkinLikesArray.length());
+                                    localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
+                                    localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
+
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < checkinCommentsArray.length(); c++) {
+                                        JSONObject commentObj = checkinCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedCheckIn.getCommentRealmList().add(managedComment);
+                                    }
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    localFeeds.getLocalFeedCheckInRealmList().add(localFeedCheckIn);
+
+                                }
+                            }
+                            homeMyFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
+                            myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
+                            realm.commitTransaction();
+                            realm.close();
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+        });
+    }
+
+    //
+
+
+    void FetchPeoplesAroundYou(){
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -702,7 +1004,7 @@ public class HomeFragment2 extends Fragment {
                         myFeeds.setFollowing(c.getBoolean("follows"));
                         myFeeds.setFollowers(c.getInt("followers"));
 
-                        myFeedsArrayList.add(myFeeds);
+                        peopleAroundYouList.add(myFeeds);
                     }
 
                     try
@@ -719,8 +1021,8 @@ public class HomeFragment2 extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            homeMyFeedsAdapter = new HomeMyFeedsAdapter(myFeedsArrayList,getActivity());
-                            myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
+                            homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
+                            peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
                         }
                     });
 
@@ -731,6 +1033,7 @@ public class HomeFragment2 extends Fragment {
                 {
 
                 }
+
             }
         });
         realm.close();

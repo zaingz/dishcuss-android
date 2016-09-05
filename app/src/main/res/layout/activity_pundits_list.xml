@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:background="@color/colorAccent">
+        android:background="@drawable/toolbar_bg">
         <TextView
             android:gravity="center"
             android:layout_width="match_parent"
@@ -47,12 +47,12 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_desi_pundit_selection"/>
 
             </LinearLayout>
 
@@ -102,12 +102,12 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_sasta_pundit_selection"/>
 
             </LinearLayout>
 
@@ -155,12 +155,12 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_fastfood_pundit_selection"/>
 
             </LinearLayout>
 
@@ -207,12 +207,12 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_continental_pundit_selection"/>
 
             </LinearLayout>
 
@@ -260,12 +260,12 @@
                 android:orientation="horizontal"
                 android:background="@drawable/pundits_image_circle"
                 android:gravity="center"
-                android:padding="20dp">
+                android:padding="10dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/location_marker"/>
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_foreign_pundit_selection"/>
 
             </LinearLayout>
 

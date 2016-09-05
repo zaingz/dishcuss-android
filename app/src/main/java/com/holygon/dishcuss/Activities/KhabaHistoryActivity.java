@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
@@ -42,6 +44,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
     ArrayList<KhabaHistoryModel> itemsData = new ArrayList<>();
     int userID;
     Realm realm;
+    ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         header.setText("Khaba History");
 
         gridLayout = new LinearLayoutManager(this);
@@ -69,6 +73,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
 
 
     void FetchMyFeedsData(){
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -134,14 +139,14 @@ public class KhabaHistoryActivity extends AppCompatActivity {
                         public void run() {
                             KhabaHistoryAdapter adapter = new KhabaHistoryAdapter(itemsData,KhabaHistoryActivity.this);
                             offerList.setAdapter(adapter);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                finally
-                {
+                finally{
 
                 }
             }

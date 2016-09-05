@@ -12,18 +12,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.BookmarkActivity;
+import com.holygon.dishcuss.Activities.ExploreSelectedCategoryActivity;
+import com.holygon.dishcuss.Activities.NotificationActivity;
+import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Activities.SelectRestaurantActivity;
+import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Adapters.ExploreAdapter;
 import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
+import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -53,6 +63,7 @@ public class ExploreFragment extends Fragment{
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;
 
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
+    ProgressBar progressBar;
 
 
     Button category_button_1;
@@ -77,6 +88,7 @@ public class ExploreFragment extends Fragment{
         exploreRecyclerView = (RecyclerView) rootView.findViewById(R.id.explore_recycler_view);
 
 
+        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
         category_button_1 = (Button) rootView.findViewById(R.id.category_button_1);
 
         realm = Realm.getDefaultInstance();
@@ -84,10 +96,6 @@ public class ExploreFragment extends Fragment{
 
         exploreLayoutManager = new LinearLayoutManager(activity);
         exploreRecyclerView.setLayoutManager(exploreLayoutManager);
-//        ArrayList<String> itemsData = new ArrayList<>();
-//        for (int i = 0; i < 50; i++) {
-//            itemsData.add("Local Feeds " + i + " / Item " + i);
-//        }
         exploreRecyclerView.setNestedScrollingEnabled(false);
         RestaurantData();
 
@@ -95,17 +103,71 @@ public class ExploreFragment extends Fragment{
         category_button_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), SelectRestaurantActivity.class);
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
                 intent.putExtra("CategoryName",category_button_1.getText().toString());
                 startActivity(intent);
             }
         });
 
+
+
+        ImageView home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
+        home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView image_bookmark_icon=(ImageView)rootView.findViewById(R.id.image_bookmark_icon);
+        image_bookmark_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(getActivity(), BookmarkActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
+//        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
+        HomeFragment2.badge = new BadgeView(getActivity(), target);
+        if(NotificationActivity.notificationsArrayList.size()>0) {
+            HomeFragment2.badge.show(true);
+            HomeFragment2.badge.setText("" + NotificationActivity.notificationsArrayList.size());
+        }else
+        {
+            HomeFragment2.badge.hide(true);
+        }
+
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(NotificationActivity.notificationsArrayList.size()>0) {
+                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                    HomeFragment2.badge.hide(true);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
+        LinearLayout pundit_linear_layout=(LinearLayout) rootView.findViewById(R.id.pundit_linear_layout);
+
+        pundit_linear_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PunditSelectionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         return rootView;
     }
 
     void RestaurantData() {
-
+        progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_All_Restaurants_data)
@@ -331,10 +393,13 @@ public class ExploreFragment extends Fragment{
 
                             ExploreAdapter adapter = new ExploreAdapter(restaurantRealmList,getActivity());
                             exploreRecyclerView.setAdapter(adapter);
+                            progressBar.setVisibility(View.GONE);
+                            realm.close();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
+
                     }
                 });
             }

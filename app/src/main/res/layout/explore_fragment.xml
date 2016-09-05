@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -51,7 +52,8 @@
 
            <android.support.v4.widget.NestedScrollView
                android:layout_width="match_parent"
-               android:layout_height="match_parent">
+               android:layout_height="match_parent"
+               app:layout_scrollFlags="enterAlways|snap|enterAlwaysCollapsed|exitUntilCollapsed|scroll">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -153,7 +155,7 @@
                             android:layout_weight="50"
                             android:background="@drawable/button_desserts"
                             android:layout_marginLeft="2dp"
-                            android:text="Desserts/Bakery"
+                            android:text="Desserts&amp;Bakery"
                             android:textStyle="bold"
                             android:textColor="#fff"/>
 
@@ -164,10 +166,21 @@
                 </LinearLayout>
 
 
+                    <ProgressBar
+                        android:id="@+id/native_progress_bar"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:layout_centerHorizontal="true"
+                        android:indeterminate="true"
+                        android:visibility="gone"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/explore_recycler_view"
                         android:layout_marginTop="15dp"
                         android:scrollbars="vertical"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

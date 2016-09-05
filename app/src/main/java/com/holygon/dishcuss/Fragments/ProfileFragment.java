@@ -74,8 +74,7 @@ public class ProfileFragment extends Fragment {
         client = new OkHttpClient();
 
         TextView header=(TextView) rootView.findViewById(R.id.app_toolbar_name);
-        header.setText("My Account");
-
+        header.setText("     My Account");
 
         get_more_food=(LinearLayout)rootView.findViewById(R.id.get_more_food);
         signOut_layout=(LinearLayout)rootView.findViewById(R.id.sign_out_user_layout);
@@ -170,6 +169,7 @@ public class ProfileFragment extends Fragment {
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

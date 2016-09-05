@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -64,6 +66,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TabLayout tabLayout;
     int restaurantID;
     Toolbar restaurant_details_awesome_toolbar;
+    LinearLayout restaurant_details_awesome_toolbar_parent;
     LinearLayout restaurant_call_now,bookmark_button_layout,follow_button_layout;
     TextView bookmark_button_text,follow_button_text;
     Realm realm;
@@ -85,6 +88,23 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count;
 
+
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(this);
+        mSpinner.setTitle(title);
+        mSpinner.show();
+    }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+
+//*******************PROGRESS******************************
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +135,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         like = (FloatingActionButton) findViewById(R.id.material_design_floating_action_like);
         follow = (FloatingActionButton) findViewById(R.id.material_design_floating_action_follow);
 
+        restaurant_details_awesome_toolbar_parent=(LinearLayout)findViewById(R.id.restaurant_details_awesome_toolbar_parent);
+
 
 
 
@@ -123,13 +145,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         if (bundle != null) {
             restaurantID = bundle.getInt("RestaurantID");
 
-        //    restaurant=GetRestaurantData(restaurantID);
+            restaurant=GetRestaurantData(restaurantID);
 
-//            //if(restaurant!=null){
-//                SetValues();
-//            }else {
-//                Log.e("","ELSE");
-//            }
+            if(restaurant!=null){
+                SetValues();
+            }else {
+                Log.e("","ELSE");
+            }
             if(!dataAlreadyExists)
                 RestaurantData();
 
@@ -149,10 +171,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         bookmark_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookmark_button_text.getText().toString().equals("  Bookmark")){
+                if(bookmark_button_text.getText().toString().equals(" Bookmark")){
                     bookmark_button_text.setText("Bookmarked");
                 }else {
-                    bookmark_button_text.setText("  Bookmark");
+                    bookmark_button_text.setText(" Bookmark");
                 }
                 GenericRoutes.Like(restaurantID,"restaurant");
             }
@@ -161,10 +183,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         follow_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(follow_button_text.getText().toString().equals("   Follow")) {
+                if(follow_button_text.getText().toString().equals("  Follow")) {
                     follow_button_text.setText("Unfollow");
                 }else {
-                    follow_button_text.setText("   Follow");
+                    follow_button_text.setText("  Follow");
                 }
                 GenericRoutes.FollowRestaurant(restaurantID);
 
@@ -234,7 +256,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         Picasso.with(RestaurantDetailActivity.this).load(imageUri).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                restaurant_details_awesome_toolbar.setBackground(new BitmapDrawable(bitmap));
+                restaurant_details_awesome_toolbar_parent.setBackground(new BitmapDrawable(bitmap));
             }
 
             @Override
@@ -307,7 +329,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
     void RestaurantData() {
-
+        showSpinner("Loading Data...");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_Restaurant_data+restaurantID)
@@ -552,6 +574,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     restaurant=realmRestaurant;
                                     realm.commitTransaction();
                                     SetValues();
+                                    DismissSpinner();
                             }
 
                         } catch (JSONException e) {
@@ -567,12 +590,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     Restaurant GetRestaurantData(int rID){
         realm = Realm.getDefaultInstance();
         RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", rID).findAll();
+        Log.e("Count",""+restaurants.size());
         if(restaurants.size()>0){
             dataAlreadyExists=true;
 
             realm.beginTransaction();
             realm.commitTransaction();
-            return restaurants.get(0);
+            return restaurants.get(restaurants.size()-1);
         }
         return null;
     }

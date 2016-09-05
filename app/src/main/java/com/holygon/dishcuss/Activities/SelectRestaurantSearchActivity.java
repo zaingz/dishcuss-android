@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
     Realm realm;
 
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
-
+    ProgressBar progressBar;
     String categoryName="";
     EditText searchEditText;
 
@@ -61,6 +62,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
         selectRestaurantLayoutManager = new LinearLayoutManager(this);
         selectRestaurantRecyclerView.setLayoutManager(selectRestaurantLayoutManager);
         selectRestaurantRecyclerView.setNestedScrollingEnabled(false);
+        progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
 
 
         searchEditText.setOnKeyListener(new View.OnKeyListener() {
@@ -92,6 +94,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
     }
 
     void RestaurantData(String type) {
+        progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Select_Search_restaurants+type)
@@ -304,6 +307,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         realm.close();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
             }

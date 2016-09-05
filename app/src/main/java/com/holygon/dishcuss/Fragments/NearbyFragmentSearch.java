@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -70,6 +71,7 @@ public class NearbyFragmentSearch extends Fragment implements
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
 
     protected LocationSettingsRequest mLocationSettingsRequest;
+    ProgressBar progressBar;
 
 
     //Current Location
@@ -110,7 +112,8 @@ public class NearbyFragmentSearch extends Fragment implements
         activity = (AppCompatActivity) getActivity();
 
         nearbySearchRecyclerView = (RecyclerView) rootView.findViewById(R.id.nearby_search_recycler_view);
-
+        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         //Location
 
@@ -220,7 +223,7 @@ public class NearbyFragmentSearch extends Fragment implements
 
 
     void RestaurantData() {
-
+        progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_nearby_restaurants+"lat="+mCurrentLocation.getLatitude()+"&long="+mCurrentLocation.getLongitude())
@@ -291,7 +294,6 @@ public class NearbyFragmentSearch extends Fragment implements
                                 NearbyFragmentGoogleMap.locations.add(location);
                                 NearbyFragmentGoogleMap.restaurantName.add(restaurantObj.getString("name"));
                                 NearbyFragmentGoogleMap.restaurantID.add(restaurantObj.getInt("id"));
-
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
@@ -455,10 +457,12 @@ public class NearbyFragmentSearch extends Fragment implements
                             NearbySearchAdapter adapter = new NearbySearchAdapter(restaurantRealmList,getActivity());
                             nearbySearchRecyclerView.setAdapter(adapter);
                             NearbyFragmentGoogleMap.DrawMarkers(NearbyFragmentGoogleMap.locations);
+                            realm.close();
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
+
                     }
                 });
             }

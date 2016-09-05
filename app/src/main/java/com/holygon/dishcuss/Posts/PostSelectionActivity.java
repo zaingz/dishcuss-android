@@ -50,7 +50,7 @@ public class PostSelectionActivity extends Activity {
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,PhotoPostActivity.class);
                 intent.putExtra("PostCategory",CheckInPostActivity.UploadPic);
                 startActivity(intent);
                 finish();

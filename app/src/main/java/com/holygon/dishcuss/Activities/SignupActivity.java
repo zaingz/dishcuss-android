@@ -159,8 +159,9 @@ public class SignupActivity extends AppCompatActivity implements
         back_to_sign_in_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(SignupActivity.this,SignInActivity.class);
-                startActivity(intent);
+//                Intent intent=new Intent(SignupActivity.this,SignInActivity.class);
+//                startActivity(intent);
+                finish();
             }
         });
 
