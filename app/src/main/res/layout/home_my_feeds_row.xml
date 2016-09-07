@@ -29,8 +29,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/bg_intro"
-                app:civ_border_width="2dp"
-                app:civ_border_color="#FF000000"/>
+                app:civ_border_width="1dp"
+                app:civ_border_color="#e7e7e7"/>
 
             <LinearLayout
                 android:layout_marginTop="12dp"
@@ -62,6 +62,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/icon_my_feed_account"/>
+
         </RelativeLayout>
 
         </LinearLayout>

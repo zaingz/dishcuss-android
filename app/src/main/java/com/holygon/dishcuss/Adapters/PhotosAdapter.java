@@ -25,7 +25,6 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 
         public ImageView imageView;
         public ViewHolder(View v) {
-
             super(v);
             imageView = (ImageView) v.findViewById(R.id.account_photo_imageView);
         }

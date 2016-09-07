@@ -455,9 +455,6 @@ public class PersonalProfileFragment extends Fragment{
         Log.e("Count",""+userProfiles.size());
         if(userProfiles.size()>0){
             dataAlreadyExists=true;
-
-            realm.beginTransaction();
-            realm.commitTransaction();
             return userProfiles.get(userProfiles.size()-1);
         }
         return null;

@@ -72,6 +72,9 @@
             android:name=".Activities.SelectRestaurantSearchActivity"
             android:theme="@style/MyMaterialTheme" />
         <activity
+            android:name=".Activities.SearchMainActivity"
+            android:theme="@style/MyMaterialTheme" />
+        <activity
             android:name=".Chat.ChatScreenActivity"
             android:theme="@style/MyMaterialTheme"
             android:windowSoftInputMode="adjustPan"/>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="1dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="3dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="3dp">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/recent_search_user_profile_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/bg_intro"
+                app:civ_border_width="1dp"
+                app:civ_border_color="#fdfdfd"/>
+
+            <TextView
+                android:id="@+id/recent_search_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Siki Adda"
+                android:textColor="@color/black_3"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/search_bar_user_followers_count"
+                android:layout_width="wrap_content"
+                android:text="Restaurant"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

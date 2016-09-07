@@ -21,6 +21,7 @@
     <color name="black_2">#666666</color>
     <color name="black_3">#787878</color>
     <color name="view_line">#dedede</color>
+    <color name="line_seprator">#f9f9f9</color>
     <color name="windowBackground1">#232323</color>
     <color name="hint_color">#dcdbdb</color>
 

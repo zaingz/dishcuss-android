@@ -131,16 +131,10 @@ public class NearbyFragmentSearch extends Fragment implements
 
         nearbySearchLayoutManager = new LinearLayoutManager(activity);
         nearbySearchRecyclerView.setLayoutManager(nearbySearchLayoutManager);
-        ArrayList<String> itemsData = new ArrayList<>();
 
-        for (int i = 0; i < 50; i++) {
-            itemsData.add("Local Feeds " + i + " / Item " + i);
-        }
         nearbySearchRecyclerView.setNestedScrollingEnabled(false);
         getData=false;
 
-//        NearbySearchAdapter adapter = new NearbySearchAdapter(itemsData);
-//        nearbySearchRecyclerView.setAdapter(adapter);
 
 
 

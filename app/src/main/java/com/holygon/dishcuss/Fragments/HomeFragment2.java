@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
+import com.holygon.dishcuss.Activities.SearchMainActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Model.Comment;
@@ -124,7 +124,7 @@ public class HomeFragment2 extends Fragment {
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
-        FetchLocalFeedsData();
+        FetchAllLocalFeedsData();
 
 
         //My Feed
@@ -232,7 +232,7 @@ public class HomeFragment2 extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
                 startActivity(intent);
             }
         });
@@ -448,7 +448,7 @@ public class HomeFragment2 extends Fragment {
     }
 
 
-    void FetchLocalFeedsData(){
+    void FetchAllLocalFeedsData(){
         progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -460,7 +460,7 @@ public class HomeFragment2 extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.LocalFeeds_Restaurant_URL)
+                .url(URLs.All_LocalFeeds)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
@@ -512,7 +512,6 @@ public class HomeFragment2 extends Fragment {
 
                                 JSONObject jsonDataReviewObj = jsonDataReviewsArray.getJSONObject(i);
 
-                                JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
 
                                 JSONObject reviewerObj = jsonDataReviewObj.getJSONObject("reviewer");
 
@@ -535,12 +534,21 @@ public class HomeFragment2 extends Fragment {
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
                                     }
-                                    localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    if(!jsonDataReviewObj.isNull("reviewable_id")) {
+                                        localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    }
                                     localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
 
-                                    localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
-                                    localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
-                                    localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+
+                                        JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
+
+                                        if(reviewOnObj.has("id")){
+                                            localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
+                                            localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
+                                            localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+                                        }
+
+
 
                                     localFeedReview.setReviewImage(jsonDataReviewObj.getString("image"));
 
@@ -768,7 +776,7 @@ public class HomeFragment2 extends Fragment {
 
                                 JSONObject jsonDataReviewObj = jsonDataReviewsArray.getJSONObject(i);
 
-                                JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
+
 
                                 JSONObject reviewerObj = jsonDataReviewObj.getJSONObject("reviewer");
 
@@ -791,12 +799,18 @@ public class HomeFragment2 extends Fragment {
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
                                     }
-                                    localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    if(!jsonDataReviewObj.isNull("reviewable_id")) {
+                                        localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    }
                                     localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
 
-                                    localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
-                                    localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
-                                    localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+                                    JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
+
+                                        if(reviewOnObj.has("id")){
+                                            localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
+                                            localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
+                                            localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+                                        }
 
                                     localFeedReview.setReviewImage(jsonDataReviewObj.getString("image"));
 

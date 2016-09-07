@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/search_user_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="1dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/search_bar_user_profile_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/bg_intro"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="#fdfdfd"/>
+
+                <LinearLayout
+                    android:id="@+id/user_profile_follower_user_followers_layout"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/search_bar_user_profile_image"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/search_bar_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sikander Ali"
+                        android:textColor="@color/colorAccent1"
+                        android:textStyle="bold"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/search_bar_user_followers_count"
+                            android:layout_width="wrap_content"
+                            android:text="123"
+                            android:layout_height="wrap_content" />
+                        <TextView
+                            android:layout_marginLeft="4dp"
+                            android:layout_width="wrap_content"
+                            android:text="Followers"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_below="@id/user_profile_follower_user_followers_layout"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <RatingBar
+                        android:id="@+id/search_bar_user_ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:numStars="5"
+                        android:stepSize="1"
+                        android:rating="5.0"
+                        style="?android:attr/ratingBarStyleSmall"/>
+
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:text="Big Foodie"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -593,9 +593,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         Log.e("Count",""+restaurants.size());
         if(restaurants.size()>0){
             dataAlreadyExists=true;
-
-            realm.beginTransaction();
-            realm.commitTransaction();
             return restaurants.get(restaurants.size()-1);
         }
         return null;

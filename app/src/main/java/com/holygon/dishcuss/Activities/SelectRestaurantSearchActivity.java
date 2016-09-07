@@ -1,11 +1,10 @@
 package com.holygon.dishcuss.Activities;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
@@ -43,12 +41,14 @@ import okhttp3.Response;
  */
 public class SelectRestaurantSearchActivity extends AppCompatActivity {
 
-    RecyclerView selectRestaurantRecyclerView;
-    private RecyclerView.LayoutManager selectRestaurantLayoutManager;
+    RecyclerView current_search_recycler_view;
+    private RecyclerView.LayoutManager currentSearchLayoutManager;
     Realm realm;
 
+    CardView recent_search_card_view_parent,nearby_search_card_view_parent,current_search_results_parent_card_view;
+
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
-    ProgressBar progressBar;
+    ProgressBar progressBar,nearbySearchProgressBar;
     String categoryName="";
     EditText searchEditText;
 
@@ -58,12 +58,20 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
         setContentView(R.layout.search_bar_activity);
         searchEditText=(EditText)findViewById(R.id.search_bar_edit_text);
 
-        selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
-        selectRestaurantLayoutManager = new LinearLayoutManager(this);
-        selectRestaurantRecyclerView.setLayoutManager(selectRestaurantLayoutManager);
-        selectRestaurantRecyclerView.setNestedScrollingEnabled(false);
+        current_search_recycler_view = (RecyclerView) findViewById(R.id.current_search_user_recycler_view);
+        currentSearchLayoutManager = new LinearLayoutManager(this);
+        current_search_recycler_view.setLayoutManager(currentSearchLayoutManager);
+        current_search_recycler_view.setNestedScrollingEnabled(false);
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
+        nearbySearchProgressBar=(ProgressBar)findViewById(R.id.search_nearby_progress_bar);
 
+        recent_search_card_view_parent=(CardView)findViewById(R.id.recent_search_card_view_parent);
+        nearby_search_card_view_parent=(CardView)findViewById(R.id.nearby_search_card_view_parent);
+        current_search_results_parent_card_view=(CardView)findViewById(R.id.current_search_results_parent_card_view);
+
+        recent_search_card_view_parent.setVisibility(View.VISIBLE);
+        nearby_search_card_view_parent.setVisibility(View.VISIBLE);
+        current_search_results_parent_card_view.setVisibility(View.GONE);
 
         searchEditText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -71,6 +79,11 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     restaurantRealmList=new ArrayList<>();
                     categoryName=searchEditText.getText().toString();
+                    recent_search_card_view_parent.setVisibility(View.GONE);
+                    nearby_search_card_view_parent.setVisibility(View.GONE);
+                    current_search_results_parent_card_view.setVisibility(View.VISIBLE);
+                    TextView Search_Results_for=(TextView)findViewById(R.id.Search_Results_for);
+                    Search_Results_for.setText("Search Results for "+categoryName);
                     RestaurantData(categoryName);
                     return true;
                 }
@@ -97,7 +110,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.Select_Search_restaurants+type)
+                .url(URLs.Select_Search_+type)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -116,7 +129,8 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
-                            JSONArray jsonDataArray = jsonObj.getJSONArray("restaurants");
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("restaurant");
+                            JSONArray jsonDataUsersArray = jsonObj.getJSONArray("user");
 
                             realm = Realm.getDefaultInstance();
 
@@ -302,12 +316,13 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
                             }
 
                             SelectRestaurantAdapter adapter = new SelectRestaurantAdapter(restaurantRealmList,SelectRestaurantSearchActivity.this);
-                            selectRestaurantRecyclerView.setAdapter(adapter);
+                            current_search_recycler_view.setAdapter(adapter);
+                            realm.close();
+                            progressBar.setVisibility(View.GONE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
-                        progressBar.setVisibility(View.GONE);
+
                     }
                 });
             }
