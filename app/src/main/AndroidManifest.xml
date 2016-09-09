@@ -48,6 +48,14 @@
 
 
         <activity
+            android:name=".Activities.ActivityEatBuddiesTest"
+            android:theme="@style/MyMaterialTheme"/>
+
+        <activity
+            android:name=".Activities.FriendsList"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
             android:name=".Activities.LoginActivity"/>
         <activity
             android:name=".Activities.SignInActivity"
@@ -59,6 +67,11 @@
         <activity
             android:name=".Activities.SelectRestaurantActivity"
             android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.PostDetailActivity"
+            android:theme="@style/MyMaterialTheme" />
+
 
         <activity
             android:name=".Activities.BookmarkActivity"
@@ -162,7 +175,6 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
-
 
         <meta-data
             android:name="com.google.android.gms.version"

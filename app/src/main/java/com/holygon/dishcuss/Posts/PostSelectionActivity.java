@@ -40,7 +40,7 @@ public class PostSelectionActivity extends Activity {
         writeReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,WriteReviewPostActivity.class);
                 intent.putExtra("PostCategory",CheckInPostActivity.Review);
                 startActivity(intent);
                 finish();

@@ -20,10 +20,13 @@
             android:paddingRight="15dp">
 
             <RelativeLayout
-                android:id="@+id/local_feeds_restaurant_relative_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+            <RelativeLayout
+                android:id="@+id/local_feeds_restaurant_relative_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -70,8 +73,10 @@
                     
                 </LinearLayout>
 
+            </RelativeLayout>
+
                 <ImageView
-                    android:id="@+id/image_item"
+                    android:id="@+id/image_bookmark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -80,11 +85,11 @@
             </RelativeLayout>
 
             <View
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="1dp"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@color/line_seprator"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="2dp"/>
 
 
             <RelativeLayout
@@ -135,6 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="I think they were still working the kinks out, as we visited just days after their opening - the food was very slow to arrive, even given that we had planned on a leisurely meal. When we finally got frustrated enoygh to let someone at the reception area know, she did an amazing job of getting things rolling, actually bringing out dinner salads out and then letting our server know about the issue."/>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"

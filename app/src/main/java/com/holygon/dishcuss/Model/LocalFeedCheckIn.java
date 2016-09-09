@@ -1,12 +1,17 @@
 package com.holygon.dishcuss.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
  * Created by Naeem Ibrahim on 8/8/2016.
  */
-public class LocalFeedCheckIn extends RealmObject{
+public class LocalFeedCheckIn extends RealmObject implements Parcelable{
 
 
     int checkInID;
@@ -37,9 +42,11 @@ public class LocalFeedCheckIn extends RealmObject{
 
     RealmList<Comment> commentRealmList;
 
-    public LocalFeedCheckIn() {
 
+    public LocalFeedCheckIn() {
     }
+
+
 
     public RealmList<Comment> getCommentRealmList() {
         return commentRealmList;
@@ -192,4 +199,47 @@ public class LocalFeedCheckIn extends RealmObject{
     public void setReviewSharesCount(int reviewSharesCount) {
         this.reviewSharesCount = reviewSharesCount;
     }
+
+
+    public LocalFeedCheckIn(Parcel in) {
+        this.checkInID=in.readInt();
+        this.checkInWriterName = in.readString();
+        this.checkInWriterAvatar = in.readString();
+        this.updated_at = in.readString();
+        this.checkInStatus = in.readString();
+        this.checkInImage = in.readString();
+        this.reviewLikesCount = in.readInt();
+        this.reviewCommentCount = in.readInt();
+        this.reviewSharesCount = in.readInt();
+        this.commentRealmList=new RealmList<Comment>();
+        in.readTypedList(this.commentRealmList,Comment.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(checkInID);
+        dest.writeString(checkInWriterName);
+        dest.writeString(checkInWriterAvatar);
+        dest.writeString(updated_at);
+        dest.writeString(checkInStatus);
+        dest.writeString(checkInImage);
+        dest.writeInt(reviewLikesCount);
+        dest.writeInt(reviewCommentCount);
+        dest.writeInt(reviewSharesCount);
+        dest.writeTypedList(commentRealmList);
+    }
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public LocalFeedCheckIn createFromParcel(Parcel in) {
+            return new LocalFeedCheckIn(in);
+        }
+
+        public LocalFeedCheckIn[] newArray(int size) {
+            return new LocalFeedCheckIn[size];
+        }
+    };
 }

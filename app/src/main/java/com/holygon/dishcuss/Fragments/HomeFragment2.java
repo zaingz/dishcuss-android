@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
@@ -37,9 +38,11 @@ import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
+import com.holygon.dishcuss.Model.RecentSearchModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -102,7 +105,7 @@ public class HomeFragment2 extends Fragment {
 
 
 //        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        realm =Realm.getDefaultInstance();
 
         viewPager = (ViewPager)rootView.findViewById(R.id.home_viewpager);
 
@@ -124,14 +127,22 @@ public class HomeFragment2 extends Fragment {
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
-        FetchAllLocalFeedsData();
+        if(Constants.isNetworkAvailable(getActivity())) {
+            FetchAllLocalFeedsData();
+        }else {
+            GetFeedsData();
+        }
 
 
         //My Feed
 
         myFeedsLayoutManager = new LinearLayoutManager(activity);
         myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
-        FetchMyFeedsData();
+        if(Constants.isNetworkAvailable(getActivity())) {
+            FetchMyFeedsData();
+        }else {
+
+        }
 
 
         //People Around You
@@ -142,12 +153,21 @@ public class HomeFragment2 extends Fragment {
         myFeedsRecyclerView.setAdapter(homePeopleAroundAdapter);
         FetchPeoplesAroundYou();
 
-
         //Features Restaurant
-        realm =Realm.getDefaultInstance();
+
         featuredRestaurantRealmResults = realm.where(FeaturedRestaurant.class).findAll();
+//        Log.e("FeaturedRestaurant",""+featuredRestaurantRealmResults.size());
         featuredRestaurantArrayList.addAll(featuredRestaurantRealmResults);
-        FeaturedRestaurantData(rootView);
+        if(Constants.isNetworkAvailable(getActivity())) {
+            FeaturedRestaurantData(rootView);
+        }
+        else
+        {
+            NUM_PAGES=featuredRestaurantArrayList.size();
+            addDots(rootView);
+            setupViewPager(viewPager,featuredRestaurantArrayList);
+            selectDot(0);
+        }
 
         local_feeds_text.setTextColor(Color.WHITE);
         my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
@@ -431,16 +451,16 @@ public class HomeFragment2 extends Fragment {
                                 }
                             }
 
+                            realm.close();
+                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
+                            NUM_PAGES=featuredRestaurantArrayList.size();
+                            addDots(view);
+                            setupViewPager(viewPager,featuredRestaurantArrayList);
+                            selectDot(0);
+
                         }catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
-//                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
-
-                        NUM_PAGES=featuredRestaurantArrayList.size();
-                        addDots(view);
-                        setupViewPager(viewPager,featuredRestaurantArrayList);
-                        selectDot(0);
                     }
                 });
             }
@@ -719,7 +739,7 @@ public class HomeFragment2 extends Fragment {
         // Persist your data in a transaction
         realm.beginTransaction();
         User user = realm.where(User.class).findFirst();
-        Log.e("",""+user.getToken());
+        Log.e("UserTTT",""+user.getToken());
         realm.commitTransaction();
 
         OkHttpClient client = new OkHttpClient();
@@ -1141,5 +1161,17 @@ public class HomeFragment2 extends Fragment {
         realm.close();
 
 
+    }
+
+
+    void GetFeedsData(){
+        Toast.makeText(getActivity(),"Check your internet connection",Toast.LENGTH_LONG).show();
+        realm.beginTransaction();
+        RealmResults<LocalFeeds> localFeedsRealmResults =realm.where(LocalFeeds.class).findAll();
+//        Log.e("LocalFeedsRealmResults",""+localFeedsRealmResults.size());
+        homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeedsRealmResults.last(),getActivity());
+        localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
+        realm.commitTransaction();
+        realm.close();
     }
 }

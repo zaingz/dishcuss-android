@@ -80,7 +80,7 @@ public class BookmarkActivity  extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
-        headerName.setText("Select A Restaurant");
+        headerName.setText("Bookmarks");
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
 
         selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);

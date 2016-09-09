@@ -67,4 +67,7 @@ public class URLs {
     //My Wallet
     public static String Bookmarked="http://dishcuss-api.herokuapp.com/user/bookmarks";
 
+    //EatBuddies
+    public static String EatBuddies="http://dishcuss-api.herokuapp.com/user/eat_buddies";
+
 }

@@ -377,81 +377,82 @@ public class SearchMainActivity extends AppCompatActivity implements
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");
-                                    realmRestaurant.setMenuID(restaurantMenu.getInt("id"));
-                                    realmRestaurant.setMenuName("name");
-                                    realmRestaurant.setMenuSummary("summary");
+                                    if(restaurantMenu.has("id")) {
+                                        realmRestaurant.setMenuID(restaurantMenu.getInt("id"));
+                                        realmRestaurant.setMenuName("name");
+                                        realmRestaurant.setMenuSummary("summary");
 
-                                    //Sessions Array
-                                    JSONArray jsonDataMenuSessionsArray = restaurantMenu.getJSONArray("sections");
+                                        //Sessions Array
+                                        JSONArray jsonDataMenuSessionsArray = restaurantMenu.getJSONArray("sections");
 
-                                    for (int s = 0; s < jsonDataMenuSessionsArray.length(); s++) {
+                                        for (int s = 0; s < jsonDataMenuSessionsArray.length(); s++) {
 
-                                        JSONObject sessionObj = jsonDataMenuSessionsArray.getJSONObject(s);
+                                            JSONObject sessionObj = jsonDataMenuSessionsArray.getJSONObject(s);
 
-                                        String sessionTitle = sessionObj.getString("title");
+                                            String sessionTitle = sessionObj.getString("title");
 
-                                        //Arrays food_items
-                                        JSONArray jsonDataMenuFoodItemsArray = sessionObj.getJSONArray("food_items");
+                                            //Arrays food_items
+                                            JSONArray jsonDataMenuFoodItemsArray = sessionObj.getJSONArray("food_items");
 
-                                        for (int f = 0; f < jsonDataMenuFoodItemsArray.length(); f++) {
+                                            for (int f = 0; f < jsonDataMenuFoodItemsArray.length(); f++) {
 
-                                            JSONObject menuFoodItem = jsonDataMenuFoodItemsArray.getJSONObject(f);
+                                                JSONObject menuFoodItem = jsonDataMenuFoodItemsArray.getJSONObject(f);
 
 
-                                            realm.commitTransaction();
-                                            realm.beginTransaction();
+                                                realm.commitTransaction();
+                                                realm.beginTransaction();
 
 //                                        FoodItems foodItems = new FoodItems();
-                                            FoodItems foodItems = realm.createObject(FoodItems.class);
-                                            foodItems.setFoodID(menuFoodItem.getInt("id"));
-                                            foodItems.setName(menuFoodItem.getString("name"));
-                                            foodItems.setPrice(menuFoodItem.getInt("price"));
-                                            foodItems.setSections_Title(sessionTitle);
+                                                FoodItems foodItems = realm.createObject(FoodItems.class);
+                                                foodItems.setFoodID(menuFoodItem.getInt("id"));
+                                                foodItems.setName(menuFoodItem.getString("name"));
+                                                foodItems.setPrice(menuFoodItem.getInt("price"));
+                                                foodItems.setSections_Title(sessionTitle);
 
-                                            JSONArray menuFoodItemCategoryArray = menuFoodItem.getJSONArray("category");
+                                                JSONArray menuFoodItemCategoryArray = menuFoodItem.getJSONArray("category");
 
-                                            for (int fc = 0; fc < menuFoodItemCategoryArray.length(); fc++) {
+                                                for (int fc = 0; fc < menuFoodItemCategoryArray.length(); fc++) {
 
-                                                JSONObject foodCategory = menuFoodItemCategoryArray.getJSONObject(fc);
-                                                FoodsCategory foodsCategory = new FoodsCategory();
+                                                    JSONObject foodCategory = menuFoodItemCategoryArray.getJSONObject(fc);
+                                                    FoodsCategory foodsCategory = new FoodsCategory();
 
-                                                foodsCategory.setId(foodCategory.getInt("id"));
-                                                foodsCategory.setCategoryName(foodCategory.getString("name"));
+                                                    foodsCategory.setId(foodCategory.getInt("id"));
+                                                    foodsCategory.setCategoryName(foodCategory.getString("name"));
 
-                                                Log.e("ID", "" + foodsCategory.getId());
-                                                Log.e("Name", "" + foodsCategory.getCategoryName());
+                                                    Log.e("ID", "" + foodsCategory.getId());
+                                                    Log.e("Name", "" + foodsCategory.getCategoryName());
 //                                            // Persist unmanaged objects
-                                                final FoodsCategory managedFoodsCategory = realm.copyToRealm(foodsCategory);
-                                                foodItems.getFoodsCategories().add(managedFoodsCategory);
+                                                    final FoodsCategory managedFoodsCategory = realm.copyToRealm(foodsCategory);
+                                                    foodItems.getFoodsCategories().add(managedFoodsCategory);
 
-                                            }
+                                                }
 
-                                            JSONArray menuFoodItemPhotosArray = menuFoodItem.getJSONArray("photos");
+                                                JSONArray menuFoodItemPhotosArray = menuFoodItem.getJSONArray("photos");
 
-                                            for (int p = 0; p < menuFoodItemPhotosArray.length(); p++) {
+                                                for (int p = 0; p < menuFoodItemPhotosArray.length(); p++) {
 
-                                                JSONObject photo = menuFoodItemPhotosArray.getJSONObject(p);
+                                                    JSONObject photo = menuFoodItemPhotosArray.getJSONObject(p);
 
-                                                PhotoModel photoModel = new PhotoModel();
-                                                photoModel.setId(photo.getInt("id"));
-                                                photoModel.setUrl(photo.getString("image_url"));
+                                                    PhotoModel photoModel = new PhotoModel();
+                                                    photoModel.setId(photo.getInt("id"));
+                                                    photoModel.setUrl(photo.getString("image_url"));
 
-                                                // Persist unmanaged objects
-                                                final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
-                                                foodItems.getPhotoModels().add(managedPhotoModel);
-                                            }
+                                                    // Persist unmanaged objects
+                                                    final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+                                                    foodItems.getPhotoModels().add(managedPhotoModel);
+                                                }
 
-                                            realm.commitTransaction();
-                                            realm.beginTransaction();
+                                                realm.commitTransaction();
+                                                realm.beginTransaction();
 //                                        foodItems.setPhotoModels(photoModels);
-                                            // Persist unmanaged objects
+                                                // Persist unmanaged objects
 //                                        final FoodItems managedFoodItems = realm.copyToRealm(foodItems);
-                                            realmRestaurant.getFoodItemsArrayList().add(foodItems);
-                                        }
-                                        //Food Items Array
+                                                realmRestaurant.getFoodItemsArrayList().add(foodItems);
+                                            }
+                                            //Food Items Array
 
-                                    }// Session Array
-
+                                        }// Session Array
+                                    }
                                 }
                                 realm.commitTransaction();
                                 restaurantRealmList.add(realmRestaurant);
@@ -587,10 +588,7 @@ public class SearchMainActivity extends AppCompatActivity implements
 
                                     final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
                                     userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
-
                                 }
-
-
 
                                 for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
                                     JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
@@ -598,9 +596,9 @@ public class SearchMainActivity extends AppCompatActivity implements
 
                                     userFollowing.setId(jsonFollowingObject.getInt("id"));
 
-//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
 
                                     userFollowing.setName(jsonFollowingObject.getString("name"));
                                     userFollowing.setUsername(jsonFollowingObject.getString("username"));
@@ -608,7 +606,7 @@ public class SearchMainActivity extends AppCompatActivity implements
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-//                                    userFollowing.setRole(jsonFollowingObject.getString("dob"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
@@ -621,9 +619,9 @@ public class SearchMainActivity extends AppCompatActivity implements
                                     UserFollowing userFollowing=new UserFollowing();
 
                                     userFollowing.setId(jsonFollowingObject.getInt("id"));
-//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
 
                                     userFollowing.setName(jsonFollowingObject.getString("name"));
                                     userFollowing.setUsername(jsonFollowingObject.getString("username"));
@@ -631,7 +629,7 @@ public class SearchMainActivity extends AppCompatActivity implements
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-//                                    userFollowing.setRole(jsonFollowingObject.getString("role"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);

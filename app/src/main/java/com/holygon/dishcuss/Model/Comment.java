@@ -1,12 +1,15 @@
 package com.holygon.dishcuss.Model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import io.realm.RealmObject;
 
 /**
  * Created by Naeem Ibrahim on 8/16/2016.
  */
-public class Comment extends RealmObject {
+public class Comment extends RealmObject implements Parcelable {
 
     int commentID;
     String commentUpdated_at;
@@ -86,4 +89,42 @@ public class Comment extends RealmObject {
     public void setCommentLikesCount(int commentLikesCount) {
         this.commentLikesCount = commentLikesCount;
     }
+
+    public Comment(Parcel in) {
+        this.commentID = in.readInt();
+        this.commentUpdated_at = in.readString();
+        this.commentTitle = in.readString();
+        this.commentSummary = in.readString();
+        this.commentatorID = in.readInt();
+        this.commentatorName = in.readString();
+        this.commentatorImage = in.readString();
+        this.commentLikesCount = in.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(commentID);
+        dest.writeString(commentUpdated_at);
+        dest.writeString(commentTitle);
+        dest.writeString(commentSummary);
+        dest.writeInt(commentatorID);
+        dest.writeString(commentatorName);
+        dest.writeString(commentatorImage);
+        dest.writeInt(commentLikesCount);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
 }

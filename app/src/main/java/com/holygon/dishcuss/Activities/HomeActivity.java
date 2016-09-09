@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,6 +26,8 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Fragments.PersonalProfileFragment;
 import com.holygon.dishcuss.Fragments.ProfileFragment;
@@ -55,7 +58,8 @@ import io.realm.RealmResults;
 /**
  * Created by Naeem Ibrahim on 7/20/2016.
  */
-public class HomeActivity extends RuntimePermissionsActivity {
+public class HomeActivity extends RuntimePermissionsActivity implements
+        GoogleApiClient.OnConnectionFailedListener  {
 
     private Fragment currentFragment=null;
     private AHBottomNavigationAdapter navigationAdapter;
@@ -391,5 +395,10 @@ public class HomeActivity extends RuntimePermissionsActivity {
 
             return null;
         }
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

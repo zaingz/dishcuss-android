@@ -1,5 +1,10 @@
 package com.holygon.dishcuss.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -7,7 +12,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by Naeem Ibrahim on 8/8/2016.
  */
-public class LocalFeedReview extends RealmObject {
+public class LocalFeedReview extends RealmObject implements Parcelable {
 
 
     int reviewID;
@@ -41,6 +46,8 @@ public class LocalFeedReview extends RealmObject {
     public LocalFeedReview(){
 
     }
+
+
 
     public RealmList<Comment> getCommentRealmList() {
         return commentRealmList;
@@ -193,4 +200,53 @@ public class LocalFeedReview extends RealmObject {
     public void setReviewerAvatar(String reviewerAvatar) {
         this.reviewerAvatar = reviewerAvatar;
     }
+
+    public LocalFeedReview(Parcel in){
+        this.reviewID = in.readInt();
+
+        this.reviewerName = in.readString();
+        this.reviewerAvatar = in.readString();
+        this.updated_at = in.readString();
+        this.summary = in.readString();
+        this.reviewImage = in.readString();
+
+        this.reviewLikesCount = in.readInt();
+        this.reviewCommentCount = in.readInt();
+        this.reviewSharesCount = in.readInt();
+        this.commentRealmList=new RealmList<Comment>();
+        in.readTypedList(this.commentRealmList,Comment.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(reviewID);
+
+        dest.writeString(reviewerName);
+        dest.writeString(reviewerAvatar);
+        dest.writeString(updated_at);
+        dest.writeString(summary);
+        dest.writeString(reviewImage);
+
+
+        dest.writeInt(reviewLikesCount);
+        dest.writeInt(reviewCommentCount);
+        dest.writeInt(reviewSharesCount);
+
+        dest.writeTypedList(commentRealmList);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public LocalFeedReview createFromParcel(Parcel in) {
+            return new LocalFeedReview(in);
+        }
+
+        public LocalFeedReview[] newArray(int size) {
+            return new LocalFeedReview[size];
+        }
+    };
 }

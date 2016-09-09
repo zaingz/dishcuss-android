@@ -262,21 +262,21 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                 followersCount =jsonDataFollowersArray.length();
 
                                 for(int p=0;p<jsonDataPostsArray.length();p++){
-
                                     JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
-
                                     JSONObject checkinObj = postObj.getJSONObject("checkin");
 
-                                    JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                    if(checkinObj.has("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
 
-                                    UserBeenThere userBeenThere= new UserBeenThere();
-                                    userBeenThere.setId(restaurantObj.getInt("id"));
-                                    userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                    userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                    userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                    userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                    final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                    userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                        UserBeenThere userBeenThere = new UserBeenThere();
+                                        userBeenThere.setId(restaurantObj.getInt("id"));
+                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                    }
 
 
                                     JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
@@ -387,7 +387,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("role"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
@@ -410,7 +410,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("role"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);

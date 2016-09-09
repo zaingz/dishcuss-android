@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
@@ -50,6 +51,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName,restaurantAddress,status;
+        ImageView image_bookmark;
         public TextView local_feeds_user_name,local_feeds_user_review_time;
         public TextView review_likes_count_tv,review_comments_count_tv,review_share_count_tv;
         public ImageView local_feeds_restaurant_image;
@@ -69,6 +71,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
             super(v);
             restaurantName = (TextView) v.findViewById(R.id.local_feeds_restaurant_name);
             restaurantAddress = (TextView) v.findViewById(R.id.local_feeds_restaurant_address);
+            image_bookmark = (ImageView) v.findViewById(R.id.image_bookmark);
             local_feeds_user_name = (TextView) v.findViewById(R.id.local_feeds_user_name);
             local_feeds_user_review_time = (TextView) v.findViewById(R.id.local_feeds_user_review_time);
             review_likes_count_tv = (TextView) v.findViewById(R.id.review_likes_count_tv);
@@ -161,21 +164,35 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         public void onClick(View v) {
                             if(GenericRoutes.Like(localFeedReview.getReviewID(),"review")){
                                 int prev=Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                holder.review_likes_count_tv.setText(""+prev+1);
+                                prev++;
+                                holder.review_likes_count_tv.setText(""+prev);
                             }
+//                            int prev=Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+//                            holder.review_likes_count_tv.setText(""+prev+1);
+//                            GenericRoutes.Like(localFeedReview.getReviewID(),"review");
+                        }
+                    });
+
+                    holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                            if(GenericRoutes.Like(localFeedReview.getReviewOnID(),"restaurant")){
+//                                holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
+//                            }
+
+                            holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
+                            GenericRoutes.Like(localFeedReview.getReviewOnID(),"restaurant");
                         }
                     });
 
                     holder.comment_TextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(holder.comments_row.getVisibility() == View.VISIBLE){
-                                holder.comments_row.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                holder.comments_row.setVisibility(View.VISIBLE);
-                            }
+
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","Review");
+                            intent.putExtra("MyClass", localFeedReview);
+                            mContext.startActivity(intent);
                         }
                     });
 
@@ -183,12 +200,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.layout_comment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
-                            if(holder.comments_add_row.getVisibility()==View.VISIBLE){
-                                holder.comments_add_row.setVisibility(View.GONE);
-                            }else {
-                                holder.comments_add_row.setVisibility(View.VISIBLE);
-                            }
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","Review");
+                            intent.putExtra("MyClass", localFeedReview);
+                            mContext.startActivity(intent);
                         }
                     });
 
@@ -256,16 +271,26 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
-                    holder.comment_TextView.setOnClickListener(new View.OnClickListener() {
+                    holder.layout_like.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(holder.comments_row.getVisibility() == View.VISIBLE){
-                                holder.comments_row.setVisibility(View.GONE);
-                            }else {
-                                holder.comments_row.setVisibility(View.VISIBLE);
+                            if(GenericRoutes.Like(localFeedCheckIn.getCheckInID(),"post")){
+                                int prev=Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                prev++;
+                                holder.review_likes_count_tv.setText(""+prev);
                             }
+
                         }
                     });
+
+                    holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
+                            GenericRoutes.Like(localFeedCheckIn.getCheckInOnID(),"restaurant");
+                        }
+                    });
+
 
                     holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -278,14 +303,23 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
                     final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                    holder.comment_TextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","CheckIn");
+                            intent.putExtra("MyClass", localFeedCheckIn);
+                            mContext.startActivity(intent);
+                        }
+                    });
                     holder.layout_comment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(holder.comments_add_row.getVisibility()==View.VISIBLE){
-                                holder.comments_add_row.setVisibility(View.GONE);
-                            }else {
-                                holder.comments_add_row.setVisibility(View.VISIBLE);
-                            }
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","CheckIn");
+                            intent.putExtra("MyClass", localFeedCheckIn);
+                            mContext.startActivity(intent);
                         }
                     });
 

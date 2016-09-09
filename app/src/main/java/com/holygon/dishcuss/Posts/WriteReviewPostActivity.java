@@ -71,7 +71,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     String statusStr="";
     String imagePath="";
     ImageView imageView;
-    LinearLayout select_photo_layout;
     String loc="";
     double restaurantLongitude;
     double restaurantLatitude;
@@ -119,8 +118,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
         client = new OkHttpClient();
         userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
-        imageView= (ImageView) findViewById(R.id.imageView_pic_upload_write_reviewer);
-        select_photo_layout= (LinearLayout) findViewById(R.id.select_photo_layout_checkIn);
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
@@ -137,13 +134,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
             }
         });
 
-        select_photo_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageView.setVisibility(View.VISIBLE);
-                SelectImage();
-            }
-        });
+
 
         userLocation.addTextChangedListener(new CheckPercentage());
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
@@ -322,7 +313,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
         public void afterTextChanged(Editable s) {
             Log.e("AutoComplete :: ",""+s.length());
-            if(s.length()>=2){
+            if(s.length()>=1){
                 RestaurantData(s.toString());
             }
             if(s.length()==0){
@@ -366,7 +357,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
-                            JSONArray jsonDataArray = jsonObj.getJSONArray("restaurants");
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("restaurant");
 
                             realm = Realm.getDefaultInstance();
 
@@ -486,80 +477,82 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");
-                                    realmRestaurant.setMenuID(restaurantMenu.getInt("id"));
-                                    realmRestaurant.setMenuName("name");
-                                    realmRestaurant.setMenuSummary("summary");
+                                    if(restaurantMenu.has("id")) {
+                                        realmRestaurant.setMenuID(restaurantMenu.getInt("id"));
+                                        realmRestaurant.setMenuName("name");
+                                        realmRestaurant.setMenuSummary("summary");
 
-                                    //Sessions Array
-                                    JSONArray jsonDataMenuSessionsArray = restaurantMenu.getJSONArray("sections");
+                                        //Sessions Array
+                                        JSONArray jsonDataMenuSessionsArray = restaurantMenu.getJSONArray("sections");
 
-                                    for (int s = 0; s < jsonDataMenuSessionsArray.length(); s++) {
+                                        for (int s = 0; s < jsonDataMenuSessionsArray.length(); s++) {
 
-                                        JSONObject sessionObj = jsonDataMenuSessionsArray.getJSONObject(s);
+                                            JSONObject sessionObj = jsonDataMenuSessionsArray.getJSONObject(s);
 
-                                        String sessionTitle = sessionObj.getString("title");
+                                            String sessionTitle = sessionObj.getString("title");
 
-                                        //Arrays food_items
-                                        JSONArray jsonDataMenuFoodItemsArray = sessionObj.getJSONArray("food_items");
+                                            //Arrays food_items
+                                            JSONArray jsonDataMenuFoodItemsArray = sessionObj.getJSONArray("food_items");
 
-                                        for (int f = 0; f < jsonDataMenuFoodItemsArray.length(); f++) {
+                                            for (int f = 0; f < jsonDataMenuFoodItemsArray.length(); f++) {
 
-                                            JSONObject menuFoodItem = jsonDataMenuFoodItemsArray.getJSONObject(f);
+                                                JSONObject menuFoodItem = jsonDataMenuFoodItemsArray.getJSONObject(f);
 
 
-                                            realm.commitTransaction();
-                                            realm.beginTransaction();
+                                                realm.commitTransaction();
+                                                realm.beginTransaction();
 
 //                                        FoodItems foodItems = new FoodItems();
-                                            FoodItems foodItems = realm.createObject(FoodItems.class);
-                                            foodItems.setFoodID(menuFoodItem.getInt("id"));
-                                            foodItems.setName(menuFoodItem.getString("name"));
-                                            foodItems.setPrice(menuFoodItem.getInt("price"));
-                                            foodItems.setSections_Title(sessionTitle);
+                                                FoodItems foodItems = realm.createObject(FoodItems.class);
+                                                foodItems.setFoodID(menuFoodItem.getInt("id"));
+                                                foodItems.setName(menuFoodItem.getString("name"));
+                                                foodItems.setPrice(menuFoodItem.getInt("price"));
+                                                foodItems.setSections_Title(sessionTitle);
 
-                                            JSONArray menuFoodItemCategoryArray = menuFoodItem.getJSONArray("category");
+                                                JSONArray menuFoodItemCategoryArray = menuFoodItem.getJSONArray("category");
 
-                                            for (int fc = 0; fc < menuFoodItemCategoryArray.length(); fc++) {
+                                                for (int fc = 0; fc < menuFoodItemCategoryArray.length(); fc++) {
 
-                                                JSONObject foodCategory = menuFoodItemCategoryArray.getJSONObject(fc);
-                                                FoodsCategory foodsCategory = new FoodsCategory();
+                                                    JSONObject foodCategory = menuFoodItemCategoryArray.getJSONObject(fc);
+                                                    FoodsCategory foodsCategory = new FoodsCategory();
 
-                                                foodsCategory.setId(foodCategory.getInt("id"));
-                                                foodsCategory.setCategoryName(foodCategory.getString("name"));
+                                                    foodsCategory.setId(foodCategory.getInt("id"));
+                                                    foodsCategory.setCategoryName(foodCategory.getString("name"));
 
-                                                Log.e("ID", "" + foodsCategory.getId());
-                                                Log.e("Name", "" + foodsCategory.getCategoryName());
+                                                    Log.e("ID", "" + foodsCategory.getId());
+                                                    Log.e("Name", "" + foodsCategory.getCategoryName());
 //                                            // Persist unmanaged objects
-                                                final FoodsCategory managedFoodsCategory = realm.copyToRealm(foodsCategory);
-                                                foodItems.getFoodsCategories().add(managedFoodsCategory);
+                                                    final FoodsCategory managedFoodsCategory = realm.copyToRealm(foodsCategory);
+                                                    foodItems.getFoodsCategories().add(managedFoodsCategory);
 
-                                            }
+                                                }
 
-                                            JSONArray menuFoodItemPhotosArray = menuFoodItem.getJSONArray("photos");
+                                                JSONArray menuFoodItemPhotosArray = menuFoodItem.getJSONArray("photos");
 
-                                            for (int p = 0; p < menuFoodItemPhotosArray.length(); p++) {
+                                                for (int p = 0; p < menuFoodItemPhotosArray.length(); p++) {
 
-                                                JSONObject photo = menuFoodItemPhotosArray.getJSONObject(p);
+                                                    JSONObject photo = menuFoodItemPhotosArray.getJSONObject(p);
 
-                                                PhotoModel photoModel = new PhotoModel();
-                                                photoModel.setId(photo.getInt("id"));
-                                                photoModel.setUrl(photo.getString("image_url"));
+                                                    PhotoModel photoModel = new PhotoModel();
+                                                    photoModel.setId(photo.getInt("id"));
+                                                    photoModel.setUrl(photo.getString("image_url"));
 
-                                                // Persist unmanaged objects
-                                                final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
-                                                foodItems.getPhotoModels().add(managedPhotoModel);
-                                            }
+                                                    // Persist unmanaged objects
+                                                    final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+                                                    foodItems.getPhotoModels().add(managedPhotoModel);
+                                                }
 
-                                            realm.commitTransaction();
-                                            realm.beginTransaction();
+                                                realm.commitTransaction();
+                                                realm.beginTransaction();
 //                                        foodItems.setPhotoModels(photoModels);
-                                            // Persist unmanaged objects
+                                                // Persist unmanaged objects
 //                                        final FoodItems managedFoodItems = realm.copyToRealm(foodItems);
-                                            realmRestaurant.getFoodItemsArrayList().add(foodItems);
-                                        }
-                                        //Food Items Array
+                                                realmRestaurant.getFoodItemsArrayList().add(foodItems);
+                                            }
+                                            //Food Items Array
 
-                                    }// Session Array
+                                        }// Session Array
+                                    }
 
                                 }
                                 realm.commitTransaction();
@@ -568,10 +561,10 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 //                            placeAdapter.notifyDataSetChanged();
                             placeAdapter = new ArrayAdapter<String>(WriteReviewPostActivity.this, android.R.layout.simple_list_item_1, places);
                             userLocation.setAdapter(placeAdapter);
+                            realm.close();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        realm.close();
                     }
                 });
             }

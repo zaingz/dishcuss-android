@@ -75,7 +75,8 @@ public class GenericRoutes {
         }
         else
         {
-            return DisLike(id,type);
+//            return DisLike(id,type);
+            return false;
         }
     }
 
