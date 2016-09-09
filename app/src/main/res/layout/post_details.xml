@@ -68,8 +68,6 @@
             android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="3dp"
             android:visibility="visible"
             android:background="@drawable/intro_bg"/>
@@ -218,6 +216,7 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/post_add_comment_edit_text_parent"
             android:background="@drawable/comment_layout_border"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -225,8 +224,6 @@
 
             <EditText
                 android:hint="Add Comment"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:id="@+id/post_add_comment_edit_text"
                 android:layout_width="match_parent"
                 android:background="@android:color/transparent"

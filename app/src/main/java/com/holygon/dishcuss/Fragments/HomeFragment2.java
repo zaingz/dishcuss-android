@@ -38,7 +38,6 @@ import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.RecentSearchModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
@@ -663,7 +662,8 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
                                     localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
 
-                                    localFeedCheckIn.setCheckInImage(checkinObj.getString("restaurant_image"));
+                                    localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+
 
                                     for (int p = 0; p < checkinPhotoArray.length(); p++) {
 
@@ -672,7 +672,7 @@ public class HomeFragment2 extends Fragment {
                                         PhotoModel photoModel=new PhotoModel();
                                         photoModel.setId(photo.getInt("id"));
                                         photoModel.setUrl(photo.getString("image_url"));
-
+                                        localFeedCheckIn.setCheckInImage(photo.getString("image_url"));
                                         final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
                                         localFeedCheckIn.getPhotoModels().add(managedPhotoModel);
                                     }
@@ -739,12 +739,12 @@ public class HomeFragment2 extends Fragment {
         // Persist your data in a transaction
         realm.beginTransaction();
         User user = realm.where(User.class).findFirst();
-        Log.e("UserTTT",""+user.getToken());
+        Log.e("U",""+user.getToken());
         realm.commitTransaction();
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.LocalFeeds_Restaurant_URL)
+                .url(URLs.MyFeeds_Restaurant_URL)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
@@ -925,7 +925,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
                                     localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
 
-                                    localFeedCheckIn.setCheckInImage(checkinObj.getString("restaurant_image"));
+                                    localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
 
                                     for (int p = 0; p < checkinPhotoArray.length(); p++) {
 
@@ -934,7 +934,7 @@ public class HomeFragment2 extends Fragment {
                                         PhotoModel photoModel=new PhotoModel();
                                         photoModel.setId(photo.getInt("id"));
                                         photoModel.setUrl(photo.getString("image_url"));
-
+                                        localFeedCheckIn.setCheckInImage(photo.getString("image_url"));
                                         final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
                                         localFeedCheckIn.getPhotoModels().add(managedPhotoModel);
                                     }
@@ -1005,7 +1005,7 @@ public class HomeFragment2 extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.MyFeed_Restaurant_URL)
+                .url(URLs.PeopleAroundFeed)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);

@@ -81,7 +81,7 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
 
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
-        headerName.setText("Select A Restaurant");
+
 
 
         selectRestaurantRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
@@ -95,6 +95,7 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
             categoryName = bundle.getString("CategoryName");
 
         }
+        headerName.setText(categoryName);
 
         RestaurantData("Desi");
     }

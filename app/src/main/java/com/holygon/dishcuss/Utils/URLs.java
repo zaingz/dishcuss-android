@@ -11,8 +11,8 @@ public class URLs {
     public static String UPDATE_PROFILE="http://dishcuss-api.herokuapp.com/user";
 
     public static String Featured_Restaurant_URL="http://dishcuss-api.herokuapp.com/restaurants/featured";
-    public static String MyFeed_Restaurant_URL="http://dishcuss-api.herokuapp.com//user/localfeed";
-    public static String LocalFeeds_Restaurant_URL="http://dishcuss-api.herokuapp.com/user/newsfeed";
+    public static String PeopleAroundFeed ="http://dishcuss-api.herokuapp.com//user/localfeed";
+    public static String MyFeeds_Restaurant_URL ="http://dishcuss-api.herokuapp.com/user/newsfeed";
     public static String All_LocalFeeds="http://dishcuss-api.herokuapp.com/user/all_feed";
 
     public static String Follow_User="http://dishcuss-api.herokuapp.com/user/follow/";
@@ -27,7 +27,7 @@ public class URLs {
 
     public static String Select_Search_restaurants="http://dishcuss-api.herokuapp.com/restaurants/search?name=";
 
-    public static String Select_Search_="http://dishcuss-api.herokuapp.com/search?name=";
+    public static String Select_Search_All_User_Restaurants ="http://dishcuss-api.herokuapp.com/search?name=";
 
     public static String Posts="http://dishcuss-api.herokuapp.com/user/posts";
 

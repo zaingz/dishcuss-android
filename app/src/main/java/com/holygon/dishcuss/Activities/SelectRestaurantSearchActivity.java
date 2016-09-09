@@ -110,7 +110,7 @@ public class SelectRestaurantSearchActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.Select_Search_+type)
+                .url(URLs.Select_Search_All_User_Restaurants +type)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {

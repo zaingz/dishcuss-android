@@ -456,6 +456,7 @@ public class LoginActivity extends AppCompatActivity implements
                 profileURL=String.valueOf(acct.getPhotoUrl());
                 expires_at="";
 
+                Log.e("G token",""+token);
                 SocialLoginSendDataOnServer();
 
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
+import com.holygon.dishcuss.Activities.SearchMainActivity;
 import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
@@ -199,7 +200,7 @@ public class HomeFragment extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
                 startActivity(intent);
             }
         });
@@ -417,7 +418,7 @@ public class HomeFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.LocalFeeds_Restaurant_URL)
+                .url(URLs.MyFeeds_Restaurant_URL)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
@@ -670,7 +671,7 @@ public class HomeFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.MyFeed_Restaurant_URL)
+                .url(URLs.PeopleAroundFeed)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);

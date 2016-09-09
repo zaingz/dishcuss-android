@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +45,8 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         public TextView restaurantName,restaurantAddress,ratting;
         public TextView explore_restaurant_photos_count,explore_restaurant_likes_count;
         public ImageView explore_restaurant_image_1,explore_restaurant_image_2,explore_restaurant_image_3,explore_restaurant_image_4;
-        public LinearLayout callLayout;
+        public CardView CardView_explore_restaurant_image_1,CardView_explore_restaurant_image_2,CardView_explore_restaurant_image_3,CardView_explore_restaurant_image_4;
+        public LinearLayout callLayout,images_parent_layout;
         public RelativeLayout explore_restaurant_name_parent;
         public ImageView coverImage;
         public ViewHolder(View v) {
@@ -61,10 +63,17 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             explore_restaurant_image_3=(ImageView) v.findViewById(R.id.explore_restaurant_image_3);
             explore_restaurant_image_4=(ImageView) v.findViewById(R.id.explore_restaurant_image_4);
 
+            CardView_explore_restaurant_image_1=(CardView) v.findViewById(R.id.CardView_explore_restaurant_image_1);
+            CardView_explore_restaurant_image_2=(CardView) v.findViewById(R.id.CardView_explore_restaurant_image_2);
+            CardView_explore_restaurant_image_3=(CardView) v.findViewById(R.id.CardView_explore_restaurant_image_3);
+            CardView_explore_restaurant_image_4=(CardView) v.findViewById(R.id.CardView_explore_restaurant_image_4);
+
 
             coverImage=(ImageView) v.findViewById(R.id.explore_restaurant_image_view);
 
             callLayout=(LinearLayout)v.findViewById(R.id.explore_restaurant_call_now_layout);
+
+            images_parent_layout=(LinearLayout)v.findViewById(R.id.images_parent_layout);
             explore_restaurant_name_parent=(RelativeLayout)v.findViewById(R.id.explore_restaurant_name_parent);
 
         }
@@ -91,6 +100,9 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         holder.ratting.setText(""+restaurantRealmList.get(position).getRatting());
         holder.explore_restaurant_likes_count.setText(""+restaurantRealmList.get(position).getBookmark_count());
         holder.explore_restaurant_photos_count.setText(""+itemsData.size());
+
+
+        HidesImages(holder,itemsData.size());
 
         Constants.PicassoImageBackground(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
 
@@ -151,5 +163,23 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         realm.commitTransaction();
         realm.close();
         return itemsData;
+    }
+
+    void HidesImages(ViewHolder holder,int imagesCount){
+
+        if(imagesCount>0){
+            holder.images_parent_layout.setVisibility(View.VISIBLE);
+        }
+
+        if(imagesCount==1){
+            holder.CardView_explore_restaurant_image_2.setVisibility(View.GONE);
+            holder.CardView_explore_restaurant_image_3.setVisibility(View.GONE);
+            holder.CardView_explore_restaurant_image_4.setVisibility(View.GONE);
+        }else if(imagesCount==2){
+            holder.CardView_explore_restaurant_image_3.setVisibility(View.GONE);
+            holder.CardView_explore_restaurant_image_4.setVisibility(View.GONE);
+        }else if(imagesCount==3){
+            holder.CardView_explore_restaurant_image_4.setVisibility(View.GONE);
+        }
     }
 }

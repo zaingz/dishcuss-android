@@ -142,6 +142,7 @@
                 android:text="I think they were still working the kinks out, as we visited just days after their opening - the food was very slow to arrive, even given that we had planned on a leisurely meal. When we finally got frustrated enoygh to let someone at the reception area know, she did an amazing job of getting things rolling, actually bringing out dinner salads out and then letting our server know about the issue."/>
 
             <ImageView
+                android:id="@+id/feeds_post_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginRight="20dp"

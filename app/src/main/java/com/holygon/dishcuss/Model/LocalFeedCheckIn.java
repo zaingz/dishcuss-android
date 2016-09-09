@@ -30,9 +30,18 @@ public class LocalFeedCheckIn extends RealmObject implements Parcelable{
 
     int checkInOnID;
     String checkInOnName;
+    String checkInOnImage;
     String checkInOnLocation;
 
     String checkInImage;
+
+    public String getCheckInOnImage() {
+        return checkInOnImage;
+    }
+
+    public void setCheckInOnImage(String checkInOnImage) {
+        this.checkInOnImage = checkInOnImage;
+    }
 
     RealmList<PhotoModel> photoModels;
 

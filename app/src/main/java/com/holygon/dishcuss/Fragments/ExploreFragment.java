@@ -22,6 +22,7 @@ import com.holygon.dishcuss.Activities.ExploreSelectedCategoryActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
+import com.holygon.dishcuss.Activities.SearchMainActivity;
 import com.holygon.dishcuss.Activities.SelectRestaurantActivity;
 import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Adapters.ExploreAdapter;
@@ -67,6 +68,11 @@ public class ExploreFragment extends Fragment{
 
 
     Button category_button_1;
+    Button category_button_2;
+    Button category_button_3;
+    Button category_button_4;
+    Button category_button_5;
+    Button category_button_6;
 
     public ExploreFragment() {
 
@@ -90,6 +96,11 @@ public class ExploreFragment extends Fragment{
 
         progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
         category_button_1 = (Button) rootView.findViewById(R.id.category_button_1);
+        category_button_2 = (Button) rootView.findViewById(R.id.category_button_2);
+        category_button_3 = (Button) rootView.findViewById(R.id.category_button_3);
+        category_button_4 = (Button) rootView.findViewById(R.id.category_button_4);
+        category_button_5 = (Button) rootView.findViewById(R.id.category_button_5);
+        category_button_6 = (Button) rootView.findViewById(R.id.category_button_6);
 
         realm = Realm.getDefaultInstance();
 
@@ -109,13 +120,54 @@ public class ExploreFragment extends Fragment{
             }
         });
 
+        category_button_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
+                intent.putExtra("CategoryName",category_button_2.getText().toString());
+                startActivity(intent);
+            }
+        });
+        category_button_3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
+                intent.putExtra("CategoryName",category_button_3.getText().toString());
+                startActivity(intent);
+            }
+        });
+        category_button_4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
+                intent.putExtra("CategoryName",category_button_4.getText().toString());
+                startActivity(intent);
+            }
+        });
+        category_button_5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
+                intent.putExtra("CategoryName",category_button_5.getText().toString());
+                startActivity(intent);
+            }
+        });
+        category_button_6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ExploreSelectedCategoryActivity.class);
+                intent.putExtra("CategoryName",category_button_6.getText().toString());
+                startActivity(intent);
+            }
+        });
+
 
 
         ImageView home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SelectRestaurantSearchActivity.class);
+                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
                 startActivity(intent);
             }
         });

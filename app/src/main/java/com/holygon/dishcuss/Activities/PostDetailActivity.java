@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
@@ -56,6 +57,7 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageView userProfile;
     ImageView postImage;
     EditText post_add_comment_edit_text;
+    LinearLayout post_add_comment_edit_text_parent;
     Realm realm;
     LayoutInflater inflater;
     @Override
@@ -82,6 +84,14 @@ public class PostDetailActivity extends AppCompatActivity {
                 localFeedReview=(LocalFeedReview) bundle.getParcelable("MyClass");
             }
         }
+
+        post_add_comment_edit_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                post_add_comment_edit_text.setFocusableInTouchMode(true);
+                post_add_comment_edit_text.setFocusable(true);
+            }
+        });
 
         if(!isCheckIn){
 
@@ -137,6 +147,8 @@ public class PostDetailActivity extends AppCompatActivity {
                 commentLikesCount.setText("  "+commentRealmList.get(i).getCommentLikesCount());
                 comments_row.addView(child);
             }
+
+
             post_add_comment_edit_text.setOnKeyListener(new View.OnKeyListener() {
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     // If the event is a key-down event on the "enter" button
@@ -145,9 +157,11 @@ public class PostDetailActivity extends AppCompatActivity {
                         if(!comment.equals("")){
                             post_add_comment_edit_text.setText("");
                             post_add_comment_edit_text.clearFocus();
+                            post_add_comment_edit_text.setFocusable(false);
                             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
                                     InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
                             SendCommentDataOnServer(""+localFeedReview.getReviewID(),"Title",comment,"", URLs.Add_Comment_Review);
                             int prev=Integer.valueOf(commentsCount.getText().toString());
                             prev++;
@@ -225,9 +239,11 @@ public class PostDetailActivity extends AppCompatActivity {
                         if(!comment.equals("")){
                             post_add_comment_edit_text.setText("");
                             post_add_comment_edit_text.clearFocus();
+                            post_add_comment_edit_text.setFocusable(false);
                             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
                                     InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
                             SendCommentDataOnServer(""+localFeedCheckIn.getCheckInID(),"",comment,"", URLs.Add_Comment_Post);
                             int prev=Integer.valueOf(commentsCount.getText().toString());
                             prev++;
@@ -279,7 +295,9 @@ public class PostDetailActivity extends AppCompatActivity {
         userProfile=(ImageView)findViewById(R.id.post_detail_reviewer_user_profile_image);
         postImage=(ImageView)findViewById(R.id.post_image);
         post_add_comment_edit_text=(EditText)findViewById(R.id.post_add_comment_edit_text);
+        post_add_comment_edit_text_parent=(LinearLayout) findViewById(R.id.post_add_comment_edit_text_parent);
         post_add_comment_edit_text.clearFocus();
+        post_add_comment_edit_text.setFocusable(false);
     }
 
 

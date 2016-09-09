@@ -54,7 +54,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         ImageView image_bookmark;
         public TextView local_feeds_user_name,local_feeds_user_review_time;
         public TextView review_likes_count_tv,review_comments_count_tv,review_share_count_tv;
-        public ImageView local_feeds_restaurant_image;
+        public ImageView local_feeds_restaurant_image,feeds_post_image;
         public de.hdodenhof.circleimageview.CircleImageView profileImage;
         public RelativeLayout local_feeds_restaurant_relative_layout;
         LinearLayout layout_like;
@@ -79,6 +79,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
             review_share_count_tv = (TextView) v.findViewById(R.id.review_share_count_tv);
             status = (TextView) v.findViewById(R.id.review_or_checkin_status);
             local_feeds_restaurant_image = (ImageView) v.findViewById(R.id.local_feeds_restaurant_image);
+            feeds_post_image = (ImageView) v.findViewById(R.id.feeds_post_image);
             profileImage = (de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.local_feeds_profile_image);
 
             local_feeds_restaurant_relative_layout=(RelativeLayout) v.findViewById(R.id.local_feeds_restaurant_relative_layout);
@@ -146,6 +147,12 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.review_share_count_tv.setText(""+localFeedReview.getReviewSharesCount());
 
                     holder.status.setText(localFeedReview.getSummary());
+
+//                    if(!localFeedReview.getReviewImage().equals("")){
+//
+//                        holder.feeds_post_image.setVisibility(View.VISIBLE);
+//                        Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.feeds_post_image,mContext);
+//                    }
 
                     Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image,mContext);
                     Constants.PicassoImageSrc(localFeedReview.getReviewerAvatar(),holder.profileImage,mContext);
@@ -259,7 +266,16 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                     holder.status.setText(localFeedCheckIn.getCheckInStatus());
 
-                    Constants.PicassoImageBackground(localFeedCheckIn.getCheckInImage(),holder.local_feeds_restaurant_image,mContext);
+
+                    if(localFeedCheckIn.getCheckInImage()!=null) {
+                        if (!localFeedCheckIn.getCheckInImage().equals("")) {
+
+                            holder.feeds_post_image.setVisibility(View.VISIBLE);
+                            Constants.PicassoImageBackground(localFeedCheckIn.getCheckInImage(), holder.feeds_post_image, mContext);
+                        }
+                    }
+
+                    Constants.PicassoImageBackground(localFeedCheckIn.getCheckInOnImage(),holder.local_feeds_restaurant_image,mContext);
                     Constants.PicassoImageSrc(localFeedCheckIn.getCheckInWriterAvatar(),holder.profileImage,mContext);
 
                     holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {
