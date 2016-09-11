@@ -68,8 +68,10 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 if(Constants.GetUserLoginStatus(SplashActivity.this)){
+                    Constants.skipLogin=false;
                     Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
                     startActivity(intent);
+
                     finish();
                 }
                 else

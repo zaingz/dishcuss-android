@@ -18,6 +18,7 @@ import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -66,8 +67,9 @@ public class KhabaHistoryActivity extends AppCompatActivity {
         offerList.setLayoutManager(gridLayout);
         offerList.setHasFixedSize(true);
         offerList.setNestedScrollingEnabled(false);
-
-        FetchMyFeedsData();
+        if(!Constants.skipLogin) {
+            FetchMyFeedsData();
+        }
     }
 
 

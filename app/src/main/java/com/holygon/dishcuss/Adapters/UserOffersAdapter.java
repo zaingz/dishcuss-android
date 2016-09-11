@@ -15,6 +15,7 @@ import com.holygon.dishcuss.Activities.ScanQRCodeActivity;
 import com.holygon.dishcuss.Activities.UserOffersActivity;
 import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -68,8 +69,10 @@ public class UserOffersAdapter extends RecyclerView.Adapter<UserOffersAdapter.Vi
         holder.offers_parent_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext,ScanQRCodeActivity.class);
-                mContext.startActivity(intent);
+                if(!Constants.skipLogin) {
+                    Intent intent = new Intent(mContext, ScanQRCodeActivity.class);
+                    mContext.startActivity(intent);
+                }
             }
         });
     }

@@ -88,8 +88,10 @@ public class PostDetailActivity extends AppCompatActivity {
         post_add_comment_edit_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                post_add_comment_edit_text.setFocusableInTouchMode(true);
-                post_add_comment_edit_text.setFocusable(true);
+                if(!Constants.skipLogin) {
+                    post_add_comment_edit_text.setFocusableInTouchMode(true);
+                    post_add_comment_edit_text.setFocusable(true);
+                }
             }
         });
 

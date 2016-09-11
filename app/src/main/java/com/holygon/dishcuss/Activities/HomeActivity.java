@@ -88,9 +88,15 @@ public class HomeActivity extends RuntimePermissionsActivity implements
                         Manifest.permission.ACCESS_FINE_LOCATION}, R.string.runtime_permissions_txt
                 , REQUEST_PERMISSIONS);
         setContentView(R.layout.activity_home);
-        realm =Realm.getDefaultInstance();
-        user= realm.where(User.class).findFirst();
+
+        if(!Constants.skipLogin) {
+            realm =Realm.getDefaultInstance();
+            user = realm.where(User.class).findFirst();
+        }
         initUI();
+        if(Constants.skipLogin) {
+           floatingActionButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -248,6 +254,10 @@ public class HomeActivity extends RuntimePermissionsActivity implements
                     }
                 }
 
+                if(Constants.skipLogin) {
+                   floatingActionButton.setVisibility(View.GONE);
+                }
+
                 switch (position) {
                     case 0:
                         currentFragment = new HomeFragment2();
@@ -256,7 +266,9 @@ public class HomeActivity extends RuntimePermissionsActivity implements
                         currentFragment = new NearbyFragment();
                         break;
                     case 2:
-                        currentFragment = new PersonalProfileFragment();
+                        if(!Constants.skipLogin) {
+                            currentFragment = new PersonalProfileFragment();
+                        }
                         break;
                     case 3:
                         currentFragment = new ExploreFragment();
@@ -327,15 +339,17 @@ public class HomeActivity extends RuntimePermissionsActivity implements
             }
         };
 
-        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", user.getId()).findAll();
-        if (userProfiles.size() > 0) {
+        if(!Constants.skipLogin) {
+            RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", user.getId()).findAll();
+            if (userProfiles.size() > 0) {
 
-            Picasso.with(this).load(userProfiles.get(0).getAvatar()).into(target);
+                Picasso.with(this).load(userProfiles.get(0).getAvatar()).into(target);
 //            ImageView imgView = new ImageView(this);
 //            Constants.PicassoImageSrc(userProfiles.get(0).getAvatar(), imgView, this);
 //            Drawable myDrawable = imgView.getDrawable();
 //            //  myDrawable = downloadImage(userProfiles.get(0).getAvatar());
 //            bottomNavigationItems.get(2).setDrawable(myDrawable);
+            }
         }
     }
     /**

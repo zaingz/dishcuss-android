@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 
 import io.realm.Realm;
 
@@ -33,15 +34,21 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
         header.setText("Get Free Food");
-        realm = Realm.getDefaultInstance();
-        user= realm.where(User.class).findFirst();
+        if(!Constants.skipLogin) {
+            realm = Realm.getDefaultInstance();
+            user = realm.where(User.class).findFirst();
+        }
         localShareButton=(Button)findViewById(R.id.all_share_button);
         whatsAppShareButton=(Button)findViewById(R.id.whatsApp_share_button);
         twitterShareButton=(Button)findViewById(R.id.twitter_share_button);
         facebookShareButton=(Button)findViewById(R.id.facebook_share_button);
         referral_code=(Button)findViewById(R.id.referral_code);
 
-        referral_code.setText(user.getReferral_code());
+        if(!Constants.skipLogin) {
+            referral_code.setText(user.getReferral_code());
+        }else {
+            referral_code.setText("Login first to get your code");
+        }
 
         whatsAppShareButton.setOnClickListener(new View.OnClickListener() {
             @Override

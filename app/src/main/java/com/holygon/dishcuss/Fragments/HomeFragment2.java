@@ -138,7 +138,9 @@ public class HomeFragment2 extends Fragment {
         myFeedsLayoutManager = new LinearLayoutManager(activity);
         myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
         if(Constants.isNetworkAvailable(getActivity())) {
-            FetchMyFeedsData();
+            if(!Constants.skipLogin) {
+                FetchMyFeedsData();
+            }
         }else {
 
         }
@@ -150,7 +152,9 @@ public class HomeFragment2 extends Fragment {
         peopleAroundYouList =new ArrayList<>();
         homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
         myFeedsRecyclerView.setAdapter(homePeopleAroundAdapter);
-        FetchPeoplesAroundYou();
+        if(!Constants.skipLogin) {
+            FetchPeoplesAroundYou();
+        }
 
         //Features Restaurant
 
@@ -260,23 +264,29 @@ public class HomeFragment2 extends Fragment {
         image_bookmark_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), BookmarkActivity.class);
-                startActivity(intent);
+                if(!Constants.skipLogin) {
+                    Intent intent = new Intent(getActivity(), BookmarkActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
 //        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
         badge = new BadgeView(getActivity(), target);
-        Notifications();
+        if(!Constants.skipLogin) {
+            Notifications();
+        }
 
         target.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NotificationActivity.notificationsArrayList.size()>0) {
-                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                    badge.hide(true);
-                    startActivity(intent);
+                if(!Constants.skipLogin) {
+                    if (NotificationActivity.notificationsArrayList.size() > 0) {
+                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                        badge.hide(true);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -473,14 +483,13 @@ public class HomeFragment2 extends Fragment {
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
         realm.beginTransaction();
-        User user = realm.where(User.class).findFirst();
-        Log.e("",""+user.getToken());
+//        User user = realm.where(User.class).findFirst();
+//        Log.e("",""+user.getToken());
         realm.commitTransaction();
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.All_LocalFeeds)
-                .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {

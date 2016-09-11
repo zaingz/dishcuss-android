@@ -43,6 +43,8 @@ public final class Constants{
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     public static GoogleApiClient mGoogleApiClient;
 
+    public static boolean skipLogin;
+
 
     public static boolean checkPlayServices(Activity activity) {
         int resultCode = GooglePlayServicesUtil

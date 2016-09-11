@@ -95,19 +95,20 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
 
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            userID = bundle.getInt("UserID");
-            userProfile=GetUserData(userID);
+        if(!Constants.skipLogin) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                userID = bundle.getInt("UserID");
+                userProfile = GetUserData(userID);
 
-            if(userProfile!=null){
-                SetValues();
-            }else {
-                Log.e("","ELSE");
+                if (userProfile != null) {
+                    SetValues();
+                } else {
+                    Log.e("", "ELSE");
+                }
+                if (!dataAlreadyExists)
+                    UserData();
             }
-            if(!dataAlreadyExists)
-                UserData();
-
         }
     }
 

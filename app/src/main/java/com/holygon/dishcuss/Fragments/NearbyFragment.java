@@ -23,6 +23,7 @@ import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
+import com.holygon.dishcuss.Utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,29 +78,36 @@ public class NearbyFragment extends Fragment {
         image_bookmark_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), BookmarkActivity.class);
-                startActivity(intent);
+                if(!Constants.skipLogin) {
+                    Intent intent = new Intent(getActivity(), BookmarkActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
 //        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
         HomeFragment2.badge = new BadgeView(getActivity(), target);
-        if(NotificationActivity.notificationsArrayList.size()>0) {
-            HomeFragment2.badge.show(true);
-            HomeFragment2.badge.setText("" + NotificationActivity.notificationsArrayList.size());
-        }else
-        {
-            HomeFragment2.badge.hide(true);
+
+        if(!Constants.skipLogin){
+
+            if (NotificationActivity.notificationsArrayList.size() > 0) {
+                HomeFragment2.badge.show(true);
+                HomeFragment2.badge.setText("" + NotificationActivity.notificationsArrayList.size());
+            } else {
+                HomeFragment2.badge.hide(true);
+            }
         }
 
         target.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NotificationActivity.notificationsArrayList.size()>0) {
-                    Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                    HomeFragment2.badge.hide(true);
-                    startActivity(intent);
+                if(!Constants.skipLogin) {
+                    if (NotificationActivity.notificationsArrayList.size() > 0) {
+                        Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                        HomeFragment2.badge.hide(true);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -160,6 +168,7 @@ public class NearbyFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitles.get(position);
         }
+
         public void clearAll() //Clear all page
         {
             for(int i=0; i<mFragments.size(); i++)

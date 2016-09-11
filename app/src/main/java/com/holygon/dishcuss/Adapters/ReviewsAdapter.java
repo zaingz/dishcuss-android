@@ -75,9 +75,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.layout_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(GenericRoutes.Like(mReviewModels.get(position).getReview_ID(),"review")){
-                    int prev=Integer.valueOf(holder.reviewLikesCount.getText().toString());
-                    holder.reviewLikesCount.setText(""+prev+1);
+                if (!Constants.skipLogin) {
+                    if (GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review")) {
+                        int prev = Integer.valueOf(holder.reviewLikesCount.getText().toString());
+                        holder.reviewLikesCount.setText("" + prev + 1);
+                    }
                 }
             }
         });

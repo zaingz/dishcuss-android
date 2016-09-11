@@ -47,7 +47,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 //        holder.imageView.setImageResource(imageViewArrayList.get(position));
         String imageUri = imageViewArrayList.get(position);
 //        Log.e("ImageUri",imageUri);
-        Picasso.with(mContext).load(imageUri).into(holder.imageView);
+        if(imageUri!=null && !imageUri.equals("")) {
+            Picasso.with(mContext).load(imageUri).into(holder.imageView);
+        }
     }
 
     @Override

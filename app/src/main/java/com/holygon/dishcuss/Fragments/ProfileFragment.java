@@ -87,7 +87,9 @@ public class ProfileFragment extends Fragment{
         realm=Realm.getDefaultInstance();
         client = new OkHttpClient();
 
-        GoogleLogin();
+        if(!Constants.skipLogin) {
+            GoogleLogin();
+        }
 
         TextView header=(TextView) rootView.findViewById(R.id.app_toolbar_name);
         header.setText("     My Account");
@@ -131,8 +133,10 @@ public class ProfileFragment extends Fragment{
         profileSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getActivity(), UpdateProfileActivity.class);
-                startActivity(intent);
+                if(!Constants.skipLogin) {
+                    Intent intent = new Intent(getActivity(), UpdateProfileActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -156,8 +160,15 @@ public class ProfileFragment extends Fragment{
         signOut_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = realm.where(User.class).findFirst();
-                SignOutRequest(user.getToken(),user.getProvider());
+                if(!Constants.skipLogin) {
+                    User user = realm.where(User.class).findFirst();
+                    SignOutRequest(user.getToken(), user.getProvider());
+                }else {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 

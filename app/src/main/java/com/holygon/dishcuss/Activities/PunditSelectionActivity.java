@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 
 import com.holygon.dishcuss.Chat.ChatScreenActivity;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 
 /**
  * Created by Naeem Ibrahim on 8/18/2016.
@@ -35,10 +36,12 @@ public class PunditSelectionActivity extends Activity {
         Desi_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PunditSelectionActivity.this,ChatScreenActivity.class);
-                intent.putExtra("PunditName", "Mr.John Wick");
-                intent.putExtra("PunditType", "Desi Pundit");
-                startActivity(intent);
+                if(!Constants.skipLogin) {
+                    Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
+                    intent.putExtra("PunditName", "Mr.John Wick");
+                    intent.putExtra("PunditType", "Desi Pundit");
+                    startActivity(intent);
+                }
             }
         });
 

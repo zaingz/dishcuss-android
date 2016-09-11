@@ -15,6 +15,7 @@ import com.holygon.dishcuss.Adapters.UserOffersAdapter;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -62,8 +63,12 @@ public class UserOffersActivity extends AppCompatActivity {
         offerList.setLayoutManager(gridLayout);
         offerList.setHasFixedSize(true);
 //        offerList.setNestedScrollingEnabled(false);
-        FetchMyFeedsData();
+
+        if(!Constants.skipLogin){
+            FetchMyFeedsData();
+        }
     }
+
 
 
 

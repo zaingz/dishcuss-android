@@ -35,6 +35,7 @@ import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 import com.squareup.picasso.Picasso;
@@ -139,22 +140,21 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
 
+        if(!Constants.skipLogin) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                restaurantID = bundle.getInt("RestaurantID");
 
+                restaurant = GetRestaurantData(restaurantID);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            restaurantID = bundle.getInt("RestaurantID");
-
-            restaurant=GetRestaurantData(restaurantID);
-
-            if(restaurant!=null){
-                SetValues();
-            }else {
-                Log.e("","ELSE");
+                if (restaurant != null) {
+                    SetValues();
+                } else {
+                    Log.e("", "ELSE");
+                }
+                if (!dataAlreadyExists)
+                    RestaurantData();
             }
-            if(!dataAlreadyExists)
-                RestaurantData();
-
         }
 
         restaurant_call_now.setOnClickListener(new View.OnClickListener() {
@@ -171,25 +171,29 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         bookmark_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bookmark_button_text.getText().toString().equals(" Bookmark")){
-                    bookmark_button_text.setText("Bookmarked");
-                }else {
-                    bookmark_button_text.setText(" Bookmark");
+                if(!Constants.skipLogin) {
+                    if (bookmark_button_text.getText().toString().equals(" Bookmark")) {
+                        bookmark_button_text.setText("Bookmarked");
+                    } else {
+                        bookmark_button_text.setText(" Bookmark");
+                    }
+                    GenericRoutes.Like(restaurantID, "restaurant");
                 }
-                GenericRoutes.Like(restaurantID,"restaurant");
             }
         });
 
         follow_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(follow_button_text.getText().toString().equals("  Follow")) {
-                    follow_button_text.setText("Unfollow");
-                }else {
-                    follow_button_text.setText("  Follow");
+                if(!Constants.skipLogin) {
+                    
+                    if (follow_button_text.getText().toString().equals("  Follow")) {
+                        follow_button_text.setText("Unfollow");
+                    } else {
+                        follow_button_text.setText("  Follow");
+                    }
+                    GenericRoutes.FollowRestaurant(restaurantID);
                 }
-                GenericRoutes.FollowRestaurant(restaurantID);
-
             }
         });
 

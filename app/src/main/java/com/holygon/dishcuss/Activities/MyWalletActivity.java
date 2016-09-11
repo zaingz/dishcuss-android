@@ -16,6 +16,7 @@ import com.holygon.dishcuss.Adapters.KhabaHistoryAdapter;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -62,8 +63,9 @@ public class MyWalletActivity extends AppCompatActivity {
         TextView header=(TextView) findViewById(R.id.app_toolbar_name);
         header.setText("My Wallet");
 
-
-        FetchMyFeedsData();
+        if(!Constants.skipLogin) {
+            FetchMyFeedsData();
+        }
 
         more_credits.setOnClickListener(new View.OnClickListener() {
             @Override
