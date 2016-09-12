@@ -108,7 +108,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     void Notifications(int id){
         Realm realm;
-        NotificationActivity.notificationsArrayList=new ArrayList<>();
+
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction

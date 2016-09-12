@@ -19,10 +19,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.NotificationAdapter;
 import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Helper.NotificationTouchHelper;
+import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
@@ -37,6 +40,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -56,7 +61,8 @@ public class NotificationActivity extends AppCompatActivity {
     NotificationAdapter notificationAdapter;
     private Paint p = new Paint();
 
-    public static ArrayList<Notifications> notificationsArrayList;
+    public ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
+    public static  int newNotifications;
     ProgressBar progressBar;
 
 
@@ -69,6 +75,8 @@ public class NotificationActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        realm=Realm.getDefaultInstance();
+
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         headerName.setText("Notifications");
@@ -78,16 +86,18 @@ public class NotificationActivity extends AppCompatActivity {
         notificationLayoutManager = new LinearLayoutManager(this);
         notificationRecyclerView.setLayoutManager(notificationLayoutManager);
         notificationRecyclerView.setNestedScrollingEnabled(false);
+        GetFeedsData();
         notificationAdapter = new NotificationAdapter(notificationsArrayList,NotificationActivity.this);
         notificationRecyclerView.setAdapter(notificationAdapter);
         progressBar.setVisibility(View.GONE);
 //        ItemTouchHelper.Callback callback = new NotificationTouchHelper(notificationAdapter);
 //        ItemTouchHelper helper = new ItemTouchHelper(callback);
 //        helper.attachToRecyclerView(notificationRecyclerView);
-        initSwipe();
+     //   initSwipe();
 
         if(Read()){
-            NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
+//            NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
+            newNotifications=0;
         }
 //        NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
     }
@@ -165,7 +175,7 @@ public class NotificationActivity extends AppCompatActivity {
     boolean Read(){
 
         // Get a Realm instance for this thread
-        Realm realm=Realm.getDefaultInstance();
+
         // Persist your data in a transaction
         realm.beginTransaction();
         final User user = realm.where(User.class).findFirst();
@@ -212,5 +222,18 @@ public class NotificationActivity extends AppCompatActivity {
         {
             return false;
         }
+    }
+
+    void GetFeedsData(){
+
+        realm.beginTransaction();
+        RealmResults<Notifications> notificationsRealmResults =realm.where(Notifications.class).findAll();
+
+        for (int i=notificationsRealmResults.size()-1;i>=0;i--){
+            notificationsArrayList.add(notificationsRealmResults.get(i));
+        }
+
+
+        realm.commitTransaction();
     }
 }

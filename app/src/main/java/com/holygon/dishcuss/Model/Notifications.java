@@ -1,9 +1,11 @@
 package com.holygon.dishcuss.Model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Naeem Ibrahim on 8/18/2016.
  */
-public class Notifications {
+public class Notifications extends RealmObject {
 
     int id;
     int userID;

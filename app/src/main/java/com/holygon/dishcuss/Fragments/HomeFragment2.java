@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Fragments;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -73,7 +75,7 @@ public class HomeFragment2 extends Fragment {
     private RecyclerView.LayoutManager localFeedsLayoutManager,myFeedsLayoutManager,peopleAroundYouLayoutManager;
     RelativeLayout local_feeds_layout,my_feeds_layout,people_around_you_layout;
     TextView local_feeds_text,my_feeds_text,peopleAroundYouTextView;
-
+    ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
     ArrayList<MyFeeds> peopleAroundYouList;
     boolean dataAlreadyExists=false;
 
@@ -282,11 +284,9 @@ public class HomeFragment2 extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
-                    if (NotificationActivity.notificationsArrayList.size() > 0) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
                         badge.hide(true);
                         startActivity(intent);
-                    }
                 }
             }
         });
@@ -1087,7 +1087,6 @@ public class HomeFragment2 extends Fragment {
 
     void Notifications(){
 
-        NotificationActivity.notificationsArrayList=new ArrayList<>();
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -1109,62 +1108,65 @@ public class HomeFragment2 extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                String objStr=response.body().string();
-                try {
-                    JSONObject jsonObj = new JSONObject(objStr);
-                    JSONArray jsonDataArray=jsonObj.getJSONArray("users");
+                final String objStr=response.body().string();
 
-                    for (int i = 0; i < jsonDataArray.length(); i++) {
 
-                        JSONObject c = jsonDataArray.getJSONObject(i);
+                if(getActivity()==null){
+                    return;
+                }
 
-                        Notifications notification=new Notifications();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                        notification.setId(c.getInt("id"));
-                        notification.setBody(c.getString("body"));
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("users");
 
-                        if(!c.isNull("notifier")) {
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
 
-                            JSONObject notifier = c.getJSONObject("notifier");
-                            notification.setUserID(notifier.getInt("id"));
-                            notification.setUsername(notifier.getString("username"));
-                            notification.setAvatarPic(notifier.getString("avatar"));
+                                JSONObject c = jsonDataArray.getJSONObject(i);
 
-                        }
+                                realm.beginTransaction();
+                                Notifications notification = realm.createObject(Notifications.class);
 
-                        NotificationActivity.notificationsArrayList.add(notification);
-                    }
+                                notification.setId(c.getInt("id"));
+                                notification.setBody(c.getString("body"));
 
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                                if (!c.isNull("notifier")) {
 
-                    if(getActivity()==null){
-                        return;
-                    }
+                                    JSONObject notifier = c.getJSONObject("notifier");
+                                    notification.setUserID(notifier.getInt("id"));
+                                    notification.setUsername(notifier.getString("username"));
+                                    notification.setAvatarPic(notifier.getString("avatar"));
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(NotificationActivity.notificationsArrayList.size()>0) {
+                                }
+                                notificationsArrayList.add(notification);
+                                realm.commitTransaction();
+                            }
+
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (notificationsArrayList.size() > 0) {
+                                NotificationActivity.newNotifications = notificationsArrayList.size();
                                 badge.show(true);
-                                badge.setText("" + NotificationActivity.notificationsArrayList.size());
-                            }else {
+                                badge.setText("" + notificationsArrayList.size());
+                            } else {
                                 badge.hide(true);
                             }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } finally {
+
                         }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                finally
-                {
-
-                }
+                    }
+                });
             }
         });
         realm.close();

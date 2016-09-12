@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +40,14 @@ import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 import com.twitter.sdk.android.Twitter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import io.realm.Realm;
 import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -63,9 +68,10 @@ public class ProfileFragment extends Fragment{
     LinearLayout khaba_history_layout;
     LinearLayout signOut_layout;
     LinearLayout user_offers;
-    TextView login_first;
+    TextView login_first,my_wallet_TextView;
     OkHttpClient client;
     Realm realm;
+    int balance;
     private GoogleApiClient mGoogleApiClient;
 
     public ProfileFragment() {
@@ -102,12 +108,16 @@ public class ProfileFragment extends Fragment{
         find_your_buddy_layout=(LinearLayout)rootView.findViewById(R.id.find_your_buddy_layout);
         khaba_history_layout=(LinearLayout)rootView.findViewById(R.id.khaba_history_layout);
         login_first=(TextView) rootView.findViewById(R.id.login_first);
+        my_wallet_TextView=(TextView) rootView.findViewById(R.id.my_wallet_TextView);
         my_wallet_layout=(LinearLayout)rootView.findViewById(R.id.my_wallet_layout);
 
 
         if(Constants.skipLogin){
             login_first.setText("Login or SignUp");
             profileSettings.setVisibility(View.GONE);
+            my_wallet_TextView.setText("My Wallet( 0 PKR)");
+        }else {
+            FetchMyFeedsData();
         }
 
 
@@ -119,6 +129,8 @@ public class ProfileFragment extends Fragment{
                 startActivity(intent);
             }
         });
+
+
 
 
 
@@ -253,5 +265,67 @@ public class ProfileFragment extends Fragment{
                 }
             }
         });
+    }
+
+
+    void FetchMyFeedsData(){
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.CREDITS)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                Log.e("ObjStr",""+objStr);
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+
+                    JSONObject c=jsonObj.getJSONObject("credit");
+
+                    balance=c.getInt("balance");
+
+                    try
+                    {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            my_wallet_TextView.setText("My Wallet("+balance+" PKR)");
+
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                finally
+                {
+
+                }
+            }
+        });
+        realm.close();
+
+
     }
 }

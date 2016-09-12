@@ -91,6 +91,7 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
+                android:id="@+id/my_wallet_TextView"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

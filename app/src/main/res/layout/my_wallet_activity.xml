@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/tw__composer_white"
-                    android:text="PKR 100"/>
+                    android:text="PKR 0"/>
 
             </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/tw__composer_white"
-                    android:text="PKR 100"/>
+                    android:text="PKR 0"/>
 
             </LinearLayout>
 
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/tw__composer_white"
-                    android:text="PKR 100"/>
+                    android:text="PKR 0"/>
             </LinearLayout>
 
         </LinearLayout>

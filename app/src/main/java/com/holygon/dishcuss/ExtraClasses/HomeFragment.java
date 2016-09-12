@@ -213,7 +213,7 @@ public class HomeFragment extends Fragment {
         target.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NotificationActivity.notificationsArrayList.size()>0) {
+                if(NotificationActivity.newNotifications>0) {
                     Intent intent = new Intent(getActivity(), NotificationActivity.class);
                     startActivity(intent);
                 }
@@ -743,7 +743,7 @@ public class HomeFragment extends Fragment {
 
     void Notifications(){
 
-        NotificationActivity.notificationsArrayList=new ArrayList<>();
+//        NotificationActivity.notificationsArrayList=new ArrayList<>();
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -788,7 +788,7 @@ public class HomeFragment extends Fragment {
 
                         }
 
-                        NotificationActivity.notificationsArrayList.add(notification);
+//                        NotificationActivity.notificationsArrayList.add(notification);
                     }
 
                     try
@@ -805,12 +805,12 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(NotificationActivity.notificationsArrayList.size()>0) {
-                                badge.show(true);
-                                badge.setText("" + NotificationActivity.notificationsArrayList.size());
-                            }else {
-                                badge.hide(true);
-                            }
+//                            if(NotificationActivity.notificationsArrayList.size()>0) {
+//                                badge.show(true);
+//                                badge.setText("" + NotificationActivity.notificationsArrayList.size());
+//                            }else {
+//                                badge.hide(true);
+//                            }
                         }
                     });
 

@@ -188,9 +188,9 @@ public class ExploreFragment extends Fragment{
 //        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
         HomeFragment2.badge = new BadgeView(getActivity(), target);
         if(!Constants.skipLogin) {
-            if (NotificationActivity.notificationsArrayList.size() > 0) {
+            if (NotificationActivity.newNotifications > 0) {
                 HomeFragment2.badge.show(true);
-                HomeFragment2.badge.setText("" + NotificationActivity.notificationsArrayList.size());
+                HomeFragment2.badge.setText("" + NotificationActivity.newNotifications);
             } else {
                 HomeFragment2.badge.hide(true);
             }
@@ -200,11 +200,9 @@ public class ExploreFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
-                    if (NotificationActivity.notificationsArrayList.size() > 0) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
                         HomeFragment2.badge.hide(true);
                         startActivity(intent);
-                    }
                 }
             }
         });
