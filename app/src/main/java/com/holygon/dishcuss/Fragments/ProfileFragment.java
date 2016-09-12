@@ -63,6 +63,7 @@ public class ProfileFragment extends Fragment{
     LinearLayout khaba_history_layout;
     LinearLayout signOut_layout;
     LinearLayout user_offers;
+    TextView login_first;
     OkHttpClient client;
     Realm realm;
     private GoogleApiClient mGoogleApiClient;
@@ -100,8 +101,14 @@ public class ProfileFragment extends Fragment{
         user_offers=(LinearLayout)rootView.findViewById(R.id.offers_layout);
         find_your_buddy_layout=(LinearLayout)rootView.findViewById(R.id.find_your_buddy_layout);
         khaba_history_layout=(LinearLayout)rootView.findViewById(R.id.khaba_history_layout);
+        login_first=(TextView) rootView.findViewById(R.id.login_first);
         my_wallet_layout=(LinearLayout)rootView.findViewById(R.id.my_wallet_layout);
 
+
+        if(Constants.skipLogin){
+            login_first.setText("Login or SignUp");
+            profileSettings.setVisibility(View.GONE);
+        }
 
 
         find_your_buddy_layout.setOnClickListener(new View.OnClickListener() {

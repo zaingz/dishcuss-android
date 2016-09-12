@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.holygon.dishcuss.Fragments.AccountBeenThereFragment;
@@ -55,6 +57,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     TabLayout tabLayout;
     int userID;
     Realm realm;
+    String message=null;
     de.hdodenhof.circleimageview.CircleImageView profileImage;
     UserProfile userProfile=new UserProfile();
     boolean dataAlreadyExists = false;
@@ -62,6 +65,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     int reviewsCount=0, followersCount =0, commentsCount =0;
 
     TextView userName, userLocation, review_count, follower_count, comments_count;
+    Button userFollowButton;
 
 
     //*******************PROGRESS******************************
@@ -93,9 +97,6 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
         GetUI();
 
-
-
-        if(!Constants.skipLogin) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userID = bundle.getInt("UserID");
@@ -109,7 +110,23 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                 if (!dataAlreadyExists)
                     UserData();
             }
-        }
+
+        userFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean st = FollowUser(userID);
+                if(st){
+                    userFollowButton.setText("Un follow");
+                }
+
+                boolean st1 = UnFollowUser(userID);
+                if(st1){
+                    userFollowButton.setText("Follow");
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -136,6 +153,12 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         viewPager = (ViewPager)findViewById(R.id.viewpager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        userFollowButton = (Button) findViewById(R.id.user_profile_follow_button);
+
+        if(Constants.skipLogin){
+            userFollowButton.setVisibility(View.GONE);
+        }
+
     }
 
     void SetValues(){
@@ -211,12 +234,11 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
 
         showSpinner("Loading Data...");
-        User user = realm.where(User.class).findFirst();
+
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_User_data+userID)
-                .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -447,5 +469,112 @@ public class ProfilesDetailActivity extends AppCompatActivity {
             return userProfiles.get(userProfiles.size()-1);
         }
         return null;
+    }
+
+
+    boolean FollowUser(int id){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Follow_User+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+
+                    if(jsonObj.has("message")){
+                        message= jsonObj.getString("message");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+
+                }
+            }
+        });
+
+        while (message==null){
+//            Log.e("Loop","Working");
+        }
+        realm.commitTransaction();
+        if (message.equals("Successfully followed!")) {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    boolean UnFollowUser(int id){
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.UnFollow_User+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String objStr=response.body().string();
+                try {
+                    JSONObject jsonObj = new JSONObject(objStr);
+
+                    if(jsonObj.has("message")){
+                        message= jsonObj.getString("message");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                }
+            }
+        });
+
+        while (message==null){
+//            Log.e("Loop","Working");
+        }
+        realm.commitTransaction();
+        if (message.equals("Successfully unfollowed!"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

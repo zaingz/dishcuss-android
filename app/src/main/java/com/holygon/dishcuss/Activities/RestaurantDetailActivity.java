@@ -140,7 +140,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
 
-        if(!Constants.skipLogin) {
+
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 restaurantID = bundle.getInt("RestaurantID");
@@ -155,7 +155,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                 if (!dataAlreadyExists)
                     RestaurantData();
             }
-        }
+
 
         restaurant_call_now.setOnClickListener(new View.OnClickListener() {
             @Override

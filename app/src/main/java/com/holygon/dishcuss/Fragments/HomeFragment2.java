@@ -1181,6 +1181,5 @@ public class HomeFragment2 extends Fragment {
         homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeedsRealmResults.last(),getActivity());
         localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
         realm.commitTransaction();
-        realm.close();
     }
 }
