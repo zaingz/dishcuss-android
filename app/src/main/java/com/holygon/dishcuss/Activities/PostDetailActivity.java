@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -60,6 +61,7 @@ public class PostDetailActivity extends AppCompatActivity {
     LinearLayout post_add_comment_edit_text_parent;
     Realm realm;
     LayoutInflater inflater;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +135,12 @@ public class PostDetailActivity extends AppCompatActivity {
                 TextView commentatorComment=(TextView)child.findViewById(R.id.commentator_comment);
                 TextView commentTime=(TextView)child.findViewById(R.id.comment_time);
                 TextView commentLikesCount=(TextView)child.findViewById(R.id.comment_likes_count);
+                de.hdodenhof.circleimageview.CircleImageView commentator_profile_image=(de.hdodenhof.circleimageview.CircleImageView)
+                        child.findViewById(R.id.commentator_profile_image);
+
+                if(!commentRealmList.get(i).getCommentatorImage().equals("")){
+                    Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(),commentator_profile_image,this);
+                }
 
                 commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                 commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
@@ -216,6 +224,12 @@ public class PostDetailActivity extends AppCompatActivity {
                 TextView commentTime=(TextView)child.findViewById(R.id.comment_time);
                 TextView commentLikesCount=(TextView)child.findViewById(R.id.comment_likes_count);
 
+                de.hdodenhof.circleimageview.CircleImageView commentator_profile_image=(de.hdodenhof.circleimageview.CircleImageView)
+                        child.findViewById(R.id.commentator_profile_image);
+
+                if(!commentRealmList.get(i).getCommentatorImage().equals("")){
+                    Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(),commentator_profile_image,this);
+                }
                 commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                 commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
                 Date date= GetDate(commentRealmList.get(i).getCommentUpdated_at());
@@ -275,6 +289,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 // todo: goto back activity from here
@@ -284,6 +299,46 @@ public class PostDetailActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            Toast.makeText(PostDetailActivity.this,"Key Down",Toast.LENGTH_LONG).show();
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Toast.makeText(PostDetailActivity.this,"BAck Pressed",Toast.LENGTH_LONG).show();
+        if(post_add_comment_edit_text.hasFocus()){
+
+            post_add_comment_edit_text.clearFocus();
+            post_add_comment_edit_text.setFocusable(false);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
+                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
+            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
+
+            Toast.makeText(PostDetailActivity.this,"Press again",Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        if (event.getAction() ==  KeyEvent.KEYCODE_BACK) {
+
+            Toast.makeText(PostDetailActivity.this,"onTouchEvent",Toast.LENGTH_LONG).show();
+
+        }
+
+        return  true;
     }
 
     void GetUI(){
@@ -305,7 +360,6 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
     void SendCommentDataOnServer(String id, String title, String comment, String imageURL, String routeURL){
-
 
         OkHttpClient  client = new OkHttpClient();
         String message=null;
@@ -364,6 +418,13 @@ public class PostDetailActivity extends AppCompatActivity {
                                 TextView commentatorComment = (TextView) child.findViewById(R.id.commentator_comment);
                                 TextView commentTime = (TextView) child.findViewById(R.id.comment_time);
                                 TextView commentLikesCount = (TextView) child.findViewById(R.id.comment_likes_count);
+
+                                de.hdodenhof.circleimageview.CircleImageView commentator_profile_image=(de.hdodenhof.circleimageview.CircleImageView)
+                                        child.findViewById(R.id.commentator_profile_image);
+
+                                if(!comment.getCommentatorImage().equals("")){
+                                    Constants.PicassoImageSrc(comment.getCommentatorImage(),commentator_profile_image,PostDetailActivity.this);
+                                }
 
                                 commentatorName.setText(comment.getCommentatorName());
                                 commentatorComment.setText(comment.getCommentSummary());

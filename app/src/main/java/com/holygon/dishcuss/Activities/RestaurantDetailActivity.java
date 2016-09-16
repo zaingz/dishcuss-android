@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.holygon.dishcuss.Fragments.RestaurantMenuFragment;
 import com.holygon.dishcuss.Fragments.RestaurantPhotosFragment;
 import com.holygon.dishcuss.Fragments.RestaurantReviewsFragment;
 import com.holygon.dishcuss.Fragments.StickyHeaderFragment;
@@ -289,7 +290,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new RestaurantReviewsFragment(restaurantID), "Reviews");
         adapter.addFragment(new RestaurantPhotosFragment(restaurantID), "Photos");
-        adapter.addFragment(new StickyHeaderFragment(), "Menu");
+        adapter.addFragment(new RestaurantMenuFragment(restaurantID), "Menu");
         viewPager.setAdapter(adapter);
     }
 

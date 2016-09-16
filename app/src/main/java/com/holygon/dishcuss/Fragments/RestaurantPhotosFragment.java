@@ -69,7 +69,7 @@ public class RestaurantPhotosFragment extends Fragment {
         Realm realm = Realm.getDefaultInstance();
         RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
         realm.beginTransaction();
-        RealmList<FoodItems> foodItems =restaurants.get(0).getFoodItemsArrayList();
+        RealmList<FoodItems> foodItems =restaurants.get(restaurants.size()-1).getFoodItemsArrayList();
 //        Log.e("FoodItems : ",""+foodItems.size());
         for(int i=0;i<foodItems.size();i++){
 
