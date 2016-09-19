@@ -274,7 +274,6 @@ public class HomeFragment2 extends Fragment {
         });
 
         ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
-//        ImageView ic_bookMark =(ImageView) rootView.findViewById(R.id.image_bookmark_icon);
         badge = new BadgeView(getActivity(), target);
         if(!Constants.skipLogin) {
             Notifications();
@@ -285,8 +284,8 @@ public class HomeFragment2 extends Fragment {
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                        badge.hide(true);
                         startActivity(intent);
+                        badge.hide(true);
                 }
             }
         });

@@ -105,6 +105,8 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
                 notifyDataSetChanged();
             }
         });
+
+
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Chat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.Time;
@@ -9,13 +10,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Model.Comment;
+import com.holygon.dishcuss.Model.PhotoModel;
+import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserBeenThere;
+import com.holygon.dishcuss.Model.UserFollowing;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
+import com.holygon.dishcuss.Utils.URLs;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 8/19/2016.
@@ -28,6 +51,7 @@ private static String TAG = ChatMessageAdapter.class.getSimpleName();
     private int SELF = 100;
     private static String today;
     int lastMessageInfo=0;
+    private String profileImage=null;
 
 private Context mContext;
 private ArrayList<ChatMessage> messageArrayList;
@@ -87,6 +111,28 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         ChatMessage lastMessage;
         ChatMessage message = messageArrayList.get(position);
 
+        Realm realm=Realm.getDefaultInstance();
+        User user = realm.where(User.class).findFirst();
+        if (message.userID == user.getId()) {
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id",user.getId()).findAll();
+        if(userProfiles.size()>0) {
+            UserProfile userProfile = userProfiles.first();
+                if (userProfile.getAvatar() != null)
+                {
+                    if (!userProfile.getAvatar().equals("")) {
+                        Constants.PicassoImageSrc(userProfile.getAvatar(), ((ViewHolder) holder).profileImage, mContext);
+                    }
+                }
+        }
+        else
+        {
+            UserData(user.getId(),((ViewHolder) holder).profileImage);
+        }
+        }
+        else {
+            ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_foreign_pundit_selection);
+        }
+
         if(position>0){
             lastMessage  = messageArrayList.get(position-1);
             if(lastMessage.userID==message.userID)
@@ -96,6 +142,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 ((ViewHolder) holder).profileImage.setVisibility(View.VISIBLE);
             }
         }
+
+
         ((ViewHolder) holder).message.setText(message.getMessage());
         if(message.getCreatedAt()==null){
             Calendar c = Calendar.getInstance();
@@ -130,5 +178,41 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             e.printStackTrace();
         }
         return timestamp;
+    }
+    void UserData(int userID, final de.hdodenhof.circleimageview.CircleImageView profileImg) {
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_User_data+userID)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr = response.body().string();
+
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            if(jsonObj.has("user"))
+                            {
+                                JSONObject userObj = jsonObj.getJSONObject("user");
+                                Constants.PicassoImageSrc(userObj.getString("avatar"),profileImg , mContext);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 }

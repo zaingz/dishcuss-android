@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -71,6 +72,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     LinearLayout restaurant_details_awesome_toolbar_parent;
     LinearLayout restaurant_call_now,bookmark_button_layout,follow_button_layout;
     TextView bookmark_button_text,follow_button_text;
+    ImageView restaurant_share_button;
     Realm realm;
     boolean dataAlreadyExists = false;
     Restaurant restaurant=new Restaurant();
@@ -126,6 +128,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         bookmark_count = (TextView) findViewById(R.id.bookmark_Count);
         been_here_count = (TextView) findViewById(R.id.been_here_Count);
 
+        restaurant_share_button=(ImageView)findViewById(R.id.restaurant_share_button);
+
         restaurant_call_now = (LinearLayout) findViewById(R.id.restaurant_call_now_button);
         follow_button_layout = (LinearLayout) findViewById(R.id.follow_button_layout);
         bookmark_button_layout = (LinearLayout) findViewById(R.id.bookmark_button_layout);
@@ -166,6 +170,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     return;
                 }
                 startActivity(intent);
+            }
+        });
+
+        restaurant_share_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InviteFriends();
             }
         });
 
@@ -403,13 +414,19 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     realmRestaurant.setBookmark_count(bookmarksCount);
                                     realmRestaurant.setBeen_here_count(beenHereCount);
 
+
+                                if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
-                                    realmRestaurant.setCover_image_id(restaurantCoverImage.getInt("id"));
-                                    JSONObject CoverImage = restaurantCoverImage.getJSONObject("image");
-                                    JSONObject CoverImageURL = CoverImage.getJSONObject("image");
-                                    realmRestaurant.setCover_image_url(CoverImageURL.getString("url"));
-                                    JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
-                                    realmRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
+
+                                    if(restaurantCoverImage.has("id")) {
+                                        realmRestaurant.setCover_image_id(restaurantCoverImage.getInt("id"));
+                                        JSONObject CoverImage = restaurantCoverImage.getJSONObject("image");
+                                        JSONObject CoverImageURL = CoverImage.getJSONObject("image");
+                                        realmRestaurant.setCover_image_url(CoverImageURL.getString("url"));
+                                        JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
+                                        realmRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
+                                    }
+                                }
 
 //                                    for (int c = 0; c < jsonDataCheckInsArray.length(); c++) {
 //                                        JSONObject checkInsObj = jsonDataCheckInsArray.getJSONObject(c);
@@ -603,5 +620,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             return restaurants.get(restaurants.size()-1);
         }
         return null;
+    }
+    private void InviteFriends(){
+        Intent intent=new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
+        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is");
+        startActivity(Intent.createChooser(intent, "Share Dishcuss With Friends"));
     }
 }

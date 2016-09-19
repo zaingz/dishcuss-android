@@ -201,8 +201,8 @@ public class ExploreFragment extends Fragment{
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
-                        HomeFragment2.badge.hide(true);
                         startActivity(intent);
+                        HomeFragment2.badge.hide(true);
                 }
             }
         });

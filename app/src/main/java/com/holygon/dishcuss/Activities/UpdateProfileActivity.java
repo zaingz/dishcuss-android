@@ -64,6 +64,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements
     EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender,userDOB;
     AutoCompleteTextView userLocation;
     String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender,strUserDOB;
+    LinearLayout Password_parent,ConfirmPassword_parent;
 
     OkHttpClient client;
     LinearLayout signUpLayout;
@@ -119,6 +120,14 @@ public class UpdateProfileActivity extends AppCompatActivity implements
         if(Constants.checkPlayServices(this)) {
             buildGoogleApiClient();
         }
+
+        if(user.getProvider().equals("Facebook") || user.getProvider().equals("Twitter") ||user.getProvider().equals("Google")) {
+            ConfirmPassword_parent.setVisibility(View.GONE);
+            Password_parent.setVisibility(View.GONE);
+
+            userConfirmPassword.setText("123");
+            userPassword.setText("123");
+        }
     }
 
 
@@ -139,6 +148,9 @@ public class UpdateProfileActivity extends AppCompatActivity implements
         userPassword=(EditText) findViewById(R.id.update_edt_user_password);
         userConfirmPassword=(EditText) findViewById(R.id.update_edt_user_retype_password);
         userGender=(EditText) findViewById(R.id.update_edt_user_gender);
+
+        Password_parent=(LinearLayout) findViewById(R.id.Password_parent);
+        ConfirmPassword_parent=(LinearLayout) findViewById(R.id.ConfirmPassword_parent);
 
 
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
@@ -277,15 +289,26 @@ public class UpdateProfileActivity extends AppCompatActivity implements
 
 
     void SendDataOnServer(){
+        FormBody body;
+        if(user.getProvider().equals("Facebook") || user.getProvider().equals("Twitter") ||user.getProvider().equals("Google")) {
+            body = new FormBody.Builder()
+                    .add("user[name]",strUserFullName)
+                    .add("user[location]", strUserLocation)
+                    .add("user[gender]", strUserGender)
+                    .add("user[dob]", strUserDOB)
+                    .build();
+        }
+        else
+        {
+            body = new FormBody.Builder()
+                    .add("user[name]",strUserFullName)
+                    .add("user[location]", strUserLocation)
+                    .add("user[gender]", strUserGender)
+                    .add("user[dob]", strUserDOB)
+                    .add("user[password]", strUserPassword)
+                    .build();
 
-        FormBody body = new FormBody.Builder()
-                .add("user[name]",strUserFullName)
-                .add("user[location]", strUserLocation)
-                .add("user[gender]", strUserGender)
-                .add("user[dob]", strUserDOB)
-                .add("user[password]", strUserPassword)
-                .build();
-
+        }
         Request request = new Request.Builder()
                 .url(URLs.UPDATE_PROFILE)
                 .addHeader("Authorization", "Token token="+user.getToken())

@@ -294,9 +294,11 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
-                                if (GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")) {
-                                    int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                    prev++;
+                                int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                prev++;
+                                holder.review_likes_count_tv.setText("" + prev);
+                                if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")){
+                                    prev--;
                                     holder.review_likes_count_tv.setText("" + prev);
                                 }
                             }
@@ -378,7 +380,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     Log.e("LocalFeed","Why so?");
                 }
 
-
     }
 
     @Override
@@ -393,7 +394,12 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
     Date GetDate(String date){
-        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+//        String segments[] = date.split("\\+");
+//        String d = segments[0];
+//        String d2 = segments[1];
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+//        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date convertedDate = new Date();
         try {

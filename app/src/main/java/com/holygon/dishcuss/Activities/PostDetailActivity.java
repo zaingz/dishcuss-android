@@ -2,6 +2,7 @@ package com.holygon.dishcuss.Activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -204,13 +205,16 @@ public class PostDetailActivity extends AppCompatActivity {
 
             Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInWriterAvatar(),userProfile,PostDetailActivity.this);
 
-            if(localFeedCheckIn.getCheckInImage().equals(""))
-            {
+            if(localFeedCheckIn.getCheckInImage()!=null) {
+                if (localFeedCheckIn.getCheckInImage().equals("")) {
+                    postImage.setVisibility(View.GONE);
+                }
+                else
+                {
+                    Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInImage(),postImage,PostDetailActivity.this);
+                }
+            }else {
                 postImage.setVisibility(View.GONE);
-            }
-            else
-            {
-                Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInImage(),postImage,PostDetailActivity.this);
             }
 
             commentRealmList=localFeedCheckIn.getCommentRealmList();
@@ -270,11 +274,14 @@ public class PostDetailActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     Date GetDate(String date){
-        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+//        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+//        String segments[] = date.split("\\+");
+//        String d = segments[0];
+//        String d2 = segments[1];
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date convertedDate = new Date();
         try {

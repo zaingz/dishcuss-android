@@ -23,13 +23,12 @@
             android:textStyle="bold"
             android:textSize="18dp"
             android:paddingTop="20dp"
-            android:paddingBottom="10dp"
             android:textColor="@color/tw__composer_white"/>
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="120dp"
         android:layout_gravity="bottom"
-        android:layout_marginTop="110dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_marginBottom="55dp"

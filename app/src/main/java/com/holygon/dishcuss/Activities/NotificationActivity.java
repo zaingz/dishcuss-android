@@ -80,8 +80,6 @@ public class NotificationActivity extends AppCompatActivity {
         TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         headerName.setText("Notifications");
-        progressBar.setVisibility(View.VISIBLE);
-
         notificationRecyclerView = (RecyclerView) findViewById(R.id.select_restaurant_recycler_view);
         notificationLayoutManager = new LinearLayoutManager(this);
         notificationRecyclerView.setLayoutManager(notificationLayoutManager);
@@ -89,17 +87,8 @@ public class NotificationActivity extends AppCompatActivity {
         GetFeedsData();
         notificationAdapter = new NotificationAdapter(notificationsArrayList,NotificationActivity.this);
         notificationRecyclerView.setAdapter(notificationAdapter);
-        progressBar.setVisibility(View.GONE);
-//        ItemTouchHelper.Callback callback = new NotificationTouchHelper(notificationAdapter);
-//        ItemTouchHelper helper = new ItemTouchHelper(callback);
-//        helper.attachToRecyclerView(notificationRecyclerView);
-     //   initSwipe();
-
-        if(Read()){
-//            NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
-            newNotifications=0;
-        }
-//        NotificationActivity.notificationsArrayList=new ArrayList<Notifications>();
+        newNotifications=0;
+        Read();
     }
 
     @Override
@@ -172,10 +161,8 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
 
-    boolean Read(){
-
+    void Read(){
         // Get a Realm instance for this thread
-
         // Persist your data in a transaction
         realm.beginTransaction();
         final User user = realm.where(User.class).findFirst();
@@ -212,20 +199,12 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
 
-        while (message==null){
-        }
         realm.commitTransaction();
-        if (message.equals("Notification Seen")) {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+
     }
 
     void GetFeedsData(){
-
+//    progressBar.setVisibility(View.VISIBLE);
         realm.beginTransaction();
         RealmResults<Notifications> notificationsRealmResults =realm.where(Notifications.class).findAll();
 
@@ -235,5 +214,6 @@ public class NotificationActivity extends AppCompatActivity {
 
 
         realm.commitTransaction();
+//        progressBar.setVisibility(View.GONE);
     }
 }

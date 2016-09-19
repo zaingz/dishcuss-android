@@ -41,7 +41,9 @@ public class DishCussApplication extends Application {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.10.3:8080/");
+
+//            mSocket = IO.socket("http://192.168.10.3:8080/");
+            mSocket = IO.socket("https://dishcuss-chat.herokuapp.com/");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

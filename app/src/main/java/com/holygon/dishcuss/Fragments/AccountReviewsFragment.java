@@ -93,7 +93,11 @@ public class AccountReviewsFragment extends Fragment {
 //        });
     }
     Date GetDate(String date){
-        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+//        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+//        String segments[] = date.split("\\+");
+//        String d = segments[0];
+//        String d2 = segments[1];
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date convertedDate = new Date();
         try {

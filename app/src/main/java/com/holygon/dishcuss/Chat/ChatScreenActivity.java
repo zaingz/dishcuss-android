@@ -71,6 +71,8 @@ public class ChatScreenActivity extends AppCompatActivity {
         realm=Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
 
+        Log.e("User : ",""+user);
+
         TextView headerName = (TextView) findViewById(R.id.app_toolbar_name);
         TextView chat_pundit_type = (TextView) findViewById(R.id.chat_pundit_type);
         chat_message=(EditText)findViewById(R.id.chat_message_edt);
@@ -89,7 +91,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         chatRecyclerView.setLayoutManager(chatLayoutManager);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this,chatMessageArrayList,129);
+        messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this,chatMessageArrayList,user.getId());
         chatRecyclerView.setAdapter(messageAdapter);
 
         chat_btn_send.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +102,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                     if (!newMessage.equals("")) {
                         chat_message.setText("");
                         ChatMessage message = new ChatMessage();
-                        message.setUserID(selfID);
+                        message.setUserID(user.getId());
                         message.setMessage(newMessage);
 
                         chatMessageArrayList.add(message);

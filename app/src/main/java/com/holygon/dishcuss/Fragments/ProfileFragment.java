@@ -116,7 +116,9 @@ public class ProfileFragment extends Fragment{
             login_first.setText("Login or SignUp");
             profileSettings.setVisibility(View.GONE);
             my_wallet_TextView.setText("My Wallet( 0 PKR)");
-        }else {
+        }
+        else
+        {
             FetchMyFeedsData();
         }
 
@@ -192,6 +194,15 @@ public class ProfileFragment extends Fragment{
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
 
@@ -306,6 +317,9 @@ public class ProfileFragment extends Fragment{
                         e.printStackTrace();
                     }
 
+                    if(getActivity()==null){
+                        return;
+                    }
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

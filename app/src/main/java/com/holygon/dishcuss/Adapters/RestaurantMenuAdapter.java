@@ -83,7 +83,7 @@ public class RestaurantMenuAdapter extends RecyclerView.Adapter<RestaurantMenuAd
                 Constants.PicassoImageBackground(photoModelRealmList.get(0).getUrl(),holder.menuItemImage,context);
             }
         }
-        
+
         holder.select_a_menu_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

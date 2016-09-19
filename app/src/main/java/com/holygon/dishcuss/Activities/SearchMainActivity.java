@@ -490,17 +490,20 @@ public class SearchMainActivity extends AppCompatActivity implements
 
                                     JSONObject checkinObj = postObj.getJSONObject("checkin");
 
-                                    JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                    if(checkinObj.has("restaurant")) {
 
-                                    UserBeenThere userBeenThere= new UserBeenThere();
-                                    userBeenThere.setId(restaurantObj.getInt("id"));
-                                    userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                    userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                    userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                    userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                    final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                    userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
 
+                                        UserBeenThere userBeenThere = new UserBeenThere();
+                                        userBeenThere.setId(restaurantObj.getInt("id"));
+                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+
+                                    }
 
                                     JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
                                     for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {

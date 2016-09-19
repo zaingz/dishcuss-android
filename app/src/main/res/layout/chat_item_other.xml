@@ -19,9 +19,9 @@
             android:id="@+id/chat_user_profile_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/bg_intro"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            android:src="@drawable/ic_desi_pundit_selection"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#c1c0c0"/>
 
     <LinearLayout
         android:layout_marginLeft="3dp"
