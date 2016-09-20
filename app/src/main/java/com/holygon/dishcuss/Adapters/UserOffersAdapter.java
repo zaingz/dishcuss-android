@@ -75,6 +75,8 @@ public class UserOffersAdapter extends RecyclerView.Adapter<UserOffersAdapter.Vi
                 }
             }
         });
+
+        holder.setIsRecyclable(false);
     }
 
     @Override

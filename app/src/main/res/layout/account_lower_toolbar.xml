@@ -1,5 +1,6 @@
 <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autofit="http://schemas.android.com/tools"
     android:id="@+id/my_awesome_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -42,14 +43,15 @@
                     android:layout_toRightOf="@id/user_detail_profile_image"
                     android:orientation="vertical">
 
-                    <TextView
-
+                    <me.grantland.widget.AutofitTextView
                         android:id="@+id/user_profile_user_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="Sikander Ali"
+                        android:text="Naeem Ibrahim"
                         android:textColor="@color/black_1"
                         android:textSize="20dp"
+                        android:singleLine="true"
+                        autofit:minTextSize="12dp"
                         android:textStyle="bold"/>
 
                     <LinearLayout
@@ -65,7 +67,7 @@
                         <TextView
                             android:id="@+id/user_profile_user_location"
                             android:layout_width="wrap_content"
-                            android:text="Lahore"
+                            android:text=""
                             android:textColor="@color/black_3"
                             android:textStyle="bold"
                             android:layout_height="wrap_content" />
@@ -140,7 +142,7 @@
                     android:id="@+id/user_profile_review_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1211"
+                    android:text=""
                     android:textColor="@android:color/black"
                     android:layout_marginLeft="3dp"
                     android:layout_marginTop="10dp" />
@@ -172,7 +174,7 @@
                     android:id="@+id/user_profile_followers_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="222"
+                    android:text=""
                     android:textColor="@android:color/black"
                     android:layout_marginLeft="3dp"
                     />
@@ -202,7 +204,7 @@
                     android:id="@+id/user_profile_comments_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1231"
+                    android:text=""
                     android:textColor="@android:color/black"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="9dp" />

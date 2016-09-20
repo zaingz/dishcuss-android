@@ -112,7 +112,7 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
                 context.startActivity(intent);
             }
         });
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

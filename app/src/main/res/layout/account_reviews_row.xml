@@ -12,6 +12,7 @@
         android:layout_margin="1dp"
         android:layout_marginBottom="3dp">
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +21,6 @@
             android:paddingRight="15dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp">
-
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -32,8 +32,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/bg_intro"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"/>
+                   />
 
                 <LinearLayout
                     android:layout_marginTop="12dp"
@@ -117,6 +116,7 @@
                         android:text="2" />
 
                     <TextView
+                        android:id="@+id/review_comments_count_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"

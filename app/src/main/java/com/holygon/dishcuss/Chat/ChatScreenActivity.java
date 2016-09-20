@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,11 +42,15 @@ public class ChatScreenActivity extends AppCompatActivity {
     private Socket mSocket;
     int selfID=129;
 
+    String punditType;
+    ImageView pundit_image;
+
 
     User user;
     Realm realm;
     String userJoinID;
     private Boolean isConnected = false;
+    int punditNumber=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,14 +80,33 @@ public class ChatScreenActivity extends AppCompatActivity {
 
         TextView headerName = (TextView) findViewById(R.id.app_toolbar_name);
         TextView chat_pundit_type = (TextView) findViewById(R.id.chat_pundit_type);
+        pundit_image = (ImageView)findViewById(R.id.pundit_image);
         chat_message=(EditText)findViewById(R.id.chat_message_edt);
-        chat_btn_send=(Button) findViewById(R.id.chat_btn_send);
+        chat_btn_send=(Button)findViewById(R.id.chat_btn_send);
 
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             headerName.setText(bundle.getString("PunditName"));
-            chat_pundit_type.setText(bundle.getString("PunditType"));
+            punditNumber=bundle.getInt("PunditNumber");
+            punditType=bundle.getString("PunditType");
+
+            if(punditNumber==1) {
+                chat_pundit_type.setText("Desi Pundit");
+                pundit_image.setImageDrawable(getResources().getDrawable(R.drawable.pundit_ic_desi));
+            }else if(punditNumber==2) {
+                chat_pundit_type.setText("Sasta Pundit");
+                pundit_image.setImageDrawable(getResources().getDrawable(R.drawable.pundit_ic_sasta));
+            }else if(punditNumber==3) {
+                chat_pundit_type.setText("Fast Food Pundit");
+                pundit_image.setImageDrawable(getResources().getDrawable(R.drawable.pundit_ic_fastfood));
+            }else if(punditNumber==4) {
+                chat_pundit_type.setText("Continental Pundit");
+                pundit_image.setImageDrawable(getResources().getDrawable(R.drawable.pundit_ic_continental));
+            }else if(punditNumber==5) {
+                chat_pundit_type.setText("Foreign Pundit");
+                pundit_image.setImageDrawable(getResources().getDrawable(R.drawable.pundit_ic_foriegn));
+            }
         }
 
 
@@ -91,7 +115,7 @@ public class ChatScreenActivity extends AppCompatActivity {
         chatRecyclerView.setLayoutManager(chatLayoutManager);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this,chatMessageArrayList,user.getId());
+        messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this,chatMessageArrayList,user.getId(),punditNumber);
         chatRecyclerView.setAdapter(messageAdapter);
 
         chat_btn_send.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +137,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                             jsonObj.put("msg", newMessage);
                             jsonObj.put("user", user.getEmail());
                             jsonObj.put("img", "");
-                            jsonObj.put("room", "pandit1");
+                            jsonObj.put("room", punditType);
                             mSocket.emit("p1_msg_app", jsonObj.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -192,7 +216,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                             {
                                 jsonObj.put("email","default@gmail.com");
                             }
-                            jsonObj.put("room","pandit1");
+                            jsonObj.put("room",punditType);
                             mSocket.emit("p1_join",jsonObj.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -64,6 +64,8 @@ public class KhabaHistoryAdapter extends RecyclerView.Adapter<KhabaHistoryAdapte
         holder.khaba_restaurant_location.setText(imageViewArrayList.get(position).getRestaurantLocation());
         holder.khaba_restaurant_time.setText(imageViewArrayList.get(position).getCredit_time());
         holder.khaba_price.setText("PKR " +imageViewArrayList.get(position).getPrice());
+
+        holder.setIsRecyclable(false);
     }
 
     @Override

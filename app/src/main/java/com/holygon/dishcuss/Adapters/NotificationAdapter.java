@@ -91,6 +91,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             }
         });
 
+        holder.setIsRecyclable(false);
     }
 
     @Override

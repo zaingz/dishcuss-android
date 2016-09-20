@@ -1,15 +1,21 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -50,6 +56,24 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         if(imageUri!=null && !imageUri.equals("")) {
             Picasso.with(mContext).load(imageUri).into(holder.imageView);
         }
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                holder.imageView.setDrawingCacheEnabled(true);
+                Bitmap b=holder.imageView.getDrawingCache();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                b.compress(Bitmap.CompressFormat.PNG, 75, stream);
+                byte[] bytes = stream.toByteArray();
+                Intent i = new Intent(((Activity)mContext), PhotoDetailActivity.class);
+                i.putExtra("Bitmap", bytes);
+                i.putExtra("Type","Photo");
+                ((Activity)mContext).startActivity(i);
+
+            }
+        });
+        holder.setIsRecyclable(false);
     }
 
     @Override

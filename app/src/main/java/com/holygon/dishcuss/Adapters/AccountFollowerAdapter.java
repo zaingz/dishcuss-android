@@ -52,9 +52,13 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.user_profile_follower_user_name.setText(userFollowings.get(position).getName());
         holder.user_profile_follower_user_followers_count.setText(""+userFollowings.get(position).getFollowerCount());
-        if(!userFollowings.get(position).getAvatar().equals("")){
-            Constants.PicassoImageSrc(userFollowings.get(position).getAvatar(),holder.profileImageView,mContext);
+        if(userFollowings.get(position).getAvatar()!=null) {
+            if (!userFollowings.get(position).getAvatar().equals("")) {
+                Constants.PicassoImageSrc(userFollowings.get(position).getAvatar(), holder.profileImageView, mContext);
+            }
         }
+
+        holder.setIsRecyclable(false);
     }
 
     @Override

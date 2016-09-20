@@ -133,13 +133,47 @@ public final class Constants{
 
     public static void PicassoImageSrc(String URL, ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
-            Picasso.with(context).load(URL).into(imageView);
+            Picasso.with(context).load(URL)
+                    .resize(60,60)
+                    .onlyScaleDown()
+                    .centerCrop()
+                    .into(imageView);
         }
     }
 
     public static void PicassoImageBackground(String URL, final ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
-            Picasso.with(context).load(URL).into(new Target(){
+            Picasso.with(context).load(URL)
+                    .resize(60,60)
+                    .onlyScaleDown()
+                    .centerCrop()
+                    .into(new Target(){
+
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                }
+
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                }
+            });
+        }
+    }
+
+    public static void PicassoLargeImageBackground(String URL, final ImageView imageView, final Context context){
+        if(URL!=null && !URL.equals("")){
+            Picasso.with(context).load(URL)
+                    .resize(400,250)
+                    .onlyScaleDown()
+                    .centerCrop()
+                    .into(new Target(){
 
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {

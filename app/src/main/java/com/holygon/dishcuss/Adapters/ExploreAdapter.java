@@ -137,6 +137,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             }
         });
 
+        holder.setIsRecyclable(false);
     }
 
     @Override

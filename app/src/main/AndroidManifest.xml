@@ -166,6 +166,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
 
         <activity
+            android:name=".Activities.PhotoDetailActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+
+        <activity
             android:name=".Activities.PunditSelectionActivity"
             android:theme="@style/MyMaterialTheme"/>
 

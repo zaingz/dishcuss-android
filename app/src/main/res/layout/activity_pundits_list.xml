@@ -90,6 +90,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/Sasta_pundit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
@@ -143,6 +144,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/fast_food_pundit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
@@ -195,6 +197,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/Continental_pundit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
@@ -248,6 +251,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/Foregin_pundit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"

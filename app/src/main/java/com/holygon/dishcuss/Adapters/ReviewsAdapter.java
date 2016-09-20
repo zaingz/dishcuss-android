@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
@@ -33,20 +35,22 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     Context mContext;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView reviewTitle,reviewTime,reviewSummary,reviewLikesCount,reviewCommentsCount,reviewSharesCount;
+        public TextView reviewTitle,reviewTime,reviewSummary,reviewLikesCount,reviewCommentsCount,reviewSharesCount,review_comments_count_tv;
         LinearLayout layout_like,layout_comment;
         LinearLayout comment_row;
+        public de.hdodenhof.circleimageview.CircleImageView profileImageView;
         public ViewHolder(View v) {
             super(v);
             reviewTitle = (TextView) v.findViewById(R.id.row_reviews_user_name);
             reviewTime = (TextView) v.findViewById(R.id.row_reviews_user_review_time);
             reviewSummary = (TextView) v.findViewById(R.id.row_review_post_summary);
             reviewLikesCount = (TextView) v.findViewById(R.id.row_review_like_count);
+            review_comments_count_tv = (TextView) v.findViewById(R.id.review_comments_count_tv);
             reviewCommentsCount = (TextView) v.findViewById(R.id.row_review_comments_count);
             reviewSharesCount = (TextView) v.findViewById(R.id.row_review_shares_count);
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
-
+            profileImageView=(de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.account_reviews_profile_image);
             comment_row=(LinearLayout)v.findViewById(R.id.review_comments);
         }
     }
@@ -72,6 +76,11 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.reviewCommentsCount.setText(mReviewModels.get(position).getReview_comments_count()+"");
         holder.reviewSharesCount.setText(mReviewModels.get(position).getReview_shares_count()+"");
 
+        if(mReviewModels.get(position).getReview_reviewer_Avatar()!=null) {
+            if (!mReviewModels.get(position).getReview_reviewer_Avatar().equals("")) {
+                Constants.PicassoImageSrc(mReviewModels.get(position).getReview_reviewer_Avatar(), holder.profileImageView, mContext);
+            }
+        }
         holder.layout_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,14 +94,36 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
 
 
+       final ReviewModel reviewModel=  mReviewModels.get(position);
+
         holder.layout_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.comment_row.getVisibility() == View.VISIBLE){
-                    holder.comment_row.setVisibility(View.GONE);
-                }else {
-                    holder.comment_row.setVisibility(View.VISIBLE);
-                }
+                Intent intent=new Intent(mContext, PostDetailActivity.class);
+                intent.putExtra("Type","Review2");
+                intent.putExtra("MyClass",reviewModel );
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.reviewCommentsCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, PostDetailActivity.class);
+                intent.putExtra("Type","Review2");
+                intent.putExtra("MyClass",reviewModel );
+                mContext.startActivity(intent);
+            }
+        });
+
+
+        holder.review_comments_count_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, PostDetailActivity.class);
+                intent.putExtra("Type","Review2");
+                intent.putExtra("MyClass",reviewModel );
+                mContext.startActivity(intent);
             }
         });
 

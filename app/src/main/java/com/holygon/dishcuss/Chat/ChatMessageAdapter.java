@@ -52,6 +52,7 @@ private static String TAG = ChatMessageAdapter.class.getSimpleName();
     private static String today;
     int lastMessageInfo=0;
     private String profileImage=null;
+    int PunditNumber;
 
 private Context mContext;
 private ArrayList<ChatMessage> messageArrayList;
@@ -69,10 +70,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 }
 
 
-    public ChatMessageAdapter(Context mContext, ArrayList<ChatMessage> messageArrayList, int userId) {
+    public ChatMessageAdapter(Context mContext, ArrayList<ChatMessage> messageArrayList, int userId,int PunditNumber) {
         this.mContext = mContext;
         this.messageArrayList = messageArrayList;
         this.userId = userId;
+        this.PunditNumber=PunditNumber;
 
     }
 
@@ -129,8 +131,19 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             UserData(user.getId(),((ViewHolder) holder).profileImage);
         }
         }
-        else {
-            ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_foreign_pundit_selection);
+        else
+        {
+            if(PunditNumber==1) {
+                ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_desi_pundit_selection);
+            }else if(PunditNumber==2) {
+                ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_sasta_pundit_selection);
+            }else if(PunditNumber==3) {
+                ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_fastfood_pundit_selection);
+            }else if(PunditNumber==4) {
+                ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_continental_pundit_selection);
+            }else if(PunditNumber==5) {
+                ((ViewHolder) holder).profileImage.setImageResource(R.drawable.ic_foreign_pundit_selection);
+            }
         }
 
         if(position>0){

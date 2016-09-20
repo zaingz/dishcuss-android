@@ -1,7 +1,9 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
@@ -26,6 +29,7 @@ import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -170,10 +174,12 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
-                                if (GenericRoutes.Like(localFeedReview.getReviewID(), "review")) {
-                                    int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                    prev++;
-                                    holder.review_likes_count_tv.setText("" + prev);
+                                if(Constants.isNetworkAvailable((Activity) mContext)) {
+                                    if (GenericRoutes.Like(localFeedReview.getReviewID(), "review")) {
+                                        int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                        prev++;
+                                        holder.review_likes_count_tv.setText("" + prev);
+                                    }
                                 }
 //                            int prev=Integer.valueOf(holder.review_likes_count_tv.getText().toString());
 //                            holder.review_likes_count_tv.setText(""+prev+1);
@@ -188,10 +194,24 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 //                            if(GenericRoutes.Like(localFeedReview.getReviewOnID(),"restaurant")){
 //                                holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
 //                            }
-                            if(!Constants.skipLogin) {
-                                holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
-                                GenericRoutes.Like(localFeedReview.getReviewOnID(), "restaurant");
+                            if(Constants.isNetworkAvailable((Activity) mContext)) {
+                                if (!Constants.skipLogin) {
+                                    holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
+                                    GenericRoutes.Like(localFeedReview.getReviewOnID(), "restaurant");
+                                }
                             }
+                        }
+                    });
+
+
+                    holder.review_comments_count_tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","Review");
+                            intent.putExtra("MyClass", localFeedReview);
+                            mContext.startActivity(intent);
                         }
                     });
 
@@ -274,9 +294,28 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         if (!localFeedCheckIn.getCheckInImage().equals("")) {
 
                             holder.feeds_post_image.setVisibility(View.VISIBLE);
-                            Constants.PicassoImageBackground(localFeedCheckIn.getCheckInImage(), holder.feeds_post_image, mContext);
+                            Constants.PicassoLargeImageBackground(localFeedCheckIn.getCheckInImage(), holder.feeds_post_image, mContext);
                         }
                     }
+
+
+                    holder.feeds_post_image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            holder.feeds_post_image.setDrawingCacheEnabled(true);
+                            Bitmap b=holder.feeds_post_image.getDrawingCache();
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            b.compress(Bitmap.CompressFormat.PNG,75, stream);
+                            byte[] bytes = stream.toByteArray();
+                            Intent i = new Intent(((Activity)mContext), PhotoDetailActivity.class);
+                            i.putExtra("Type","CheckIn");
+                            i.putExtra("MyClass", localFeedCheckIn);
+                            i.putExtra("Bitmap", bytes);
+                            ((Activity)mContext).startActivity(i);
+                        }
+
+                    });
 
                     Constants.PicassoImageBackground(localFeedCheckIn.getCheckInOnImage(),holder.local_feeds_restaurant_image,mContext);
                     Constants.PicassoImageSrc(localFeedCheckIn.getCheckInWriterAvatar(),holder.profileImage,mContext);
@@ -294,12 +333,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
-                                int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                prev++;
-                                holder.review_likes_count_tv.setText("" + prev);
-                                if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")){
-                                    prev--;
+                                if(Constants.isNetworkAvailable((Activity) mContext)) {
+                                    int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                    prev++;
                                     holder.review_likes_count_tv.setText("" + prev);
+                                    if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")) {
+                                        prev--;
+                                        holder.review_likes_count_tv.setText("" + prev);
+                                    }
                                 }
                             }
                         }
@@ -327,6 +368,16 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
                     final LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                    holder.review_comments_count_tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+                            intent.putExtra("Type","CheckIn");
+                            intent.putExtra("MyClass", localFeedCheckIn);
+                            mContext.startActivity(intent);
+                        }
+                    });
 
                     holder.comment_TextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -379,7 +430,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 {
                     Log.e("LocalFeed","Why so?");
                 }
-
+        holder.setIsRecyclable(false);
     }
 
     @Override
@@ -444,6 +495,18 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
             }
         }
         return C;
+    }
+
+    public Bitmap scaleDownBitmap(Bitmap photo, int newHeight, Context context) {
+
+        final float densityMultiplier = context.getResources().getDisplayMetrics().density;
+
+        int h= (int) (newHeight*densityMultiplier);
+        int w= (int) (h * photo.getWidth()/((double) photo.getHeight()));
+
+        photo=Bitmap.createScaledBitmap(photo, w, h, true);
+
+        return photo;
     }
 }
 

@@ -78,7 +78,7 @@ public class SearchRestaurantNearbySuggestionsAdapter  extends RecyclerView.Adap
                 context.startActivity(intent);
             }
         });
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

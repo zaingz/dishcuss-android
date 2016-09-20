@@ -92,7 +92,7 @@ public class RestaurantMenuAdapter extends RecyclerView.Adapter<RestaurantMenuAd
 //                context.startActivity(intent);
             }
         });
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

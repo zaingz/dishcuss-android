@@ -58,9 +58,11 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.user_profile_been_there_restaurant_name.setText(userBeenTheres.get(position).getRestaurantName());
         holder.user_profile_been_there_restaurant_address.setText(userBeenTheres.get(position).getRestaurantLocation());
-//        if(!userBeenTheres.get(position).getCover_image_thumbnail().equals("")) {
-//            Constants.PicassoImageBackground(userBeenTheres.get(position).getCover_image_thumbnail(), holder.user_profile_been_there_restaurant_image, mContext);
-//        }
+        if(userBeenTheres.get(position).getCover_image_url()!=null) {
+            if (!userBeenTheres.get(position).getCover_image_url().equals("")) {
+                Constants.PicassoImageBackground(userBeenTheres.get(position).getCover_image_url(), holder.user_profile_been_there_restaurant_image, mContext);
+            }
+        }
 
         Date date=Constants.GetDate(userBeenTheres.get(position).getBeenThereTime());
         SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
@@ -70,7 +72,7 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
         SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
         String dates = localDateFormatForDate.format(date);
         holder.user_profile_been_there_time.setText(dates+" "+time);
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

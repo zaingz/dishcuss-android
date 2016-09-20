@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
@@ -52,8 +53,9 @@ public class PostDetailActivity extends AppCompatActivity {
 
     LocalFeedReview localFeedReview;
     LocalFeedCheckIn localFeedCheckIn;
+    ReviewModel reviewModel;
     RealmList<Comment> commentRealmList;
-    boolean isCheckIn;
+    boolean isCheckIn,FeedsReview=true;
     LinearLayout comments_row;
     TextView Name,time,status,likesCount,commentsCount,sharesCount;
     ImageView userProfile;
@@ -82,9 +84,14 @@ public class PostDetailActivity extends AppCompatActivity {
             if(type.equals("CheckIn")){
                 isCheckIn=true;
                 localFeedCheckIn=(LocalFeedCheckIn) bundle.getParcelable("MyClass");
-            }else {
+            }else if(type.equals("Review")) {
                 isCheckIn=false;
+                FeedsReview=true;
                 localFeedReview=(LocalFeedReview) bundle.getParcelable("MyClass");
+            }else if(type.equals("Review2")) {
+                isCheckIn=false;
+                FeedsReview=false;
+                reviewModel=(ReviewModel) bundle.getParcelable("MyClass");
             }
         }
 
@@ -100,27 +107,28 @@ public class PostDetailActivity extends AppCompatActivity {
 
         if(!isCheckIn){
 
-            TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
-            headerName.setText(""+localFeedReview.getReviewerName());
-            Name.setText(""+localFeedReview.getReviewerName());
+            if(FeedsReview) {
+                TextView headerName = (TextView) findViewById(R.id.app_toolbar_name);
+                headerName.setText("" + localFeedReview.getReviewerName());
+                Name.setText("" + localFeedReview.getReviewerName());
 
-            Date date1= GetDate(""+localFeedReview.getUpdated_at());
-            SimpleDateFormat localDateFormatForTime1 = new SimpleDateFormat("h:mm a");
-            String gettime = localDateFormatForTime1.format(date1);
-            SimpleDateFormat localDateFormatForDay1 = new SimpleDateFormat("EEE");
-            String getday = localDateFormatForDay1.format(date1);
-            SimpleDateFormat localDateFormatForDate1 = new SimpleDateFormat("MMM d");
-            String getdates = localDateFormatForDate1.format(date1);
+                Date date1 = GetDate("" + localFeedReview.getUpdated_at());
+                SimpleDateFormat localDateFormatForTime1 = new SimpleDateFormat("h:mm a");
+                String gettime = localDateFormatForTime1.format(date1);
+                SimpleDateFormat localDateFormatForDay1 = new SimpleDateFormat("EEE");
+                String getday = localDateFormatForDay1.format(date1);
+                SimpleDateFormat localDateFormatForDate1 = new SimpleDateFormat("MMM d");
+                String getdates = localDateFormatForDate1.format(date1);
 
-            time.setText(getdates+", "+gettime);
+                time.setText(getdates + ", " + gettime);
 
-            status.setText(""+localFeedReview.getSummary());
-            likesCount.setText(""+localFeedReview.getReviewLikesCount());
-            commentsCount.setText(""+localFeedReview.getReviewCommentCount());
-            sharesCount.setText(""+localFeedReview.getReviewSharesCount());
+                status.setText("" + localFeedReview.getSummary());
+                likesCount.setText("" + localFeedReview.getReviewLikesCount());
+                commentsCount.setText("" + localFeedReview.getReviewCommentCount());
+                sharesCount.setText("" + localFeedReview.getReviewSharesCount());
 
-            Constants.PicassoImageBackground(localFeedReview.getReviewerAvatar(),userProfile,PostDetailActivity.this);
-            postImage.setVisibility(View.GONE);
+                Constants.PicassoImageBackground(localFeedReview.getReviewerAvatar(), userProfile, PostDetailActivity.this);
+                postImage.setVisibility(View.GONE);
 
 //            if(localFeedReview.getReviewImage().equals("")){
 //                postImage.setVisibility(View.GONE);
@@ -128,62 +136,150 @@ public class PostDetailActivity extends AppCompatActivity {
 //                Constants.PicassoImageBackground(localFeedReview.getReviewImage(),postImage,PostDetailActivity.this);
 //            }
 
-            commentRealmList=localFeedReview.getCommentRealmList();
+                commentRealmList = localFeedReview.getCommentRealmList();
 
-            for (int i=commentRealmList.size()-1;i>=0;i--) {
-                View child = inflater.inflate(R.layout.comment_row, null);
-                TextView commentatorName=(TextView)child.findViewById(R.id.commentator_name);
-                TextView commentatorComment=(TextView)child.findViewById(R.id.commentator_comment);
-                TextView commentTime=(TextView)child.findViewById(R.id.comment_time);
-                TextView commentLikesCount=(TextView)child.findViewById(R.id.comment_likes_count);
-                de.hdodenhof.circleimageview.CircleImageView commentator_profile_image=(de.hdodenhof.circleimageview.CircleImageView)
-                        child.findViewById(R.id.commentator_profile_image);
+                for (int i = commentRealmList.size() - 1; i >= 0; i--) {
+                    View child = inflater.inflate(R.layout.comment_row, null);
+                    TextView commentatorName = (TextView) child.findViewById(R.id.commentator_name);
+                    TextView commentatorComment = (TextView) child.findViewById(R.id.commentator_comment);
+                    TextView commentTime = (TextView) child.findViewById(R.id.comment_time);
+                    TextView commentLikesCount = (TextView) child.findViewById(R.id.comment_likes_count);
+                    de.hdodenhof.circleimageview.CircleImageView commentator_profile_image = (de.hdodenhof.circleimageview.CircleImageView)
+                            child.findViewById(R.id.commentator_profile_image);
 
-                if(!commentRealmList.get(i).getCommentatorImage().equals("")){
-                    Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(),commentator_profile_image,this);
-                }
-
-                commentatorName.setText(commentRealmList.get(i).getCommentatorName());
-                commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
-                Date date= GetDate(commentRealmList.get(i).getCommentUpdated_at());
-
-                SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
-                String time = localDateFormatForTime.format(date);
-                SimpleDateFormat localDateFormatForDay = new SimpleDateFormat("EEE");
-                String day = localDateFormatForDay.format(date);
-                SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
-                String dates = localDateFormatForDate.format(date);
-
-                commentTime.setText(dates+" "+time);
-                commentLikesCount.setText("  "+commentRealmList.get(i).getCommentLikesCount());
-                comments_row.addView(child);
-            }
-
-
-            post_add_comment_edit_text.setOnKeyListener(new View.OnKeyListener() {
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    // If the event is a key-down event on the "enter" button
-                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                        String comment=post_add_comment_edit_text.getText().toString();
-                        if(!comment.equals("")){
-                            post_add_comment_edit_text.setText("");
-                            post_add_comment_edit_text.clearFocus();
-                            post_add_comment_edit_text.setFocusable(false);
-                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
-                                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
-                            SendCommentDataOnServer(""+localFeedReview.getReviewID(),"Title",comment,"", URLs.Add_Comment_Review);
-                            int prev=Integer.valueOf(commentsCount.getText().toString());
-                            prev++;
-                            commentsCount.setText(""+prev);
-                        }
+                    if (!commentRealmList.get(i).getCommentatorImage().equals("")) {
+                        Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(), commentator_profile_image, this);
                     }
-                    return true;
+
+                    commentatorName.setText(commentRealmList.get(i).getCommentatorName());
+                    commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
+                    Date date = GetDate(commentRealmList.get(i).getCommentUpdated_at());
+
+                    SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
+                    String time = localDateFormatForTime.format(date);
+                    SimpleDateFormat localDateFormatForDay = new SimpleDateFormat("EEE");
+                    String day = localDateFormatForDay.format(date);
+                    SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
+                    String dates = localDateFormatForDate.format(date);
+
+                    commentTime.setText(dates + " " + time);
+                    commentLikesCount.setText("  " + commentRealmList.get(i).getCommentLikesCount());
+                    comments_row.addView(child);
                 }
-            });
+
+
+                post_add_comment_edit_text.setOnKeyListener(new View.OnKeyListener() {
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        // If the event is a key-down event on the "enter" button
+                        if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                            String comment = post_add_comment_edit_text.getText().toString();
+                            if (!comment.equals("")) {
+                                post_add_comment_edit_text.setText("");
+                                post_add_comment_edit_text.clearFocus();
+                                post_add_comment_edit_text.setFocusable(false);
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
+                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
+                                SendCommentDataOnServer("" + localFeedReview.getReviewID(), "Title", comment, "", URLs.Add_Comment_Review);
+                                int prev = Integer.valueOf(commentsCount.getText().toString());
+                                prev++;
+                                commentsCount.setText("" + prev);
+                            }
+                        }
+                        return true;
+                    }
+                });
+            }
+            else
+            {
+                TextView headerName = (TextView) findViewById(R.id.app_toolbar_name);
+                headerName.setText("" + reviewModel.getReview_reviewer_Name());
+                Name.setText("" + reviewModel.getReview_reviewer_Name());
+
+                Log.e("reviewModel",""+reviewModel.getUpdated_at());
+                Date date1 = GetDate("" + reviewModel.getUpdated_at());
+                SimpleDateFormat localDateFormatForTime1 = new SimpleDateFormat("h:mm a");
+                String gettime = localDateFormatForTime1.format(date1);
+                SimpleDateFormat localDateFormatForDay1 = new SimpleDateFormat("EEE");
+                String getday = localDateFormatForDay1.format(date1);
+                SimpleDateFormat localDateFormatForDate1 = new SimpleDateFormat("MMM d");
+                String getdates = localDateFormatForDate1.format(date1);
+
+                time.setText(getdates + ", " + gettime);
+
+                status.setText("" + reviewModel.getReview_summary());
+                likesCount.setText("" + reviewModel.getReview_Likes_count());
+                commentsCount.setText("" + reviewModel.getReview_comments_count());
+                sharesCount.setText("" + reviewModel.getReview_shares_count());
+
+                Constants.PicassoImageBackground(reviewModel.getReview_reviewer_Avatar(), userProfile, PostDetailActivity.this);
+                postImage.setVisibility(View.GONE);
+
+//            if(localFeedReview.getReviewImage().equals("")){
+//                postImage.setVisibility(View.GONE);
+//            }else {
+//                Constants.PicassoImageBackground(localFeedReview.getReviewImage(),postImage,PostDetailActivity.this);
+//            }
+
+                commentRealmList = reviewModel.getCommentRealmList();
+
+                for (int i = commentRealmList.size() - 1; i >= 0; i--) {
+                    View child = inflater.inflate(R.layout.comment_row, null);
+                    TextView commentatorName = (TextView) child.findViewById(R.id.commentator_name);
+                    TextView commentatorComment = (TextView) child.findViewById(R.id.commentator_comment);
+                    TextView commentTime = (TextView) child.findViewById(R.id.comment_time);
+                    TextView commentLikesCount = (TextView) child.findViewById(R.id.comment_likes_count);
+                    de.hdodenhof.circleimageview.CircleImageView commentator_profile_image = (de.hdodenhof.circleimageview.CircleImageView)
+                            child.findViewById(R.id.commentator_profile_image);
+
+                    if (!commentRealmList.get(i).getCommentatorImage().equals("")) {
+                        Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(), commentator_profile_image, this);
+                    }
+
+                    commentatorName.setText(commentRealmList.get(i).getCommentatorName());
+                    commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
+                    Date date = GetDate(commentRealmList.get(i).getCommentUpdated_at());
+
+                    SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");
+                    String time = localDateFormatForTime.format(date);
+                    SimpleDateFormat localDateFormatForDay = new SimpleDateFormat("EEE");
+                    String day = localDateFormatForDay.format(date);
+                    SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
+                    String dates = localDateFormatForDate.format(date);
+
+                    commentTime.setText(dates + " " + time);
+                    commentLikesCount.setText("  " + commentRealmList.get(i).getCommentLikesCount());
+                    comments_row.addView(child);
+                }
+
+
+                post_add_comment_edit_text.setOnKeyListener(new View.OnKeyListener() {
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        // If the event is a key-down event on the "enter" button
+                        if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                            String comment = post_add_comment_edit_text.getText().toString();
+                            if (!comment.equals("")) {
+                                post_add_comment_edit_text.setText("");
+                                post_add_comment_edit_text.clearFocus();
+                                post_add_comment_edit_text.setFocusable(false);
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
+                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
+                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
+                                SendCommentDataOnServer("" + reviewModel.getReview_ID(), "Title", comment, "", URLs.Add_Comment_Review);
+                                int prev = Integer.valueOf(commentsCount.getText().toString());
+                                prev++;
+                                commentsCount.setText("" + prev);
+                            }
+                        }
+                        return true;
+                    }
+                });
+            }
         }
         else {
+
             TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
             headerName.setText(""+localFeedCheckIn.getCheckInWriterName());
             Name.setText(""+localFeedCheckIn.getCheckInWriterName());
@@ -205,18 +301,21 @@ public class PostDetailActivity extends AppCompatActivity {
 
             Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInWriterAvatar(),userProfile,PostDetailActivity.this);
 
-            if(localFeedCheckIn.getCheckInImage()!=null) {
-                if (localFeedCheckIn.getCheckInImage().equals("")) {
+            if(localFeedCheckIn.getCheckInImage()!=null)
+            {
+                if (localFeedCheckIn.getCheckInImage().equals(""))
+                {
                     postImage.setVisibility(View.GONE);
                 }
                 else
                 {
-                    Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInImage(),postImage,PostDetailActivity.this);
+                    Constants.PicassoLargeImageBackground(""+localFeedCheckIn.getCheckInImage(),postImage,PostDetailActivity.this);
                 }
-            }else {
+            }
+            else
+            {
                 postImage.setVisibility(View.GONE);
             }
-
             commentRealmList=localFeedCheckIn.getCommentRealmList();
 
 
@@ -277,6 +376,7 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     Date GetDate(String date){
+          Log.e("Post Detail Date",""+date);
 //        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 //        String segments[] = date.split("\\+");
 //        String d = segments[0];
@@ -312,7 +412,6 @@ public class PostDetailActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
-            Toast.makeText(PostDetailActivity.this,"Key Down",Toast.LENGTH_LONG).show();
         }
         return true;
     }
@@ -331,8 +430,6 @@ public class PostDetailActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
                     InputMethodManager.RESULT_UNCHANGED_SHOWN);
             imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
-
-            Toast.makeText(PostDetailActivity.this,"Press again",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -340,9 +437,6 @@ public class PostDetailActivity extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event) {
 
         if (event.getAction() ==  KeyEvent.KEYCODE_BACK) {
-
-            Toast.makeText(PostDetailActivity.this,"onTouchEvent",Toast.LENGTH_LONG).show();
-
         }
 
         return  true;

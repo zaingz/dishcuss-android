@@ -86,7 +86,7 @@ public class SelectRestaurantAdapter extends RecyclerView.Adapter<SelectRestaura
                 context.startActivity(intent);
             }
         });
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

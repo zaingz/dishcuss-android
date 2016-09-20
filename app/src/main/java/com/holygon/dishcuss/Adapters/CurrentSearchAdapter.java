@@ -164,6 +164,7 @@ public class CurrentSearchAdapter  extends RecyclerView.Adapter<CurrentSearchAda
                 });
             }
         }
+        holder.setIsRecyclable(false);
     }
 
     @Override

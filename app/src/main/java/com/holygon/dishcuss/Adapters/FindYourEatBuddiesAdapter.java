@@ -51,6 +51,7 @@ public class FindYourEatBuddiesAdapter extends RecyclerView.Adapter<FindYourEatB
 //        String newUrlString = imageUri.replaceAll(" ", "%20");
 //        Log.e("ImageUri",newUrlString);
 //        Picasso.with(mContext).load(newUrlString).into(holder.imageView);
+        holder.setIsRecyclable(false);
     }
 
     @Override

@@ -54,7 +54,11 @@ public class HomeViewPagerFragment extends Fragment {
 
 
         String imageUri = featuredRestaurant.getCover_image_url();
-        Picasso.with(getActivity()).load(imageUri).into(new Target(){
+        Picasso.with(getActivity()).load(imageUri)
+                .resize(400,250)
+                .onlyScaleDown()
+                .centerCrop()
+                .into(new Target(){
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 parentLayout.setBackground(new BitmapDrawable(bitmap));

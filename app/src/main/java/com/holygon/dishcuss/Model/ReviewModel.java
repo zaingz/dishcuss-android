@@ -1,12 +1,16 @@
 package com.holygon.dishcuss.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import io.realm.RealmList;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 /**
  * Created by Naeem Ibrahim on 8/4/2016.
  */
-public class ReviewModel extends RealmObject {
+public class ReviewModel extends RealmObject implements Parcelable {
 
 
     int review_ID;
@@ -140,4 +144,53 @@ public class ReviewModel extends RealmObject {
     public void setReview_shares_count(int review_shares_count) {
         this.review_shares_count = review_shares_count;
     }
+
+    public ReviewModel(Parcel in){
+        this.review_ID = in.readInt();
+
+        this.review_reviewer_Name= in.readString();
+        this.review_reviewer_Avatar = in.readString();
+        this.updated_at = in.readString();
+        this.review_summary = in.readString();
+        this.review_title = in.readString();
+
+        this.review_Likes_count = in.readInt();
+        this.review_comments_count = in.readInt();
+        this.review_shares_count = in.readInt();
+        this.commentRealmList=new RealmList<Comment>();
+        in.readTypedList(this.commentRealmList,Comment.CREATOR);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(review_ID);
+
+        dest.writeString(review_reviewer_Name);
+        dest.writeString(review_reviewer_Avatar);
+        dest.writeString(updated_at);
+        dest.writeString(review_summary);
+        dest.writeString(review_title);
+
+
+        dest.writeInt(review_Likes_count);
+        dest.writeInt(review_comments_count);
+        dest.writeInt(review_shares_count);
+
+        dest.writeTypedList(commentRealmList);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public ReviewModel createFromParcel(Parcel in) {
+            return new ReviewModel(in);
+        }
+
+        public ReviewModel[] newArray(int size) {
+            return new ReviewModel[size];
+        }
+    };
 }

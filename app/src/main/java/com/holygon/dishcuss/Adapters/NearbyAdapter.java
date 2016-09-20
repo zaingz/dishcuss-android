@@ -40,7 +40,7 @@ public class NearbyAdapter  extends RecyclerView.Adapter<NearbyAdapter.ViewHolde
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mTextView.setText(mDataset.get(position));
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

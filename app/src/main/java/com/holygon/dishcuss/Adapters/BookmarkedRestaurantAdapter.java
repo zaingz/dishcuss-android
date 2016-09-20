@@ -75,7 +75,7 @@ public class BookmarkedRestaurantAdapter extends RecyclerView.Adapter<Bookmarked
                 context.startActivity(intent);
             }
         });
-
+        holder.setIsRecyclable(false);
     }
 
     @Override

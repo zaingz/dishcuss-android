@@ -106,6 +106,7 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
             }
         });
 
+        holder.setIsRecyclable(false);
 
     }
 
