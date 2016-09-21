@@ -23,7 +23,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:src="@drawable/bg_intro" />
+                    android:src="@drawable/profile_avatar" />
 
                 <LinearLayout
                     android:id="@+id/commentator_layout"

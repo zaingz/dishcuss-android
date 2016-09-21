@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -85,9 +86,14 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 if (!Constants.skipLogin) {
-                    if (GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review")) {
+                    if(Constants.isNetworkAvailable((Activity) mContext)) {
                         int prev = Integer.valueOf(holder.reviewLikesCount.getText().toString());
-                        holder.reviewLikesCount.setText("" + prev + 1);
+                        prev=prev + 1;
+                        holder.reviewLikesCount.setText("" + prev);
+                        if (!GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review", (Activity) mContext)) {
+                            prev=prev - 1;
+                            holder.reviewLikesCount.setText("" + prev);
+                        }
                     }
                 }
             }

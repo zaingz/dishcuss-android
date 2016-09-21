@@ -74,7 +74,7 @@
                     android:id="@+id/recent_search_image_1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bg_intro"
+                    android:src="@drawable/sample_image"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#fdfdfd"/>
 
@@ -107,7 +107,7 @@
                     android:id="@+id/recent_search_image_2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bg_intro"
+                    android:src="@drawable/sample_image"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#fdfdfd"/>
 
@@ -140,7 +140,7 @@
                     android:id="@+id/recent_search_image_3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bg_intro"
+                    android:src="@drawable/sample_image"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#fdfdfd"/>
 
@@ -173,7 +173,7 @@
                     android:id="@+id/recent_search_image_4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/bg_intro"
+                    android:src="@drawable/sample_image"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#fdfdfd"/>
 

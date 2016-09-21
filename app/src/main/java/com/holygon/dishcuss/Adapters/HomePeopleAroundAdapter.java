@@ -159,13 +159,7 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully followed!")) {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return message.equals("Successfully followed!");
     }
 
     boolean UnFollowUser(int id){
@@ -210,13 +204,6 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully unfollowed!"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return message.equals("Successfully unfollowed!");
     }
 }

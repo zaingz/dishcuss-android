@@ -517,13 +517,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully followed!")) {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return message.equals("Successfully followed!");
     }
 
 
@@ -569,13 +563,6 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully unfollowed!"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return message.equals("Successfully unfollowed!");
     }
 }

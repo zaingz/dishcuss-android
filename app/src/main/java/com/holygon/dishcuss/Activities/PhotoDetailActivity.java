@@ -70,7 +70,7 @@ public class PhotoDetailActivity extends Activity {
             type=bundle.getString("Type");
             if(type.equals("CheckIn")){
 
-                localFeedCheckIn=(LocalFeedCheckIn) bundle.getParcelable("MyClass");
+                localFeedCheckIn= bundle.getParcelable("MyClass");
                 likesCount.setText(""+localFeedCheckIn.getReviewLikesCount());
                 commentsCount.setText(""+localFeedCheckIn.getReviewCommentCount());
                 sharesCount.setText(""+localFeedCheckIn.getReviewSharesCount());
@@ -94,7 +94,7 @@ public class PhotoDetailActivity extends Activity {
                         Log.e("Like : ",""+prev);
                         likesCount.setText("" + prev);
 
-                        if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")) {
+                        if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",PhotoDetailActivity.this)) {
                             prev--;
                             likesCount.setText("" + prev);
                         }

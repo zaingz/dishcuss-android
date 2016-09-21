@@ -27,7 +27,7 @@
                 android:id="@+id/recent_search_user_profile_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/bg_intro"
+                android:src="@drawable/sample_image"
                 app:civ_border_width="1dp"
                 app:civ_border_color="#fdfdfd"/>
 

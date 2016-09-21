@@ -189,7 +189,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     } else {
                         bookmark_button_text.setText(" Bookmark");
                     }
-                    GenericRoutes.Like(restaurantID, "restaurant");
+                    GenericRoutes.Like(restaurantID, "restaurant",RestaurantDetailActivity.this);
                 }
             }
         });

@@ -27,7 +27,7 @@
                 android:id="@+id/post_detail_reviewer_user_profile_image"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/bg_intro"/>
+                android:background="@drawable/sample_image"/>
 
             <TextView
                 android:id="@+id/post_detail_reviewer_user_name"
@@ -70,7 +70,7 @@
             android:layout_height="200dp"
             android:layout_marginTop="3dp"
             android:visibility="visible"
-            android:background="@drawable/intro_bg"/>
+            android:background="@drawable/sample_image"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"

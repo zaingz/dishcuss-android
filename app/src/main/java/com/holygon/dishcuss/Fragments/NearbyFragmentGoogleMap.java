@@ -131,7 +131,7 @@ public class NearbyFragmentGoogleMap extends Fragment implements
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.getUiSettings().setRotateGesturesEnabled(true);
 
-        mGoogleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+        mGoogleMap.setOnMarkerClickListener(this);
     }
 
     public static void DrawMarkers(ArrayList<Location> mLocations){

@@ -27,7 +27,7 @@
             android:layout_height="200dp"
             android:alpha="0.8"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            android:background="@drawable/intro_bg">
+            android:background="@drawable/sample_image">
 
         <include layout="@layout/activity_restaurant_detail_toolbars"
             android:id="@+id/restaurant_details_awesome_toolbar"/>

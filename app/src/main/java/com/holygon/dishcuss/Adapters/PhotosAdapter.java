@@ -66,10 +66,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 b.compress(Bitmap.CompressFormat.PNG, 75, stream);
                 byte[] bytes = stream.toByteArray();
-                Intent i = new Intent(((Activity)mContext), PhotoDetailActivity.class);
+                Intent i = new Intent(mContext, PhotoDetailActivity.class);
                 i.putExtra("Bitmap", bytes);
                 i.putExtra("Type","Photo");
-                ((Activity)mContext).startActivity(i);
+                mContext.startActivity(i);
 
             }
         });

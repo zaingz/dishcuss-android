@@ -32,7 +32,7 @@
                     android:id="@+id/user_detail_profile_image"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/bg_intro"
+                    android:src="@drawable/profile_avatar"
                     />
 
                 <LinearLayout

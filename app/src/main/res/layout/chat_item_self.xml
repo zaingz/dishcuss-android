@@ -54,6 +54,6 @@
             android:id="@+id/chat_user_profile_image"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/bg_intro" />
+            android:src="@drawable/profile_avatar" />
     </LinearLayout>
 </RelativeLayout>

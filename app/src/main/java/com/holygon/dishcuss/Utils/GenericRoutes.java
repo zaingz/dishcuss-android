@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Utils;
 
 
+import android.app.Activity;
 import android.util.Log;
 import com.holygon.dishcuss.Model.User;
 
@@ -26,7 +27,7 @@ public class GenericRoutes {
     public static String message=null;
     public static OkHttpClient client;
 
-    public static boolean Like(int id,String type){
+    public static boolean Like(int id, String type, final Activity activity){
 
 
 
@@ -54,8 +55,19 @@ public class GenericRoutes {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                String objStr=response.body().string();
-                try {
+                final String objStr=response.body().string();
+
+
+                /** check if activity still exist */
+                if (activity == null) {
+                    return;
+                }
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
                     JSONObject jsonObj = new JSONObject(objStr);
 
                     if(jsonObj.has("message")){
@@ -63,9 +75,9 @@ public class GenericRoutes {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }finally {
-
                 }
+                    }
+                });
             }
         });
 
@@ -73,14 +85,8 @@ public class GenericRoutes {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully liked!")) {
-            return true;
-        }
-        else
-        {
-//            return DisLike(id,type);
-            return false;
-        }
+        //            return DisLike(id,type);
+        return message.equals("Successfully liked!");
     }
 
 
@@ -235,14 +241,7 @@ public class GenericRoutes {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully unfollowed!"))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return message.equals("Successfully unfollowed!");
     }
 
 

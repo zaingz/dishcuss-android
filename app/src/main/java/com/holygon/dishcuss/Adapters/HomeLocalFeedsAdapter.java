@@ -175,7 +175,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
-                                    if (GenericRoutes.Like(localFeedReview.getReviewID(), "review")) {
+                                    if (GenericRoutes.Like(localFeedReview.getReviewID(), "review",(Activity) mContext)) {
                                         int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
                                         prev++;
                                         holder.review_likes_count_tv.setText("" + prev);
@@ -197,7 +197,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             if(Constants.isNetworkAvailable((Activity) mContext)) {
                                 if (!Constants.skipLogin) {
                                     holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
-                                    GenericRoutes.Like(localFeedReview.getReviewOnID(), "restaurant");
+                                    GenericRoutes.Like(localFeedReview.getReviewOnID(), "restaurant",(Activity) mContext);
                                 }
                             }
                         }
@@ -308,11 +308,11 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             b.compress(Bitmap.CompressFormat.PNG,75, stream);
                             byte[] bytes = stream.toByteArray();
-                            Intent i = new Intent(((Activity)mContext), PhotoDetailActivity.class);
+                            Intent i = new Intent(mContext, PhotoDetailActivity.class);
                             i.putExtra("Type","CheckIn");
                             i.putExtra("MyClass", localFeedCheckIn);
                             i.putExtra("Bitmap", bytes);
-                            ((Activity)mContext).startActivity(i);
+                            mContext.startActivity(i);
                         }
 
                     });
@@ -336,8 +336,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
                                     int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
                                     prev++;
+                                    Log.e("Likes",""+prev);
                                     holder.review_likes_count_tv.setText("" + prev);
-                                    if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post")) {
+                                    if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",(Activity) mContext)) {
                                         prev--;
                                         holder.review_likes_count_tv.setText("" + prev);
                                     }
@@ -350,8 +351,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
-                                holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
-                                GenericRoutes.Like(localFeedCheckIn.getCheckInOnID(), "restaurant");
+                                if (Constants.isNetworkAvailable((Activity) mContext)) {
+                                    holder.image_bookmark.setImageResource(R.drawable.icon_bookmarked);
+                                    GenericRoutes.Like(localFeedCheckIn.getCheckInOnID(), "restaurant",(Activity) mContext);
+                                }
                             }
                         }
                     });

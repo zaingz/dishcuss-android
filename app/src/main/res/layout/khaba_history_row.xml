@@ -26,15 +26,13 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/khaba_history_restaurant_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/bg_intro"
-                    app:civ_border_width="2dp"
-                    android:layout_marginTop="5dp"
-                    app:civ_border_color="#FF000000"/>
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:src="@drawable/profile_avatar"
+                    android:layout_marginTop="5dp"/>
 
                 <LinearLayout
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

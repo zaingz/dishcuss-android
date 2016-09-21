@@ -29,7 +29,7 @@
                     android:id="@+id/user_profile_follower_profile_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/bg_intro"/>
+                    android:src="@drawable/profile_avatar"/>
 
                 <LinearLayout
                     android:id="@+id/user_profile_follower_user_followers_layout"

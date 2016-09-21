@@ -23,9 +23,7 @@
                     android:id="@+id/write_reviewer_user_profile_image"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/bg_intro"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="#FF000000"/>
+                    android:src="@drawable/profile_avatar"/>
 
                 <TextView
                     android:id="@+id/write_reviewer_user_name"

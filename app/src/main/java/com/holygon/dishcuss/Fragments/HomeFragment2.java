@@ -394,12 +394,6 @@ public class HomeFragment2 extends Fragment {
 
                 final String objStr=response.body().string();
 
-                try
-                {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 /** check if activity still exist */
                 if (getActivity() == null) {
                     return;
@@ -502,12 +496,6 @@ public class HomeFragment2 extends Fragment {
 
                 final String objStr=response.body().string();
 
-                try
-                {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 /** check if activity still exist */
                 if (getActivity() == null) {
                     return;
@@ -767,12 +755,6 @@ public class HomeFragment2 extends Fragment {
 
                 final String objStr=response.body().string();
 
-                try
-                {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 /** check if activity still exist */
                 if (getActivity() == null) {
                     return;
@@ -1026,61 +1008,49 @@ public class HomeFragment2 extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                String objStr=response.body().string();
+                final String objStr=response.body().string();
                 Log.e("ObjStr",""+objStr);
-                try {
-                    JSONObject jsonObj = new JSONObject(objStr);
-                    JSONArray jsonDataArray=jsonObj.getJSONArray("users");
 
-                    for (int i = 0; i < jsonDataArray.length(); i++) {
+                /** check if activity still exist */
+                if (getActivity() == null) {
+                    return;
+                }
 
-                        JSONObject c = jsonDataArray.getJSONObject(i);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                        MyFeeds myFeeds=new MyFeeds();
+                        try {
+                                JSONObject jsonObj = new JSONObject(objStr);
+                                JSONArray jsonDataArray=jsonObj.getJSONArray("users");
 
-                        myFeeds.setId(c.getInt("id"));
-                        myFeeds.setName(c.getString("name"));
-                        myFeeds.setUsername(c.getString("username"));
-                        myFeeds.setAvatarPic(c.getString("avatar"));
-                        myFeeds.setLocation(c.getString("location"));
-                        myFeeds.setFollowing(c.getBoolean("follows"));
-                        myFeeds.setFollowers(c.getInt("followers"));
+                                for (int i = 0; i < jsonDataArray.length(); i++) {
 
-                        peopleAroundYouList.add(myFeeds);
-                    }
+                                    JSONObject c = jsonDataArray.getJSONObject(i);
 
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    /** check if activity still exist */
-                    if (getActivity() == null) {
-                        return;
-                    }
+                                    MyFeeds myFeeds=new MyFeeds();
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
-                            peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
+                                    myFeeds.setId(c.getInt("id"));
+                                    myFeeds.setName(c.getString("name"));
+                                    myFeeds.setUsername(c.getString("username"));
+                                    myFeeds.setAvatarPic(c.getString("avatar"));
+                                    myFeeds.setLocation(c.getString("location"));
+                                    myFeeds.setFollowing(c.getBoolean("follows"));
+                                    myFeeds.setFollowers(c.getInt("followers"));
+
+                                    peopleAroundYouList.add(myFeeds);
+                                }
+
+                                homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
+                                peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                finally
-                {
-
-                }
+                    }
+                });
 
             }
         });
-        realm.close();
-
-
     }
 
 
@@ -1144,11 +1114,7 @@ public class HomeFragment2 extends Fragment {
                                 realm.commitTransaction();
                             }
 
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+
 
                             if (notificationsArrayList.size() > 0) {
                                 NotificationActivity.newNotifications = notificationsArrayList.size();

@@ -83,15 +83,15 @@ public class PostDetailActivity extends AppCompatActivity {
             String type=bundle.getString("Type");
             if(type.equals("CheckIn")){
                 isCheckIn=true;
-                localFeedCheckIn=(LocalFeedCheckIn) bundle.getParcelable("MyClass");
+                localFeedCheckIn= bundle.getParcelable("MyClass");
             }else if(type.equals("Review")) {
                 isCheckIn=false;
                 FeedsReview=true;
-                localFeedReview=(LocalFeedReview) bundle.getParcelable("MyClass");
+                localFeedReview= bundle.getParcelable("MyClass");
             }else if(type.equals("Review2")) {
                 isCheckIn=false;
                 FeedsReview=false;
-                reviewModel=(ReviewModel) bundle.getParcelable("MyClass");
+                reviewModel= bundle.getParcelable("MyClass");
             }
         }
 
