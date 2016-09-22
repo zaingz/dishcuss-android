@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.ReviewModel;
@@ -62,8 +63,8 @@ public class PersonalProfileFragment extends Fragment{
     int reviewsCount=0, followersCount =0, commentsCount =0;
     de.hdodenhof.circleimageview.CircleImageView profileImage;
     TextView userName, userLocation, review_count, follower_count, comments_count;
-
     ProgressBar progressBar;
+    public static boolean isCalledOnce=false;
 
 
     //*******************PROGRESS******************************
@@ -114,9 +115,10 @@ public class PersonalProfileFragment extends Fragment{
 
             user= realm.where(User.class).findFirst();
             userID = user.getId();
+        if(PersonalProfileFragment.isCalledOnce) {
             userProfile=GetUserData(userID);
-
-            if(userProfile!=null){
+            if(userProfile!=null)
+            {
                 reviewsCount=userProfile.getReviewsCount();
                 followersCount=userProfile.getFollowersCount();
                 commentsCount=userProfile.getCommentsCount();
@@ -124,8 +126,12 @@ public class PersonalProfileFragment extends Fragment{
             }else {
                 Log.e("","ELSE");
             }
-            if(!dataAlreadyExists)
+        }
+            if(!dataAlreadyExists) {
+
                 UserData();
+                PersonalProfileFragment.isCalledOnce=true;
+            }
 
 
         return rootView;
@@ -282,17 +288,18 @@ public class PersonalProfileFragment extends Fragment{
 
                                     JSONObject checkinObj = postObj.getJSONObject("checkin");
 
-                                    JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                    if(checkinObj.has("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
 
-                                    UserBeenThere userBeenThere= new UserBeenThere();
-                                    userBeenThere.setId(restaurantObj.getInt("id"));
-                                    userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                    userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                    userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                    userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                    final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                    userProfileRealm.getUserBeenThereRealmList().add(beenThere);
-
+                                        UserBeenThere userBeenThere = new UserBeenThere();
+                                        userBeenThere.setId(restaurantObj.getInt("id"));
+                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                    }
 
                                     JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
                                     for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {

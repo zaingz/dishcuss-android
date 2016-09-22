@@ -13,7 +13,10 @@ import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Naeem Ibrahim on 8/25/2016.
@@ -62,7 +65,7 @@ public class KhabaHistoryAdapter extends RecyclerView.Adapter<KhabaHistoryAdapte
 
         holder.khaba_restaurant_name.setText(imageViewArrayList.get(position).getRestaurantName());
         holder.khaba_restaurant_location.setText(imageViewArrayList.get(position).getRestaurantLocation());
-        holder.khaba_restaurant_time.setText(imageViewArrayList.get(position).getCredit_time());
+        holder.khaba_restaurant_time.setText(""+GetDate(imageViewArrayList.get(position).getCredit_time()));
         holder.khaba_price.setText("PKR " +imageViewArrayList.get(position).getPrice());
 
         holder.setIsRecyclable(false);
@@ -71,5 +74,25 @@ public class KhabaHistoryAdapter extends RecyclerView.Adapter<KhabaHistoryAdapte
     @Override
     public int getItemCount() {
         return imageViewArrayList.size();
+    }
+
+
+    Date GetDate(String date){
+        Log.e("Post Detail Date",""+date);
+//        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+//        String segments[] = date.split("\\+");
+//        String d = segments[0];
+//        String d2 = segments[1];
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //  System.out.println(convertedDate);
+        return convertedDate;
     }
 }

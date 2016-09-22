@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
+import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Adapters.NotificationAdapter;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.DishCussApplication;
 
 import org.json.JSONException;
@@ -40,7 +42,7 @@ public class ChatScreenActivity extends AppCompatActivity {
     EditText chat_message;
     Button chat_btn_send;
     private Socket mSocket;
-    int selfID=129;
+    int selfID=0;
 
     String punditType;
     ImageView pundit_image;
@@ -51,6 +53,8 @@ public class ChatScreenActivity extends AppCompatActivity {
     String userJoinID;
     private Boolean isConnected = false;
     int punditNumber=0;
+
+    String guestEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +67,8 @@ public class ChatScreenActivity extends AppCompatActivity {
 
         DishCussApplication app = (DishCussApplication) this.getApplication();
         mSocket = app.getSocket();
-
+        int rand= (int) (5 + (Math.random() * (99909 - 10000)));
+        guestEmail="guest"+rand+"@gmail.com";
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -73,10 +78,13 @@ public class ChatScreenActivity extends AppCompatActivity {
 
         mSocket.connect();
 
-        realm=Realm.getDefaultInstance();
-        user = realm.where(User.class).findFirst();
+        if(!Constants.skipLogin) {
+            realm = Realm.getDefaultInstance();
+            user = realm.where(User.class).findFirst();
+            Log.e("User : ", "" + user);
+        }else {
 
-        Log.e("User : ",""+user);
+        }
 
         TextView headerName = (TextView) findViewById(R.id.app_toolbar_name);
         TextView chat_pundit_type = (TextView) findViewById(R.id.chat_pundit_type);
@@ -115,8 +123,13 @@ public class ChatScreenActivity extends AppCompatActivity {
         chatRecyclerView.setLayoutManager(chatLayoutManager);
         chatRecyclerView.setNestedScrollingEnabled(false);
 
-        messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this,chatMessageArrayList,user.getId(),punditNumber);
-        chatRecyclerView.setAdapter(messageAdapter);
+        if(user!=null) {
+            messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this, chatMessageArrayList, user.getId(), punditNumber);
+            chatRecyclerView.setAdapter(messageAdapter);
+        }else {
+            messageAdapter = new ChatMessageAdapter(ChatScreenActivity.this, chatMessageArrayList,selfID, punditNumber);
+            chatRecyclerView.setAdapter(messageAdapter);
+        }
 
         chat_btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +139,13 @@ public class ChatScreenActivity extends AppCompatActivity {
                     if (!newMessage.equals("")) {
                         chat_message.setText("");
                         ChatMessage message = new ChatMessage();
-                        message.setUserID(user.getId());
+
+                        if(user!=null) {
+                            message.setUserID(user.getId());
+                        }else {
+                            message.setUserID(selfID);
+                        }
+
                         message.setMessage(newMessage);
 
                         chatMessageArrayList.add(message);
@@ -135,7 +154,11 @@ public class ChatScreenActivity extends AppCompatActivity {
                         try {
                             jsonObj.put("id", userJoinID);
                             jsonObj.put("msg", newMessage);
-                            jsonObj.put("user", user.getEmail());
+                            if(user!=null) {
+                                jsonObj.put("user", user.getEmail());
+                            }else {
+                                jsonObj.put("user", guestEmail);
+                            }
                             jsonObj.put("img", "");
                             jsonObj.put("room", punditType);
                             mSocket.emit("p1_msg_app", jsonObj.toString());
@@ -207,15 +230,25 @@ public class ChatScreenActivity extends AppCompatActivity {
                     if(mSocket.connected()){
                         JSONObject jsonObj=new JSONObject();
                         try {
-                            jsonObj.put("id",user.getId());
-                            jsonObj.put("username",user.getName());
-                            if(!user.getEmail().equals("")){
-                                jsonObj.put("email",user.getEmail());
+
+                            if(user!=null) {
+                                jsonObj.put("id", user.getId());
+                                jsonObj.put("username",user.getName());
+                                if(!user.getEmail().equals("")){
+                                    jsonObj.put("email",user.getEmail());
+                                }
+                                else
+                                {
+                                    jsonObj.put("email",guestEmail);
+                                }
+                            }else {
+                                jsonObj.put("id", selfID);
+                                jsonObj.put("username","Test User");
+                                jsonObj.put("email",guestEmail);
                             }
-                            else
-                            {
-                                jsonObj.put("email","default@gmail.com");
-                            }
+
+
+
                             jsonObj.put("room",punditType);
                             mSocket.emit("p1_join",jsonObj.toString());
                         } catch (JSONException e) {
@@ -276,7 +309,8 @@ public class ChatScreenActivity extends AppCompatActivity {
                     }
 
                     ChatMessage messages = new ChatMessage();
-                    messages.setId(010101);
+                    messages.setId(10101);
+                    messages.setUserID(10101);
                     messages.setMessage(message);
                     chatMessageArrayList.add(messages);
                     messageAdapter.notifyDataSetChanged();
@@ -308,7 +342,8 @@ public class ChatScreenActivity extends AppCompatActivity {
 
                     userJoinID=id;
                     ChatMessage messages = new ChatMessage();
-                    messages.setId(010101);
+                    messages.setId(10101);
+                    messages.setUserID(10101);
                     messages.setMessage(message);
                     chatMessageArrayList.add(messages);
                     messageAdapter.notifyDataSetChanged();

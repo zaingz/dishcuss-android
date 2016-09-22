@@ -132,7 +132,12 @@ public class CheckInPostActivity extends AppCompatActivity {
                 if(!status.getText().toString().equals("")){
                     statusStr=status.getText().toString();
                 }
-                SendDataOnServer();
+
+                if(restaurantID!=0 && restaurantLatitude!=0.0 && restaurantLongitude!=0.0) {
+                    SendDataOnServer();
+                }else {
+                    Toast.makeText(CheckInPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

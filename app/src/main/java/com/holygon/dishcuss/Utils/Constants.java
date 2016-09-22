@@ -116,6 +116,20 @@ public final class Constants{
     }
 
 
+    public static void SetUserFacebookFriends(Context ctx, String friends){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("UserFacebookFriends",friends);
+        editor.commit();
+    }
+
+    public static String GetUserFacebookFriends(Context ctx){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        String isLogin = sharedPreferences.getString("UserFacebookFriends", "");
+        return isLogin;
+    }
+
+
 
     public static void SetUserLoginStatus(Context ctx, boolean isLogin){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);

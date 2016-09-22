@@ -56,8 +56,8 @@ public class GetFreeFoodActivity extends AppCompatActivity {
 
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                share.putExtra(Intent.EXTRA_TEXT, "Text...");
+                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
+                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
                 share.setPackage("com.whatsapp");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(share, "Share"));
@@ -72,8 +72,8 @@ public class GetFreeFoodActivity extends AppCompatActivity {
 
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                share.putExtra(Intent.EXTRA_TEXT, "Text...");
+                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
+                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
                 share.setPackage("com.twitter.android");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(share, "Share"));
@@ -87,8 +87,8 @@ public class GetFreeFoodActivity extends AppCompatActivity {
 
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-                share.putExtra(Intent.EXTRA_TEXT, "Text...");
+                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
+                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
                 share.setPackage("com.facebook.katana");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(Intent.createChooser(share, "Share"));
@@ -123,7 +123,7 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         Intent intent=new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
-        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is"+user.getReferral_code());
+        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
         startActivity(Intent.createChooser(intent, "Share Dishcuss With Friends"));
     }
 }

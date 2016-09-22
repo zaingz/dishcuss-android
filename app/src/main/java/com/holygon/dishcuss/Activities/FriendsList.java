@@ -41,7 +41,7 @@ public class FriendsList extends AppCompatActivity {
 
         Intent intent = getIntent();
         String jsondata = intent.getStringExtra("jsondata");
-
+        Log.e("jsondata",""+jsondata);
         JSONArray friendslist;
         ArrayList<String> friends = new ArrayList<String>();
 
@@ -67,20 +67,22 @@ public class FriendsList extends AppCompatActivity {
         User user;
         realm=Realm.getDefaultInstance();
         user= realm.where(User.class).findFirst();
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < friendsID.size(); i++) {
-            String ID = friendsID.get(i);
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("id", ID);
-                jsonArray.put(jsonObject);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+
+//        JSONArray jsonArray = new JSONArray();
+//        for (int i = 0; i < friendsID.size(); i++) {
+//            String ID = friendsID.get(i);
+//            JSONObject jsonObject = new JSONObject();
+//            try {
+//                jsonObject.put("id", ID);
+//                jsonArray.put(jsonObject);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         FormBody body = new FormBody.Builder()
-                .add("user", String.valueOf(jsonArray))
+//                .add("user", String.valueOf(jsonArray))
+                .add("user", String.valueOf(friendsID))
                 .build();
 
         Request request = new Request.Builder()
@@ -98,10 +100,12 @@ public class FriendsList extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 final String obj=response.body().string();
                 Log.e("Obj",obj.toString());
-                try{
+                try
+                {
 
-                }catch (Exception e){
-                } finally {
+                }
+                catch (Exception e){
+
                 }
 
             }

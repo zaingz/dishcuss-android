@@ -47,7 +47,7 @@
                         android:id="@+id/user_profile_user_name"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="Naeem Ibrahim"
+                        android:text=""
                         android:textColor="@color/black_1"
                         android:textSize="20dp"
                         android:singleLine="true"

@@ -71,14 +71,15 @@ public class AccountPhotosFragment extends Fragment {
         RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", userID).findAll();
         realm.beginTransaction();
 
-        RealmList<PhotoModel> photoModels=userProfiles.get(0).getPhotoModelRealmList();
+        if(userProfiles.size()>0)
+        {
+            RealmList<PhotoModel> photoModels = userProfiles.get(0).getPhotoModelRealmList();
 
-            for (int j=0;j<photoModels.size();j++){
+            for (int j = 0; j < photoModels.size(); j++) {
                 itemsData.add(photoModels.get(j).getUrl());
             }
-        realm.commitTransaction();
-        realm.close();
-
+            realm.commitTransaction();
+            realm.close();
+        }
     }
-
 }

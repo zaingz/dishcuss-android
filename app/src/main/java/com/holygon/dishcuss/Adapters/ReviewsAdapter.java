@@ -90,10 +90,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                         int prev = Integer.valueOf(holder.reviewLikesCount.getText().toString());
                         prev=prev + 1;
                         holder.reviewLikesCount.setText("" + prev);
-                        if (!GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review", (Activity) mContext)) {
-                            prev=prev - 1;
-                            holder.reviewLikesCount.setText("" + prev);
-                        }
+                        GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review", (Activity) mContext);
+
                     }
                 }
             }

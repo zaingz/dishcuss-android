@@ -187,6 +187,7 @@ public class ProfileFragment extends Fragment{
                 }else {
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
                     startActivity(intent);
                     getActivity().finish();
                 }
@@ -241,6 +242,8 @@ public class ProfileFragment extends Fragment{
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful()){
+
+                    LoginManager.getInstance().logOut();
 
                     if(provider.equals("Facebook")) {
                         LoginManager.getInstance().logOut();
@@ -309,13 +312,6 @@ public class ProfileFragment extends Fragment{
                     JSONObject c=jsonObj.getJSONObject("credit");
 
                     balance=c.getInt("balance");
-
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
 
                     if(getActivity()==null){
                         return;

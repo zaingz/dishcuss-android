@@ -27,11 +27,8 @@ public class GenericRoutes {
     public static String message=null;
     public static OkHttpClient client;
 
-    public static boolean Like(int id, String type, final Activity activity){
+    public static void Like(int id, String type, final Activity activity){
 
-
-
-        GenericRoutes.message=null;
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -81,17 +78,14 @@ public class GenericRoutes {
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
+
         realm.commitTransaction();
         //            return DisLike(id,type);
-        return message.equals("Successfully liked!");
     }
 
 
-    public static boolean DisLike(int id,String type){
-        GenericRoutes.message=null;
+    public static void DisLike(int id,String type){
+
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -132,22 +126,11 @@ public class GenericRoutes {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully disliked!"))
-        {
-            return true;
-        }
-        else if (message.equals("You have liked that item!")){
-            return false;
-        }
-        else
-        {
-            return false;
-        }
     }
 
 
-    public static boolean FollowRestaurant(int id){
-        GenericRoutes.message=null;
+    public static void FollowRestaurant(int id){
+
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -190,17 +173,9 @@ public class GenericRoutes {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        if (message.equals("Successfully followed!")) {
-            return true;
-        }
-        else
-        {
-           return UnFollowRestaurant(id);
-        }
     }
 
-    public static boolean UnFollowRestaurant(int id) {
-        GenericRoutes.message=null;
+    public static void UnFollowRestaurant(int id) {
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -241,7 +216,6 @@ public class GenericRoutes {
 //            Log.e("Loop","Working");
         }
         realm.commitTransaction();
-        return message.equals("Successfully unfollowed!");
     }
 
 

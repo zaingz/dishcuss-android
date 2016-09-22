@@ -8,6 +8,7 @@
     <color name="textColorPrimary">#000</color>
     <color name="windowBackground">#000</color>
     <color name="navigationBarColor">#000000</color>
+    <color name="b">#231F20</color>
     <color name="genre">#666666</color>
     <color name="year">#888888</color>
     <color name="list_divider">#d9d9d9</color>

@@ -47,63 +47,56 @@ public class PunditSelectionActivity extends Activity {
         Desi_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Constants.skipLogin) {
+
                     Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
-                    intent.putExtra("PunditName", "Mr.John Wick");
+                    intent.putExtra("PunditName", "Mr. Sheeda Pehlwan");
                     intent.putExtra("PunditType", "desi");
                     intent.putExtra("PunditNumber", 1);
                     startActivity(intent);
-                }
+
             }
         });
 
         Sasta_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Constants.skipLogin) {
+
                     Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
-                    intent.putExtra("PunditName", "Mr.John Wick");
+                    intent.putExtra("PunditName", "Mr.Miskeen");
                     intent.putExtra("PunditType", "sasta");
                     intent.putExtra("PunditNumber", 2);
                     startActivity(intent);
-                }
             }
         });
         FastFood_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Constants.skipLogin) {
                     Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
-                    intent.putExtra("PunditName", "Mr.John Wick");
+                    intent.putExtra("PunditName", "Ms. Hawahawai");
                     intent.putExtra("PunditType", "fast_food");
                     intent.putExtra("PunditNumber", 3);
                     startActivity(intent);
-                }
             }
         });
         Continental_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Constants.skipLogin) {
                     Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
-                    intent.putExtra("PunditName", "Mr.John Wick");
+                    intent.putExtra("PunditName", "Mr.Breganzza");
                     intent.putExtra("PunditType", "continental");
                     intent.putExtra("PunditNumber", 4);
                     startActivity(intent);
-                }
             }
         });
         Foreign_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!Constants.skipLogin) {
                     Intent intent = new Intent(PunditSelectionActivity.this, ChatScreenActivity.class);
                     intent.putExtra("PunditName", "Mr.John Wick");
                     intent.putExtra("PunditType", "foreign");
                     intent.putExtra("PunditNumber", 5);
                     startActivity(intent);
                 }
-            }
         });
 
     }

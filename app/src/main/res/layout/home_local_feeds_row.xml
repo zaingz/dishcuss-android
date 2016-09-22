@@ -30,9 +30,9 @@
 
                 <android.support.v7.widget.CardView
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="60dp"
+                    android:layout_width="45dp"
                     android:id="@+id/local_feeds_restaurant_image_layout"
-                    android:layout_height="60dp"
+                    android:layout_height="45dp"
                     card_view:cardUseCompatPadding="true"
                     card_view:cardCornerRadius="6dp"
                     android:padding="1dp">
@@ -47,7 +47,7 @@
 
 
                 <LinearLayout
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="6dp"
                     android:layout_marginLeft="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -64,7 +64,6 @@
                         android:textColor="@color/black_1"/>
 
                     <TextView
-                        android:layout_marginTop="3dp"
                         android:id="@+id/local_feeds_restaurant_address"
                         android:layout_width="wrap_content"
                         android:textColor="@color/black_2"
@@ -81,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_bookmark"/>
+                    android:background="@drawable/icon_bookmark"/>
             </RelativeLayout>
 
             <View
@@ -99,15 +98,15 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/local_feeds_profile_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:src="@drawable/profile_avatar"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#e7e7e7"/>
 
                 <LinearLayout
                     android:id="@+id/user_profile_layout"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -159,9 +158,9 @@
 
                 <ImageView
                     android:id="@+id/local_feeds_likes_count"
-                    android:layout_width="25dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_height="20dp"
                     android:background="@drawable/icon_likes_count"/>
 
                 <TextView
@@ -232,15 +231,16 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/icon_for_like" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Like"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
@@ -257,16 +257,16 @@
 
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="2dp"
                         android:background="@drawable/icon_for_comment"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Comment"
-                        android:layout_marginLeft="5dp"
-                        />
+                        android:layout_marginLeft="5dp" />
 
                 </LinearLayout>
 
@@ -281,14 +281,16 @@
 
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_height="15dp"
                         android:background="@drawable/icon_for_share"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Share"
+                        android:layout_marginTop="2dp"
                         android:layout_marginLeft="5dp"
                         />
 

@@ -25,15 +25,15 @@
 
             <ImageView
                 android:id="@+id/post_detail_reviewer_user_profile_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@drawable/sample_image"/>
 
             <TextView
                 android:id="@+id/post_detail_reviewer_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="18dp"
                 android:layout_marginLeft="6dp"
                 android:text="Sikander Ali"
                 android:layout_toRightOf="@id/post_detail_reviewer_user_profile_image"

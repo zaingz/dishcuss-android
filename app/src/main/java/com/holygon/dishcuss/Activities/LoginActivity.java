@@ -23,7 +23,9 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -42,6 +44,8 @@ import com.holygon.dishcuss.Fragments.LoginIntroFragment;
 import com.holygon.dishcuss.Model.FbDataModel;
 import com.holygon.dishcuss.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -106,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements
     OkHttpClient client;
     Realm realm;
     String message="";
+    JSONArray rawName;
 
     String email="",name="",username="",location="",profilePicURL="",gender="",provider="",uid="",profileURL="",token="",expires_at="";
 
@@ -317,8 +322,31 @@ public class LoginActivity extends AppCompatActivity implements
         @Override
         public void onSuccess(final LoginResult loginResult) {
 
-            //   progressDialog.dismiss();
-//            Log.e("loginResult ",""+loginResult.getAccessToken().getToken());
+
+            GraphRequestAsyncTask graphRequestAsyncTask = new GraphRequest(
+                    loginResult.getAccessToken(),
+                    //AccessToken.getCurrentAccessToken(),
+                    "/me/friends",
+                    null,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
+                            Log.e("response: ", response + "");
+                            try {
+                                rawName=response.getJSONObject().getJSONArray("data");
+
+                                Constants.SetUserFacebookFriends(LoginActivity.this,rawName.toString());
+
+                                Log.e("jsondata",""+Constants.GetUserFacebookFriends(LoginActivity.this));
+
+//                                rawName= Constants.GetUserFacebookFriends(ActivityEatBuddiesTest.this);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+            ).executeAsync();
+
             // App code
             GraphRequest request = GraphRequest.newMeRequest(
                     loginResult.getAccessToken(),
@@ -328,11 +356,10 @@ public class LoginActivity extends AppCompatActivity implements
                                 JSONObject object,
                                 GraphResponse response) {
 
-                            Log.e("response: ", response + "");
-                            Log.e("object: ", object.toString());
+//                            Log.e("response: ", response + "");
+//                            Log.e("object: ", object.toString());
 
                             try {
-
                                 if(object.has("email")){
                                     email=object.getString("email").toString();
                                 }

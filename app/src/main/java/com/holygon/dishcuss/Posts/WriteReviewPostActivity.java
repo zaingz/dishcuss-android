@@ -130,7 +130,12 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                 if(!status.getText().toString().equals("")){
                     statusStr=status.getText().toString();
                 }
-                SendDataOnServer();
+
+                if(!statusStr.equals("") && restaurantID!=0) {
+                    SendDataOnServer();
+                }else {
+                    Toast.makeText(WriteReviewPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
+                }
             }
         });
 

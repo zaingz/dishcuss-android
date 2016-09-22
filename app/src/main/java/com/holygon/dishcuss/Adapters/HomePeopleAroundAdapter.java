@@ -70,7 +70,7 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final Resources res = mContext.getResources();
         holder.userName.setText(myFeeds.get(position).getName());
-        holder.reviewTime.setText(String.valueOf(myFeeds.get(position).getId()));
+        holder.reviewTime.setText(String.valueOf(myFeeds.get(position).getFollowers())+" Followers");
         if(myFeeds.get(position).isFollowing()){
             holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_already_followed));
         }

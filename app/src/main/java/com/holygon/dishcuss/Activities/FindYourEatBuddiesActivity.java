@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
+import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Adapters.UserOffersAdapter;
+import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import io.realm.Realm;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -40,10 +44,13 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
 
     RecyclerView offerList;
     private RecyclerView.LayoutManager gridLayout;
-    ArrayList<UserOffersModel> itemsData = new ArrayList<>();
+    ArrayList<MyFeeds> itemsData = new ArrayList<>();
     int userID;
     Realm realm;
     ProgressBar progressBar;
+    ArrayList<String> friendsID = new ArrayList<String>();
+    OkHttpClient client;
+    FindYourEatBuddiesAdapter findYourEatBuddiesAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,109 +68,96 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
         gridLayout = new LinearLayoutManager(this);
         offerList = (RecyclerView)findViewById(R.id.eat_buddies_recycler_view);
 
-
         offerList.setLayoutManager(gridLayout);
         offerList.setHasFixedSize(true);
         offerList.setNestedScrollingEnabled(false);
 
-        for(int i=0;i<10;i++){
+        client = new OkHttpClient();
 
-            UserOffersModel userOffersModel=new UserOffersModel();
-            userOffersModel.setId(i);
-            itemsData.add(userOffersModel);
+        Intent intent = getIntent();
+        String jsondata = intent.getStringExtra("jsondata");
+        Log.e("jsondata",""+jsondata);
+        JSONArray friendslist;
+        ArrayList<String> friends = new ArrayList<String>();
+
+        try {
+            friendslist = new JSONArray(jsondata);
+            for (int l=0; l < friendslist.length(); l++) {
+                friends.add(friendslist.getJSONObject(l).getString("name"));
+                friendsID.add(friendslist.getJSONObject(l).getString("id"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        FindYourEatBuddiesAdapter adapter = new FindYourEatBuddiesAdapter(itemsData,FindYourEatBuddiesActivity.this);
-        offerList.setAdapter(adapter);
+        SendDataOnServer();
 
-//        FetchMyFeedsData();
     }
 
+    void SendDataOnServer(){
 
-
-    void FetchMyFeedsData(){
-        progressBar.setVisibility(View.VISIBLE);
-        // Get a Realm instance for this thread
-        realm = Realm.getDefaultInstance();
-        // Persist your data in a transaction
-
-        User user = realm.where(User.class).findFirst();
-        Log.e("UserT",""+user.getToken());
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(URLs.USER_OFFER)
-                .addHeader("Authorization", "Token token="+user.getToken())
+        Realm realm;
+        User user;
+        realm=Realm.getDefaultInstance();
+        user= realm.where(User.class).findFirst();
+        FormBody body = new FormBody.Builder()
+//                .add("user", String.valueOf(jsonArray))
+                .add("user", String.valueOf(friendsID))
                 .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
+
+        Request request = new Request.Builder()
+                .url(URLs.EatBuddies)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                String objStr=response.body().string();
+                final String objStr=response.body().string();
                 Log.e("ObjStr",""+objStr);
-                try {
-                    JSONObject jsonObj = new JSONObject(objStr);
-                    JSONArray jsonDataArray=jsonObj.getJSONArray("offers");
 
-                    for (int i = 0; i < jsonDataArray.length(); i++) {
 
-                        JSONObject c = jsonDataArray.getJSONObject(i);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                        UserOffersModel userOffersModel=new UserOffersModel();
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray=jsonObj.getJSONArray("search");
 
-                        userOffersModel.setId(c.getInt("id"));
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
 
-                        if(!c.isNull("points")) {
-                            userOffersModel.setPoints(c.getInt("points"));
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                MyFeeds myFeeds=new MyFeeds();
+
+                                myFeeds.setId(c.getInt("id"));
+                                myFeeds.setName(c.getString("name"));
+                                myFeeds.setUsername(c.getString("username"));
+                                myFeeds.setAvatarPic(c.getString("avatar"));
+                                myFeeds.setLocation(c.getString("location"));
+                                myFeeds.setFollowing(c.getBoolean("follows"));
+                                myFeeds.setFollowers(c.getInt("followers"));
+
+                                itemsData.add(myFeeds);
+                            }
+
+                            findYourEatBuddiesAdapter = new FindYourEatBuddiesAdapter(itemsData,FindYourEatBuddiesActivity.this);
+                            offerList.setAdapter(findYourEatBuddiesAdapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        userOffersModel.setDescription(c.getString("description"));
-                        userOffersModel.setImg(c.getString("image"));
-
-                        JSONObject r = c.getJSONObject("restaurant");
-
-                        userOffersModel.setRestaurantID(r.getInt("id"));
-                        userOffersModel.setRestaurantName(r.getString("name"));
-                        userOffersModel.setRestaurantOpeningTime(r.getString("opening_time"));
-                        userOffersModel.setRestaurantClosingTime(r.getString("closing_time"));
-                        userOffersModel.setRestaurantLocation(r.getString("location"));
-
-                        itemsData.add(userOffersModel);
                     }
+                });
 
-                    try
-                    {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            UserOffersAdapter adapter = new UserOffersAdapter(itemsData,FindYourEatBuddiesActivity.this);
-                            offerList.setAdapter(adapter);
-                        }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                finally
-                {
-
-                }
-
-                progressBar.setVisibility(View.GONE);
             }
         });
-        realm.close();
-
 
     }
 

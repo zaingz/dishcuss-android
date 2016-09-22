@@ -167,9 +167,9 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         userName.setText(userProfile.getName());
         userLocation.setText(userProfile.getLocation());
 
-        review_count.setText(""+reviewsCount);
-        comments_count.setText(""+commentsCount);
-        follower_count.setText(""+followersCount);
+        review_count.setText(""+userProfile.getReviewsCount());
+        comments_count.setText(""+userProfile.getCommentsCount());
+        follower_count.setText(""+userProfile.getFollowersCount());
         Constants.PicassoImageSrc(userProfile.getAvatar(),profileImage,this);
         if (viewPager != null) {
             setupViewPager(viewPager);

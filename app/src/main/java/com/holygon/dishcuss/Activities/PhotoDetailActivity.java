@@ -93,11 +93,7 @@ public class PhotoDetailActivity extends Activity {
                         prev++;
                         Log.e("Like : ",""+prev);
                         likesCount.setText("" + prev);
-
-                        if (!GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",PhotoDetailActivity.this)) {
-                            prev--;
-                            likesCount.setText("" + prev);
-                        }
+                        GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",PhotoDetailActivity.this);
                     }
                 }
             }

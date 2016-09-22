@@ -13,7 +13,6 @@ public class LocalFeeds extends RealmObject{
 
 
     public LocalFeeds(){
-
     }
 
 

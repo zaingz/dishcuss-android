@@ -24,7 +24,7 @@
             
             
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_colleagues"
                 android:layout_marginRight="10dp"
@@ -55,7 +55,7 @@
 
 
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_hamburger"
                 android:layout_marginRight="10dp"
@@ -84,7 +84,7 @@
 
 
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_wallet"
                 android:layout_marginRight="10dp"
@@ -115,7 +115,7 @@
 
 
             <ImageView
-                android:layout_width="45dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_offer"
                 android:layout_marginRight="10dp"
@@ -145,7 +145,7 @@
 
 
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_gift"
                 android:layout_marginRight="10dp"
@@ -174,7 +174,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_account_settings"
                 android:layout_marginRight="10dp"
@@ -204,7 +204,7 @@
 
 
             <ImageView
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_logout"
                 android:layout_marginRight="10dp"

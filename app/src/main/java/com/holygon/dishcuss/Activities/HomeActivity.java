@@ -140,6 +140,7 @@ public class HomeActivity extends RuntimePermissionsActivity implements
      */
     private void initUI() {
 
+        Class fragmentClass;
         bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_action_button);
 
@@ -167,9 +168,8 @@ public class HomeActivity extends RuntimePermissionsActivity implements
         }
 
         bottomNavigation.setAccentColor(Color.parseColor("#FFE4770A"));
-        bottomNavigation.setInactiveColor(Color.parseColor("#747474"));
-        bottomNavigation.setColored(true);
-        bottomNavigation.setBackgroundColor(Color.BLACK);
+        bottomNavigation.setInactiveColor(Color.WHITE);
+        bottomNavigation.setDefaultBackgroundColor(Color.parseColor("#231F20"));
 
 
         currentFragment = new HomeFragment2();

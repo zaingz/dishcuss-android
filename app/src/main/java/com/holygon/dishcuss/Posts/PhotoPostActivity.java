@@ -129,7 +129,11 @@ public class PhotoPostActivity extends AppCompatActivity {
                 if(!status.getText().toString().equals("")){
                     statusStr=status.getText().toString();
                 }
-                SendDataOnServer();
+                if( restaurantID!=0 && restaurantLatitude!=0.0 && restaurantLongitude!=0.0) {
+                    SendDataOnServer();
+                }else {
+                    Toast.makeText(PhotoPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -323,9 +327,7 @@ public class PhotoPostActivity extends AppCompatActivity {
                 file=new File(compressImage(imagePath));
                 imageView.setImageBitmap(thumbnail);
             }
-
         }
-
     }
 
 

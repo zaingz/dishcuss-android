@@ -53,6 +53,8 @@ private static String TAG = ChatMessageAdapter.class.getSimpleName();
     int lastMessageInfo=0;
     private String profileImage=null;
     int PunditNumber;
+    int uID;
+    Realm realm;
 
 private Context mContext;
 private ArrayList<ChatMessage> messageArrayList;
@@ -113,23 +115,41 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         ChatMessage lastMessage;
         ChatMessage message = messageArrayList.get(position);
 
-        Realm realm=Realm.getDefaultInstance();
-        User user = realm.where(User.class).findFirst();
-        if (message.userID == user.getId()) {
-        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id",user.getId()).findAll();
-        if(userProfiles.size()>0) {
-            UserProfile userProfile = userProfiles.first();
-                if (userProfile.getAvatar() != null)
+        if(!Constants.skipLogin) {
+            realm= Realm.getDefaultInstance();
+            User user = realm.where(User.class).findFirst();
+            uID=user.getId();
+        }else {
+            uID=0;
+        }
+
+        Log.e("Message",""+message.userID);
+
+        if (message.userID ==uID )
+        {
+            if(!Constants.skipLogin)
+            {
+                RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uID).findAll();
+                if (userProfiles.size() > 0)
                 {
-                    if (!userProfile.getAvatar().equals("")) {
-                        Constants.PicassoImageSrc(userProfile.getAvatar(), ((ViewHolder) holder).profileImage, mContext);
+                    UserProfile userProfile = userProfiles.first();
+                    if (userProfile.getAvatar() != null)
+                    {
+                        if (!userProfile.getAvatar().equals(""))
+                        {
+                            Constants.PicassoImageSrc(userProfile.getAvatar(), ((ViewHolder) holder).profileImage, mContext);
+                        }
                     }
                 }
-        }
-        else
-        {
-            UserData(user.getId(),((ViewHolder) holder).profileImage);
-        }
+                else
+                {
+                    UserData(uID, ((ViewHolder) holder).profileImage);
+                }
+            }
+            else
+            {
+              //  UserData(uID, ((ViewHolder) holder).profileImage);
+            }
         }
         else
         {
