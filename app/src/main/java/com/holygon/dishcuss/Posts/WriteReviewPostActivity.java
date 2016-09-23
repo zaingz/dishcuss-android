@@ -35,7 +35,9 @@ import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -50,6 +52,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -76,8 +79,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     double restaurantLatitude;
     int restaurantID;
     File file=null;
-
-    Realm realm;
+    UserProfile userProfile=new UserProfile();
 
     TextView headerName,postClick;
 
@@ -87,6 +89,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     ArrayList<Double> placeLong;
 
     ArrayAdapter<String> placeAdapter;
+    Realm realm;
 
 
 
@@ -117,11 +120,26 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         client = new OkHttpClient();
+
+        realm = Realm.getDefaultInstance();
+        User user = realm.where(User.class).findFirst();
+        userProfile=GetUserData(user.getId());
+
         userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
         headerName.setText("Write a review");
+
+        TextView write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);
+        de.hdodenhof.circleimageview.CircleImageView
+        write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
+
+        write_reviewer_user_name.setText(userProfile.getUsername());
+        if (!userProfile.getAvatar().equals(""))
+        {
+            Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,WriteReviewPostActivity.this);
+        }
 
         postClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -574,6 +592,18 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    UserProfile GetUserData(int uid){
+        realm = Realm.getDefaultInstance();
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
+        Log.e("Count",""+userProfiles.size());
+        if(userProfiles.size()>0){
+            realm.beginTransaction();
+            realm.commitTransaction();
+            return userProfiles.get(userProfiles.size()-1);
+        }
+        return null;
     }
 
 }

@@ -33,12 +33,14 @@ public class URLs {
 
     public static String Restaurant_Review="http://dishcuss-api.herokuapp.com/restaurants/reviews";
 
-    public static String Follow_Restaurant="http://dishcuss-api.herokuapp.com/user/follow/";
+    public static String Follow_Restaurant="http://dishcuss-api.herokuapp.com/restaurants/follow/";
     public static String UnFollow_Restaurant="http://dishcuss-api.herokuapp.com/restaurants/unfollow/";
 
 
     public static String Like_="http://dishcuss-api.herokuapp.com/user/like/";
-    public static String DisLike_="http://dishcuss-api.herokuapp.com/user/dislike/";
+    public static String UnLike_ ="http://dishcuss-api.herokuapp.com/restaurant/unlike/";
+//    public static String UnLike_="http://dishcuss-api.herokuapp.com/user/dislike/";
+
     //Add Comment
     public static String Add_Comment_Review="http://dishcuss-api.herokuapp.com/reviews/comment";
     public static String Add_Comment_Post="http://dishcuss-api.herokuapp.com/user/posts/comment/new";
@@ -69,5 +71,10 @@ public class URLs {
 
     //EatBuddies
     public static String EatBuddies="http://dishcuss-api.herokuapp.com/user/eat_buddies";
+
+    //Is User Followed
+    public static String IsUserFollowed="http://dishcuss-api.herokuapp.com/user/follows/check/";
+    //Is Restaurant Followed
+    public static String IsRestaurantFollowed="http://dishcuss-api.herokuapp.com/restaurant/bookmarks/follows/";
 
 }

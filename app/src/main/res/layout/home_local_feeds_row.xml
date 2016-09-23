@@ -92,6 +92,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/user_profile_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -105,7 +106,7 @@
                     app:civ_border_color="#e7e7e7"/>
 
                 <LinearLayout
-                    android:id="@+id/user_profile_layout"
+
                     android:layout_marginTop="4dp"
                     android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"

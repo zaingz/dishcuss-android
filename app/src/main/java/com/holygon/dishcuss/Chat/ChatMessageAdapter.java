@@ -130,9 +130,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             if(!Constants.skipLogin)
             {
                 RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uID).findAll();
+
                 if (userProfiles.size() > 0)
                 {
-                    UserProfile userProfile = userProfiles.first();
+                    UserProfile userProfile = userProfiles.get(userProfiles.size()-1);
                     if (userProfile.getAvatar() != null)
                     {
                         if (!userProfile.getAvatar().equals(""))
@@ -143,6 +144,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
                 }
                 else
                 {
+                    Log.e("User ","Else");
                     UserData(uID, ((ViewHolder) holder).profileImage);
                 }
             }

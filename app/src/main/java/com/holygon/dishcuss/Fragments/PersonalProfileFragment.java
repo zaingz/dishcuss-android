@@ -115,7 +115,7 @@ public class PersonalProfileFragment extends Fragment{
 
             user= realm.where(User.class).findFirst();
             userID = user.getId();
-        if(PersonalProfileFragment.isCalledOnce) {
+        if(PersonalProfileFragment.isCalledOnce || !Constants.isNetworkAvailable(getActivity())) {
             userProfile=GetUserData(userID);
             if(userProfile!=null)
             {

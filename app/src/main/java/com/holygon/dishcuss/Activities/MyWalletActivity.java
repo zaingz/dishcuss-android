@@ -78,7 +78,6 @@ public class MyWalletActivity extends AppCompatActivity {
     }
 
 
-
     void FetchMyFeedsData(){
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -141,8 +140,6 @@ public class MyWalletActivity extends AppCompatActivity {
             }
         });
         realm.close();
-
-
     }
 
 

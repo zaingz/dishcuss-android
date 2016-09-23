@@ -24,12 +24,17 @@ import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +43,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 8/8/2016.
@@ -63,7 +74,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         public RelativeLayout local_feeds_restaurant_relative_layout;
         LinearLayout layout_like;
         LinearLayout layout_comment;
-        LinearLayout user_profile_layout;
+        RelativeLayout user_profile_layout;
         TextView comment_TextView;
 
         //Comments Data
@@ -90,13 +101,12 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
-            user_profile_layout=(LinearLayout)v.findViewById(R.id.user_profile_layout);
+            user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             comment_TextView=(TextView) v.findViewById(R.id.comment_TextView);
 
 
             comments_row=(LinearLayout)v.findViewById(R.id.comments_);
             comments_add_row=(LinearLayout)v.findViewById(R.id.comments_add);
-
 
         }
     }
@@ -175,7 +185,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
-                                    GenericRoutes.Like(localFeedReview.getReviewID(), "review",(Activity) mContext);
+                                    Like(localFeedReview.getReviewID(), "review",holder.review_likes_count_tv);
                                         int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
                                         prev++;
                                         holder.review_likes_count_tv.setText("" + prev);
@@ -188,16 +198,18 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
+
+
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Log.e("SHAN","Clicked");
                             holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
                             if(Constants.isNetworkAvailable((Activity) mContext)) {
                                 if (!Constants.skipLogin) {
-                                    GenericRoutes.Like(localFeedReview.getReviewOnID(), "restaurant",(Activity) mContext);
+                                    RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant",holder.image_bookmark);
                                 }
                             }
+
                         }
                     });
 
@@ -334,9 +346,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
                                     int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
                                     prev++;
-                                    Log.e("Likes",""+prev);
                                     holder.review_likes_count_tv.setText("" + prev);
-                                    GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",(Activity) mContext);
+                                    Like(localFeedCheckIn.getCheckInID(), "post",holder.review_likes_count_tv);
                                 }
                             }
                         }
@@ -346,11 +357,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
 
-                            Log.e("SHAN","Clicked");
                             holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
                             if(!Constants.skipLogin) {
                                 if (Constants.isNetworkAvailable((Activity) mContext)) {
-                                    GenericRoutes.Like(localFeedCheckIn.getCheckInOnID(), "restaurant",(Activity) mContext);
+                                    RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant",holder.image_bookmark);
                                 }
                             }
                         }
@@ -507,6 +517,115 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         photo=Bitmap.createScaledBitmap(photo, w, h, true);
 
         return photo;
+    }
+
+    public void Like(int id, String type,final TextView tv){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully liked!")) {
+                                    int prev = Integer.valueOf(tv.getText().toString());
+                                    prev--;
+                                    tv.setText("" + prev);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        realm.commitTransaction();
+        //            return UnLike(id,type);
+    }
+
+    public void RestaurantBookmarked(final int id, final String type, final ImageView tv){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully liked!")) {
+                                    tv.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                                    GenericRoutes.UnLike(id,type);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        realm.commitTransaction();
+        //            return UnLike(id,type);
     }
 }
 

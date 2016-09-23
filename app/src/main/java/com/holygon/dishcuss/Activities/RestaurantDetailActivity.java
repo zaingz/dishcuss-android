@@ -29,13 +29,13 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.holygon.dishcuss.Fragments.RestaurantMenuFragment;
 import com.holygon.dishcuss.Fragments.RestaurantPhotosFragment;
 import com.holygon.dishcuss.Fragments.RestaurantReviewsFragment;
-import com.holygon.dishcuss.Fragments.StickyHeaderFragment;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
@@ -180,16 +180,25 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             }
         });
 
+        if(Constants.isNetworkAvailable(RestaurantDetailActivity.this)) {
+            IsRestaurantFollowedData(restaurantID);
+        }
+
         bookmark_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
                     if (bookmark_button_text.getText().toString().equals(" Bookmark")) {
                         bookmark_button_text.setText("Bookmarked");
+                        if(Constants.isNetworkAvailable(RestaurantDetailActivity.this)) {
+                            GenericRoutes.Like(restaurantID, "restaurant", RestaurantDetailActivity.this);
+                        }
                     } else {
                         bookmark_button_text.setText(" Bookmark");
+                        if(Constants.isNetworkAvailable(RestaurantDetailActivity.this)) {
+                            GenericRoutes.UnLike(restaurantID, "restaurant");
+                        }
                     }
-                    GenericRoutes.Like(restaurantID, "restaurant",RestaurantDetailActivity.this);
                 }
             }
         });
@@ -201,10 +210,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                     
                     if (follow_button_text.getText().toString().equals("  Follow")) {
                         follow_button_text.setText("Unfollow");
+                        GenericRoutes.FollowRestaurant(restaurantID);
+
                     } else {
                         follow_button_text.setText("  Follow");
+                        GenericRoutes.UnFollowRestaurant(restaurantID);
                     }
-                    GenericRoutes.FollowRestaurant(restaurantID);
+
                 }
             }
         });
@@ -627,5 +639,62 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
         intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is");
         startActivity(Intent.createChooser(intent, "Share Dishcuss With Friends"));
+    }
+
+
+    void IsRestaurantFollowedData(int rid){
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.IsRestaurantFollowed+rid)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+                Log.e("Follows",""+objStr);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    try {
+
+                        JSONObject jsonObj = new JSONObject(objStr);
+
+                        if(jsonObj.has("follows")) {
+                            boolean f = jsonObj.getBoolean("follows");
+                            boolean b = jsonObj.getBoolean("likes");
+
+                            if (b) {
+                                bookmark_button_text.setText("Bookmarked");
+                            } else {
+                                bookmark_button_text.setText(" Bookmark");
+                            }
+
+                            if (f) {
+                                follow_button_text.setText("Unfollow");
+                            } else {
+                                follow_button_text.setText("  Follow");
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            }
+        });
     }
 }

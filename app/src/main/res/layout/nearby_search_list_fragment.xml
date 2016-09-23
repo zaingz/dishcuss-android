@@ -60,6 +60,17 @@
                 android:indeterminate="true"
                 android:visibility="gone"/>
 
+            <TextView
+                android:id="@+id/turn_on_loc_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="Turn on your location to find nearby restaurants"/>
+
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/nearby_search_recycler_view"
                 android:layout_marginTop="15dp"

@@ -54,6 +54,8 @@
             android:id="@+id/chat_user_profile_image"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="#c1c0c0"
             android:src="@drawable/profile_avatar" />
     </LinearLayout>
 </RelativeLayout>

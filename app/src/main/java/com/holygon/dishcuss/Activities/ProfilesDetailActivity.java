@@ -111,17 +111,25 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                     UserData();
             }
 
+        if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+            IsUserFollowedData(userID);
+        }
         userFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean st = FollowUser(userID);
-                if(st){
-                    userFollowButton.setText("Un follow");
-                }
 
-                boolean st1 = UnFollowUser(userID);
-                if(st1){
+                if(userFollowButton.getText().toString().equals("Un follow")){
+                    if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+                        UnFollowUser(userID);
+                    }
                     userFollowButton.setText("Follow");
+                }
+                else
+                {
+                    if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+                        FollowUser(userID);
+                    }
+                    userFollowButton.setText("Un follow");
                 }
             }
         });
@@ -473,7 +481,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     }
 
 
-    boolean FollowUser(int id){
+    void FollowUser(int id){
 
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
@@ -513,15 +521,11 @@ public class ProfilesDetailActivity extends AppCompatActivity {
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
-        return message.equals("Successfully followed!");
     }
 
 
-    boolean UnFollowUser(int id){
+    void UnFollowUser(int id){
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -558,11 +562,53 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                 }
             }
         });
-
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
-        return message.equals("Successfully unfollowed!");
+    }
+
+    void IsUserFollowedData(int UID){
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.IsUserFollowed+UID)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+                Log.e("Follows",""+objStr);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            boolean f=jsonObj.getBoolean("follows");
+
+                            if(f){
+                                userFollowButton.setText("Un follow");
+                            }else {
+                                userFollowButton.setText("Follow");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 }

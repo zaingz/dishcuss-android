@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#e4770a</color>
-    <color name="colorPrimaryDark">#FFE4770A</color>
-    <color name="colorAccent">#d2883b</color>
+    <color name="colorPrimaryDark">#f68920</color>
+    <color name="colorAccent">#f68920</color>
     <color name="colorAccent1">#FFE4770A</color>
     <color name="fab_button">#3a5897</color>
     <color name="textColorPrimary">#000</color>

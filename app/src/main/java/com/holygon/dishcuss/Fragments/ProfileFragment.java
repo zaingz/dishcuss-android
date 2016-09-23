@@ -34,7 +34,16 @@ import com.holygon.dishcuss.Activities.MyWalletActivity;
 import com.holygon.dishcuss.Activities.UpdateProfileActivity;
 import com.holygon.dishcuss.Activities.UserOffersActivity;
 import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
+import com.holygon.dishcuss.Model.Comment;
+import com.holygon.dishcuss.Model.FeaturedRestaurant;
+import com.holygon.dishcuss.Model.KhabaHistoryModel;
+import com.holygon.dishcuss.Model.LocalFeedCheckIn;
+import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserOffersModel;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
@@ -46,6 +55,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -115,7 +125,7 @@ public class ProfileFragment extends Fragment{
         if(Constants.skipLogin){
             login_first.setText("Login or SignUp");
             profileSettings.setVisibility(View.GONE);
-            my_wallet_TextView.setText("My Wallet( 0 PKR)");
+            my_wallet_TextView.setText("My Wallet");
         }
         else
         {
@@ -182,6 +192,7 @@ public class ProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
+                    realm = Realm.getDefaultInstance();
                     User user = realm.where(User.class).findFirst();
                     SignOutRequest(user.getToken(), user.getProvider());
                 }else {
@@ -269,7 +280,34 @@ public class ProfileFragment extends Fragment{
 
                     realm=Realm.getDefaultInstance();
                     realm.beginTransaction();
-                    realm.deleteAll();
+
+                    RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
+                    result.deleteAllFromRealm();
+
+                    RealmResults<Comment> comments = realm.where(Comment.class).findAll();
+                    comments.deleteAllFromRealm();
+
+                    RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
+                    khabaHistoryModelRealmResults.deleteAllFromRealm();
+
+                    RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
+                    localFeedCheckInRealmResults.deleteAllFromRealm();
+
+                    RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
+                    localFeedReviewRealmResults.deleteAllFromRealm();
+
+                    RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+                    localFeedsRealmResults.deleteAllFromRealm();
+
+                    RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+                    restaurantRealmResults.deleteAllFromRealm();
+
+                    RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+                    userProfileRealmResults.deleteAllFromRealm();
+
+//                    RealmResults<UserOffersModel> userOffersModelRealmResults = realm.where(UserOffersModel.class).findAll();
+//                    userOffersModelRealmResults.deleteAllFromRealm();
+
                     realm.commitTransaction();
                     Constants.SetUserLoginStatus(getActivity(),false);
                     Intent intent=new Intent(getActivity(), LoginActivity.class);

@@ -75,6 +75,7 @@
                             android:layout_width="match_parent"
                             android:textColorHint="@color/hint_color"
                             android:hint="Naeem057"
+                            android:maxLength="15"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />
@@ -101,9 +102,9 @@
                             android:textColorHint="@color/hint_color"
                             android:hint="Naeem Ibrahim"
                             android:inputType="text"
+                            android:maxLength="18"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />
-
 
                     </LinearLayout>
 

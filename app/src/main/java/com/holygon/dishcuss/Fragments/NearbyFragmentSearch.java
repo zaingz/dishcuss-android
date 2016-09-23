@@ -1,9 +1,11 @@
 package com.holygon.dishcuss.Fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -66,6 +69,7 @@ public class NearbyFragmentSearch extends Fragment implements
     AppCompatActivity activity;
     RecyclerView nearbySearchRecyclerView;
     private RecyclerView.LayoutManager nearbySearchLayoutManager;
+    TextView turn_on_loc_textview;
     Realm realm;
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;
     ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
@@ -84,6 +88,7 @@ public class NearbyFragmentSearch extends Fragment implements
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
     //Current Location
     boolean getData=false;
+    LocationManager manager;
 
     public NearbyFragmentSearch(){
     }
@@ -112,8 +117,8 @@ public class NearbyFragmentSearch extends Fragment implements
         activity = (AppCompatActivity) getActivity();
 
         nearbySearchRecyclerView = (RecyclerView) rootView.findViewById(R.id.nearby_search_recycler_view);
+        turn_on_loc_textview=(TextView)rootView.findViewById(R.id.turn_on_loc_textview);
         progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
-        progressBar.setVisibility(View.VISIBLE);
 
         //Location
 
@@ -128,6 +133,7 @@ public class NearbyFragmentSearch extends Fragment implements
         //Location
         checkLocationSettings();
 
+        manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         nearbySearchLayoutManager = new LinearLayoutManager(activity);
         nearbySearchRecyclerView.setLayoutManager(nearbySearchLayoutManager);
@@ -203,9 +209,12 @@ public class NearbyFragmentSearch extends Fragment implements
          Log.d("Locations", mCurrentLocation.getLatitude()+"");
          Log.d("Locations", mCurrentLocation.getLongitude()+"");
 
-        if(!getData){
-            RestaurantData();
-            getData=true;
+        if(manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            turn_on_loc_textview.setVisibility(View.GONE);
+            if (!getData) {
+                RestaurantData();
+                getData = true;
+            }
         }
     }
 
@@ -483,6 +492,9 @@ public class NearbyFragmentSearch extends Fragment implements
                     // in onActivityResult().
 
                     status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                    if(!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        turn_on_loc_textview.setVisibility(View.VISIBLE);
+                    }
 
                 } catch (IntentSender.SendIntentException e) {
 
@@ -492,6 +504,7 @@ public class NearbyFragmentSearch extends Fragment implements
 
             case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                 // Location settings are inadequate, and cannot be fixed here. Dialog not created
+                turn_on_loc_textview.setVisibility(View.VISIBLE);
                 break;
         }
     }

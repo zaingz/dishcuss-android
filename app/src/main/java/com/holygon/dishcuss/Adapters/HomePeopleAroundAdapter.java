@@ -88,19 +88,16 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
             @Override
             public void onClick(View v) {
                 if(!myFeeds.get(position).isFollowing()){
-
-                    boolean st = FollowUser(myFeeds.get(position).getId());
-                    if(st){
-                        holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_already_followed));
-                        myFeeds.get(position).setFollowing(true);
-                    }
-                }else
+                    FollowUser(myFeeds.get(position).getId());
+                    holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_already_followed));
+                    myFeeds.get(position).setFollowing(true);
+                }
+                else
                 {
-                    boolean st =UnFollowUser(myFeeds.get(position).getId());
-                    if(st){
-                        holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_my_feed_account));
-                        myFeeds.get(position).setFollowing(false);
-                    }
+                    UnFollowUser(myFeeds.get(position).getId());
+                    holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_my_feed_account));
+                    myFeeds.get(position).setFollowing(false);
+
                 }
                 notifyDataSetChanged();
             }
@@ -115,7 +112,7 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
         return myFeeds.size();
     }
 
-    boolean FollowUser(int id){
+    void FollowUser(int id){
 
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
@@ -155,14 +152,11 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
-        return message.equals("Successfully followed!");
+//        return message.equals("Successfully followed!");
     }
 
-    boolean UnFollowUser(int id){
+    void UnFollowUser(int id){
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -200,10 +194,8 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
+
         realm.commitTransaction();
-        return message.equals("Successfully unfollowed!");
+//        return message.equals("Successfully unfollowed!");
     }
 }

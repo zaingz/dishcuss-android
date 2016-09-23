@@ -69,6 +69,7 @@ public class GenericRoutes {
 
                     if(jsonObj.has("message")){
                         message= jsonObj.getString("message");
+                        Log.e("Message",""+message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -80,11 +81,11 @@ public class GenericRoutes {
 
 
         realm.commitTransaction();
-        //            return DisLike(id,type);
+        //            return UnLike(id,type);
     }
 
 
-    public static void DisLike(int id,String type){
+    public static void UnLike(int id, String type){
 
         // Get a Realm instance for this thread
         Realm realm=Realm.getDefaultInstance();
@@ -93,7 +94,7 @@ public class GenericRoutes {
         final User user = realm.where(User.class).findFirst();
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.DisLike_+type+"/"+id)
+                .url(URLs.UnLike_+id)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
 
@@ -114,6 +115,7 @@ public class GenericRoutes {
 
                     if(jsonObj.has("message")){
                         message= jsonObj.getString("message");
+                        Log.e("Message",""+message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -122,9 +124,6 @@ public class GenericRoutes {
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
     }
 
@@ -160,6 +159,7 @@ public class GenericRoutes {
 
                     if(jsonObj.has("message")){
                         message= jsonObj.getString("message");
+                        Log.e("Message",""+message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -168,10 +168,6 @@ public class GenericRoutes {
                 }
             }
         });
-
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
     }
 
@@ -196,14 +192,15 @@ public class GenericRoutes {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
+            public void onResponse(Call call, Response response) throws IOException
+            {
                 String objStr=response.body().string();
                 try {
                     JSONObject jsonObj = new JSONObject(objStr);
 
                     if(jsonObj.has("message")){
                         message= jsonObj.getString("message");
+                        Log.e("Message",""+message);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -212,9 +209,6 @@ public class GenericRoutes {
             }
         });
 
-        while (message==null){
-//            Log.e("Loop","Working");
-        }
         realm.commitTransaction();
     }
 

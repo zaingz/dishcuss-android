@@ -79,7 +79,6 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
         Log.e("jsondata",""+jsondata);
         JSONArray friendslist;
         ArrayList<String> friends = new ArrayList<String>();
-
         try {
             friendslist = new JSONArray(jsondata);
             for (int l=0; l < friendslist.length(); l++) {
