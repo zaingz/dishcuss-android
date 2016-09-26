@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Debug;
@@ -29,7 +30,9 @@ import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -65,6 +68,7 @@ public class PostDetailActivity extends AppCompatActivity {
     Realm realm;
     LayoutInflater inflater;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,15 +99,15 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         }
 
-        post_add_comment_edit_text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!Constants.skipLogin) {
-                    post_add_comment_edit_text.setFocusableInTouchMode(true);
-                    post_add_comment_edit_text.setFocusable(true);
-                }
-            }
-        });
+//        post_add_comment_edit_text.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(!Constants.skipLogin) {
+//                    post_add_comment_edit_text.setFocusableInTouchMode(true);
+//                    post_add_comment_edit_text.setFocusable(true);
+//                }
+//            }
+//        });
 
         if(!isCheckIn){
 
@@ -151,6 +155,10 @@ public class PostDetailActivity extends AppCompatActivity {
                         Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(), commentator_profile_image, this);
                     }
 
+                    TextView commentLikes = (TextView) child.findViewById(R.id.comment_Like);
+                    commentLikes.setOnClickListener(LikeClick);
+                    commentLikes.setTag(commentRealmList.get(i).getCommentID());
+
                     commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                     commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
                     Date date = GetDate(commentRealmList.get(i).getCommentUpdated_at());
@@ -163,7 +171,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     String dates = localDateFormatForDate.format(date);
 
                     commentTime.setText(dates + " " + time);
-                    commentLikesCount.setText("  " + commentRealmList.get(i).getCommentLikesCount());
+                    commentLikesCount.setText(""+ commentRealmList.get(i).getCommentLikesCount());
                     comments_row.addView(child);
                 }
 
@@ -175,19 +183,15 @@ public class PostDetailActivity extends AppCompatActivity {
                             String comment = post_add_comment_edit_text.getText().toString();
                             if (!comment.equals("")) {
                                 post_add_comment_edit_text.setText("");
-                                post_add_comment_edit_text.clearFocus();
-                                post_add_comment_edit_text.setFocusable(false);
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
-                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
                                 SendCommentDataOnServer("" + localFeedReview.getReviewID(), "Title", comment, "", URLs.Add_Comment_Review);
                                 int prev = Integer.valueOf(commentsCount.getText().toString());
                                 prev++;
                                 commentsCount.setText("" + prev);
                             }
+
+                            return true;
                         }
-                        return true;
+                        return false;
                     }
                 });
             }
@@ -237,6 +241,11 @@ public class PostDetailActivity extends AppCompatActivity {
                         Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(), commentator_profile_image, this);
                     }
 
+
+                    TextView commentLikes = (TextView) child.findViewById(R.id.comment_Like);
+                    commentLikes.setOnClickListener(LikeClick);
+                    commentLikes.setTag(commentRealmList.get(i).getCommentID());
+
                     commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                     commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
                     Date date = GetDate(commentRealmList.get(i).getCommentUpdated_at());
@@ -249,7 +258,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     String dates = localDateFormatForDate.format(date);
 
                     commentTime.setText(dates + " " + time);
-                    commentLikesCount.setText("  " + commentRealmList.get(i).getCommentLikesCount());
+                    commentLikesCount.setText(""+ commentRealmList.get(i).getCommentLikesCount());
                     comments_row.addView(child);
                 }
 
@@ -261,19 +270,14 @@ public class PostDetailActivity extends AppCompatActivity {
                             String comment = post_add_comment_edit_text.getText().toString();
                             if (!comment.equals("")) {
                                 post_add_comment_edit_text.setText("");
-                                post_add_comment_edit_text.clearFocus();
-                                post_add_comment_edit_text.setFocusable(false);
-                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
-                                        InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                                imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
                                 SendCommentDataOnServer("" + reviewModel.getReview_ID(), "Title", comment, "", URLs.Add_Comment_Review);
                                 int prev = Integer.valueOf(commentsCount.getText().toString());
                                 prev++;
                                 commentsCount.setText("" + prev);
                             }
+                            return true;
                         }
-                        return true;
+                        return false;
                     }
                 });
             }
@@ -333,6 +337,12 @@ public class PostDetailActivity extends AppCompatActivity {
                 if(!commentRealmList.get(i).getCommentatorImage().equals("")){
                     Constants.PicassoImageSrc(commentRealmList.get(i).getCommentatorImage(),commentator_profile_image,this);
                 }
+
+
+                TextView commentLikes = (TextView) child.findViewById(R.id.comment_Like);
+                commentLikes.setOnClickListener(LikeClick);
+                commentLikes.setTag(commentRealmList.get(i).getCommentID());
+
                 commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                 commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
                 Date date= GetDate(commentRealmList.get(i).getCommentUpdated_at());
@@ -346,7 +356,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
                 commentTime.setText(dates+" "+time);
-                commentLikesCount.setText("  "+commentRealmList.get(i).getCommentLikesCount());
+                commentLikesCount.setText(""+commentRealmList.get(i).getCommentLikesCount());
                 comments_row.addView(child);
             }
 
@@ -357,23 +367,27 @@ public class PostDetailActivity extends AppCompatActivity {
                         String comment=post_add_comment_edit_text.getText().toString();
                         if(!comment.equals("")){
                             post_add_comment_edit_text.setText("");
-                            post_add_comment_edit_text.clearFocus();
-                            post_add_comment_edit_text.setFocusable(false);
-                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
-                                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
-                            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
                             SendCommentDataOnServer(""+localFeedCheckIn.getCheckInID(),"",comment,"", URLs.Add_Comment_Post);
                             int prev=Integer.valueOf(commentsCount.getText().toString());
                             prev++;
                             commentsCount.setText(""+prev);
                         }
+                        return true;
                     }
-                    return true;
+                    return false;
                 }
             });
         }
     }
+
+    View.OnClickListener LikeClick = new View.OnClickListener() {
+        public void onClick(View v) {
+            int idxStr = (int) v.getTag();
+            Like(idxStr,"comment");
+            Toast.makeText(PostDetailActivity.this,"Liked "+idxStr,Toast.LENGTH_SHORT).show();
+        }
+    };
+
 
     Date GetDate(String date){
           Log.e("Post Detail Date",""+date);
@@ -402,45 +416,12 @@ public class PostDetailActivity extends AppCompatActivity {
                 // todo: goto back activity from here
                 finish();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-        }
-        return true;
-    }
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        Toast.makeText(PostDetailActivity.this,"BAck Pressed",Toast.LENGTH_LONG).show();
-        if(post_add_comment_edit_text.hasFocus()){
-
-            post_add_comment_edit_text.clearFocus();
-            post_add_comment_edit_text.setFocusable(false);
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(),
-                    InputMethodManager.RESULT_UNCHANGED_SHOWN);
-            imm.hideSoftInputFromWindow(post_add_comment_edit_text.getWindowToken(), 0);
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        if (event.getAction() ==  KeyEvent.KEYCODE_BACK) {
-        }
-
-        return  true;
-    }
 
     void GetUI(){
         comments_row=(LinearLayout)findViewById(R.id.comments_);
@@ -454,10 +435,7 @@ public class PostDetailActivity extends AppCompatActivity {
         postImage=(ImageView)findViewById(R.id.post_image);
         post_add_comment_edit_text=(EditText)findViewById(R.id.post_add_comment_edit_text);
         post_add_comment_edit_text_parent=(LinearLayout) findViewById(R.id.post_add_comment_edit_text_parent);
-        post_add_comment_edit_text.clearFocus();
-        post_add_comment_edit_text.setFocusable(false);
     }
-
 
 
     void SendCommentDataOnServer(String id, String title, String comment, String imageURL, String routeURL){
@@ -527,6 +505,11 @@ public class PostDetailActivity extends AppCompatActivity {
                                     Constants.PicassoImageSrc(comment.getCommentatorImage(),commentator_profile_image,PostDetailActivity.this);
                                 }
 
+
+                                TextView commentLikes = (TextView) child.findViewById(R.id.comment_Like);
+                                commentLikes.setOnClickListener(LikeClick);
+                                commentLikes.setTag(comment.getCommentID());
+
                                 commentatorName.setText(comment.getCommentatorName());
                                 commentatorComment.setText(comment.getCommentSummary());
                                 Date date = GetDate(comment.getCommentUpdated_at());
@@ -540,7 +523,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
                                 commentTime.setText(dates + " " + time);
-                                commentLikesCount.setText("  " + comment.getCommentLikesCount());
+                                commentLikesCount.setText("" + comment.getCommentLikesCount());
                                 comments_row.addView(child,0);
                             }
                         } catch (Exception e){
@@ -550,5 +533,61 @@ public class PostDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+//    comment
+    public void Like(int id, String type){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully liked!")) {
+//                                    int prev = Integer.valueOf(textView.getText().toString());
+//                                    prev--;
+//                                    textView.setText("" + prev);
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        realm.commitTransaction();
+        //            return UnLike(id,type);
     }
 }

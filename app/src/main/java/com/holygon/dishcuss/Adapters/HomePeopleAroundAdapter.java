@@ -1,14 +1,17 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
@@ -43,12 +46,14 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
         public TextView userName,reviewTime;
         public de.hdodenhof.circleimageview.CircleImageView profileImageView;
         public ImageView followedImageView;
+        public RelativeLayout user_profile_layout;
 
         public ViewHolder(View v) {
             super(v);
             userName = (TextView) v.findViewById(R.id.my_feeds_user_name);
             reviewTime = (TextView) v.findViewById(R.id.my_feeds_user_review_time);
             followedImageView = (ImageView) v.findViewById(R.id.my_feed_followed_info_image);
+            user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             profileImageView=(de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.my_feeds_profile_image);
         }
     }
@@ -84,6 +89,15 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
             Constants.PicassoImageSrc(myFeeds.get(position).getAvatarPic(),holder.profileImageView,mContext);
         }
 
+        holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                intent.putExtra("UserID", myFeeds.get(position).getId());
+                mContext.startActivity(intent);
+            }
+        });
+
         holder.followedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,14 +105,16 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
                     FollowUser(myFeeds.get(position).getId());
                     holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_already_followed));
                     myFeeds.get(position).setFollowing(true);
+                    myFeeds.get(position).setFollowers((myFeeds.get(position).getFollowers())+1);
                 }
                 else
                 {
                     UnFollowUser(myFeeds.get(position).getId());
                     holder.followedImageView.setImageDrawable(res.getDrawable(R.drawable.icon_my_feed_account));
                     myFeeds.get(position).setFollowing(false);
-
+                    myFeeds.get(position).setFollowers((myFeeds.get(position).getFollowers())-1);
                 }
+
                 notifyDataSetChanged();
             }
         });

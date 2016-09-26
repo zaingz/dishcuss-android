@@ -39,8 +39,8 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
     Context context;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
-        public TextView restaurantName,restaurantAddress,ratting;
+        public TextView mTextView,nearby_search_restaurant_distance;
+        public TextView restaurantName,restaurantAddress,ratting,nearby_search_restaurant_cost;
         public TextView nearby_search_photos_count, nearby_search_likes_count;
         public LinearLayout callLayout;
         public RelativeLayout nearby_search_layout_recycler_view;
@@ -50,6 +50,8 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
             mTextView = (TextView) v.findViewById(R.id.nearby_search_restaurant_name);
 
             restaurantName = (TextView) v.findViewById(R.id.nearby_search_restaurant_name);
+            nearby_search_restaurant_distance = (TextView) v.findViewById(R.id.nearby_search_restaurant_distance);
+            nearby_search_restaurant_cost = (TextView) v.findViewById(R.id.nearby_search_restaurant_cost);
             restaurantAddress = (TextView) v.findViewById(R.id.nearby_search_restaurant_address);
             ratting = (TextView) v.findViewById(R.id.nearby_search_restaurant_rating);
             nearby_search_photos_count = (TextView) v.findViewById(R.id.nearby_search_photos_count);
@@ -80,6 +82,8 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
         ArrayList<String> itemsData = new ArrayList<>();
         itemsData=SetImageURL(restaurantRealmList.get(position).getId());
         holder.restaurantName.setText(restaurantRealmList.get(position).getName());
+        holder.nearby_search_restaurant_distance.setText(restaurantRealmList.get(position).getDistanceAway()+" KM Away");
+        holder.nearby_search_restaurant_cost.setText(" "+restaurantRealmList.get(position).getPricePerHead()+"/head");
         holder.restaurantAddress.setText(restaurantRealmList.get(position).getLocation());
         holder.ratting.setText(""+restaurantRealmList.get(position).getRatting());
         holder.nearby_search_likes_count.setText(""+restaurantRealmList.get(position).getBookmark_count());

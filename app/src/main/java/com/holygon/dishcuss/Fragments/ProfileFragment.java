@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -237,9 +238,25 @@ public class ProfileFragment extends Fragment{
 //        signInButton.setSize(SignInButton.SIZE_STANDARD);
 //        signInButton.setScopes(gso.getScopeArray());
     }
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(getActivity());
+        mSpinner.setTitle(title);
+        mSpinner.show();
+    }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+
+//*******************PROGRESS******************************
 
     public void SignOutRequest(String token,final String provider){
-
+        showSpinner("Please wait...");
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Token token=" + token)
                 .url(URLs.SIGN_OUT)
@@ -281,6 +298,9 @@ public class ProfileFragment extends Fragment{
                     realm=Realm.getDefaultInstance();
                     realm.beginTransaction();
 
+                    RealmResults<User> users = realm.where(User.class).findAll();
+                    users.deleteAllFromRealm();
+
                     RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
                     result.deleteAllFromRealm();
 
@@ -312,8 +332,10 @@ public class ProfileFragment extends Fragment{
                     Constants.SetUserLoginStatus(getActivity(),false);
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    DismissSpinner();
                     startActivity(intent);
                     getActivity().finish();
+
                 }
             }
         });

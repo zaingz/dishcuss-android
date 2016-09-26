@@ -19,6 +19,8 @@ public class Restaurant extends RealmObject {
     double restaurantLat;
     double restaurantLong;
     double ratting;
+    double distanceAway;
+    int pricePerHead;
 //    "like": [],
 //    "follow": [],
     int cover_image_id;
@@ -60,6 +62,22 @@ public class Restaurant extends RealmObject {
     public Restaurant() {
     }
 
+
+    public double getDistanceAway() {
+        return distanceAway;
+    }
+
+    public void setDistanceAway(double distanceAway) {
+        this.distanceAway = distanceAway;
+    }
+
+    public int getPricePerHead() {
+        return pricePerHead;
+    }
+
+    public void setPricePerHead(int pricePerHead) {
+        this.pricePerHead = pricePerHead;
+    }
 
     public double getRestaurantLat() {
         return restaurantLat;

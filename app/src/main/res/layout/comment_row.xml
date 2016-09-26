@@ -72,18 +72,20 @@
                             android:id="@+id/comment_Like"
                             android:layout_width="wrap_content"
                             android:text="   Like    "
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:onClick="LikeClicked" />
 
                         <ImageView
                             android:layout_width="17dp"
                             android:layout_height="17dp"
+                            android:layout_marginRight="5dp"
                             android:background="@drawable/icon_likes_count"/>
 
 
                         <TextView
                             android:id="@+id/comment_likes_count"
                             android:layout_width="wrap_content"
-                            android:text="     0"
+                            android:text="0"
                             android:layout_height="wrap_content" />
 
 

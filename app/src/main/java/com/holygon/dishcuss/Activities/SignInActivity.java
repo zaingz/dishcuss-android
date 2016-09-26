@@ -159,6 +159,7 @@ public class SignInActivity extends AppCompatActivity {
                         Intent intent=new Intent(SignInActivity.this,HomeActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        DismissSpinner();
                         Constants.SetUserLoginStatus(SignInActivity.this,true);
                         finish();
                     }

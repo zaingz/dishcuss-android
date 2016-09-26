@@ -25,6 +25,8 @@ public class URLs {
 
     public static String Select_restaurants="http://dishcuss-api.herokuapp.com/restaurants/categories/search?name=";
 
+    public static String Select_restaurants_explore_search="http://dishcuss-api.herokuapp.com/restaurants/sections/search?name=";
+
     public static String Select_Search_restaurants="http://dishcuss-api.herokuapp.com/restaurants/search?name=";
 
     public static String Select_Search_All_User_Restaurants ="http://dishcuss-api.herokuapp.com/search?name=";

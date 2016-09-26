@@ -18,41 +18,46 @@
             android:paddingRight="15dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp">
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/my_feeds_profile_image"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/profile_avatar"
-                app:civ_border_width="1dp"
-                app:civ_border_color="#e7e7e7"/>
-
-            <LinearLayout
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="8dp"
+            <RelativeLayout
+                android:id="@+id/user_profile_layout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/my_feeds_profile_image"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/my_feeds_user_name"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/my_feeds_profile_image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/profile_avatar"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="#e7e7e7"/>
+
+                <LinearLayout
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sikander Ali"
-                    android:textColor="@color/colorAccent1"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/my_feeds_user_review_time"
-                    android:layout_width="wrap_content"
-                    android:text="1 min"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
+                    android:layout_toRightOf="@id/my_feeds_profile_image"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/my_feeds_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sikander Ali"
+                        android:textColor="@color/colorAccent1"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/my_feeds_user_review_time"
+                        android:layout_width="wrap_content"
+                        android:text="1 min"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/my_feed_followed_info_image"

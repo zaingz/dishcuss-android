@@ -276,6 +276,7 @@ public class ExploreFragment extends Fragment{
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
                                 realmRestaurant.setRatting(restaurantObj.getDouble("rating"));
+                                realmRestaurant.setPricePerHead(restaurantObj.getInt("price_per_head"));
 
                                 if(!restaurantObj.isNull("latitude")) {
                                     realmRestaurant.setRestaurantLat(restaurantObj.getDouble("latitude"));

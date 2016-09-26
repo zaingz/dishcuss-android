@@ -70,7 +70,8 @@
 
         <activity
             android:name=".Activities.PostDetailActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/MyMaterialTheme"/>
 
 
         <activity

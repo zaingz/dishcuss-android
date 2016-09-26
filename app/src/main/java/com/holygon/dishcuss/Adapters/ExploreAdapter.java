@@ -42,7 +42,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView restaurantName,restaurantAddress,ratting;
+        public TextView restaurantName,restaurantAddress,ratting,explore_restaurant_cost;
         public TextView explore_restaurant_photos_count,explore_restaurant_likes_count;
         public ImageView explore_restaurant_image_1,explore_restaurant_image_2,explore_restaurant_image_3,explore_restaurant_image_4;
         public CardView CardView_explore_restaurant_image_1,CardView_explore_restaurant_image_2,CardView_explore_restaurant_image_3,CardView_explore_restaurant_image_4;
@@ -53,6 +53,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
             super(v);
 
             restaurantName = (TextView) v.findViewById(R.id.explore_restaurant_name);
+            explore_restaurant_cost = (TextView) v.findViewById(R.id.explore_restaurant_cost);
             restaurantAddress = (TextView) v.findViewById(R.id.explore_restaurant_address);
             ratting = (TextView) v.findViewById(R.id.explore_restaurant_rating);
             explore_restaurant_photos_count = (TextView) v.findViewById(R.id.explore_restaurant_photos_count);
@@ -96,6 +97,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         ArrayList<String> itemsData = new ArrayList<>();
         itemsData=SetImageURL(restaurantRealmList.get(position).getId());
         holder.restaurantName.setText(restaurantRealmList.get(position).getName());
+        holder.explore_restaurant_cost.setText(" "+restaurantRealmList.get(position).getPricePerHead()+"/head");
         holder.restaurantAddress.setText(restaurantRealmList.get(position).getLocation());
         holder.ratting.setText(""+restaurantRealmList.get(position).getRatting());
         holder.explore_restaurant_likes_count.setText(""+restaurantRealmList.get(position).getBookmark_count());

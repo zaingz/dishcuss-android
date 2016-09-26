@@ -181,7 +181,7 @@ public class SignupActivity extends AppCompatActivity implements
         strUserEmail=userEmail.getText().toString().trim();
         strUserPassword = userPassword.getText().toString().trim();
         strUserConfirmPassword = userConfirmPassword.getText().toString().trim();
-        strUserGender = userGender.getText().toString().trim();
+        strUserGender = userGender.getText().toString().toLowerCase().trim();
         strUserLocation = userLocation.getText().toString().trim();
 
 
@@ -204,7 +204,6 @@ public class SignupActivity extends AppCompatActivity implements
                                         if(strUserPassword.equals(strUserConfirmPassword)){
 
                                             NativeSignUp();
-
 
                                         }else {
                                             Crouton.makeText(SignupActivity.this, "Password not matched", Style.ALERT).show();
@@ -298,44 +297,50 @@ public class SignupActivity extends AppCompatActivity implements
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                try{
-                    String obj=response.body().string();
-//                    Log.e("Obj",obj.toString());
-                    JSONObject jsonObject=new JSONObject(obj);
-                    if(jsonObject.has("user")){
-                        JSONObject usersJsonObject = jsonObject.getJSONObject("user");
-//                   // Get a Realm instance for this thread
-                        realm = Realm.getDefaultInstance();
-                        // Persist your data in a transaction
-                        realm.beginTransaction();
-                        User user = realm.createObject(User.class); // Create managed objects directly
-                        user.setId(usersJsonObject.getInt("id"));
-                        user.setName(usersJsonObject.getString("name"));
-                        user.setDob(usersJsonObject.getString("date_of_birth"));
-                        user.setLocation(usersJsonObject.getString("location"));
-                        user.setUsername(usersJsonObject.getString("username"));
-                        user.setEmail(usersJsonObject.getString("email"));
-                        user.setGender(usersJsonObject.getString("gender"));
-                        user.setProvider(usersJsonObject.getString("provider"));
-                        user.setToken(usersJsonObject.getString("token"));
-                        user.setReferral_code(usersJsonObject.getString("referral_code"));
-                        realm.commitTransaction();
-                        realm.close();
+                final String obj=response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
 
-                        Intent intent=new Intent(SignupActivity.this,HomeActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        Constants.SetUserLoginStatus(SignupActivity.this,true);
-                        finish();
-                    }
-                    else  if(jsonObject.has("message")){
-                        message= jsonObject.getString("message");
-                    }
+                            Log.e("Obj",obj.toString());
+                            JSONObject jsonObject=new JSONObject(obj);
+                            if(jsonObject.has("user")){
+                                JSONObject usersJsonObject = jsonObject.getJSONObject("user");
+        //                   // Get a Realm instance for this thread
+                                realm = Realm.getDefaultInstance();
+                                // Persist your data in a transaction
+                                realm.beginTransaction();
+                                User user = realm.createObject(User.class); // Create managed objects directly
+                                user.setId(usersJsonObject.getInt("id"));
+                                user.setName(usersJsonObject.getString("name"));
+                                user.setDob(usersJsonObject.getString("date_of_birth"));
+                                user.setLocation(usersJsonObject.getString("location"));
+                                user.setUsername(usersJsonObject.getString("username"));
+                                user.setEmail(usersJsonObject.getString("email"));
+                                user.setGender(usersJsonObject.getString("gender"));
+                                user.setProvider(usersJsonObject.getString("provider"));
+                                user.setToken(usersJsonObject.getString("token"));
+                                user.setReferral_code(usersJsonObject.getString("referral_code"));
+                                realm.commitTransaction();
+                                realm.close();
 
-                }catch (Exception e){
-                    Log.i("Exception ::",""+ e.getMessage());
-                } finally {
-                }
+                                Intent intent=new Intent(SignupActivity.this,HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                Constants.SetUserLoginStatus(SignupActivity.this,true);
+                                finish();
+                            }
+                            else  if(jsonObject.has("message")){
+                                message= jsonObject.getString("message");
+                            }
+
+                        }catch (Exception e){
+                            Log.i("Exception ::",""+ e.getMessage());
+                        }
+
+                    }
+                });
 
                 DismissSpinner();
             }

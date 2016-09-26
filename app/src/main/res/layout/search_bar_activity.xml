@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <EditText
+            <AutoCompleteTextView
 
                 android:hint="Restaurant Name"
                 android:id="@+id/search_bar_edit_text"

@@ -97,7 +97,8 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
         }
         headerName.setText(categoryName);
 
-        RestaurantData("Desi");
+        Log.e("CategoryName",""+categoryName);
+        RestaurantData(categoryName);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLs.Select_restaurants+type)
+                .url(URLs.Select_restaurants_explore_search+type)
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -154,6 +155,7 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
                                 realmRestaurant.setRatting(restaurantObj.getDouble("rating"));
+                                realmRestaurant.setPricePerHead(restaurantObj.getInt("price_per_head"));
 
                                 if(!restaurantObj.isNull("latitude")) {
                                     realmRestaurant.setRestaurantLat(restaurantObj.getDouble("latitude"));

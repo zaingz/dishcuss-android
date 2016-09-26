@@ -91,6 +91,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;  // followersCount(Likes)  commentsCount(Checkins)
 
     TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count;
+    TextView explore_restaurant_cost;
 
 
     //*******************PROGRESS******************************
@@ -120,6 +121,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         setSupportActionBar(restaurant_details_awesome_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         cafeName = (TextView) findViewById(R.id.restaurant_detail_restaurant_name);
+        explore_restaurant_cost = (TextView) findViewById(R.id.explore_restaurant_cost);
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
 
@@ -266,6 +268,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         cafeName.setText(restaurant.getName());
         cafeAddress.setText(restaurant.getLocation());
         cafeTiming.setText(restaurant.getOpening_time()+" to "+restaurant.getClosing_time());
+        explore_restaurant_cost.setText("  Rs "+restaurant.getPricePerHead()+"/head");
 
         if(restaurant.getReview_count()>0){
             reviewsCount=restaurant.getReview_count();
@@ -398,6 +401,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                     realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                     realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
                                     realmRestaurant.setRatting(restaurantObj.getDouble("rating"));
+                                    realmRestaurant.setPricePerHead(restaurantObj.getInt("price_per_head"));
 
                                     if(!restaurantObj.isNull("latitude")) {
                                         realmRestaurant.setRestaurantLat(restaurantObj.getDouble("latitude"));

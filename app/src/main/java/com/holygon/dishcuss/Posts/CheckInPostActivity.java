@@ -137,7 +137,7 @@ public class CheckInPostActivity extends AppCompatActivity {
         de.hdodenhof.circleimageview.CircleImageView
                 write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
 
-        write_reviewer_user_name.setText(userProfile.getUsername());
+        write_reviewer_user_name.setText(userProfile.getName());
         if (!userProfile.getAvatar().equals(""))
         {
             Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
@@ -433,6 +433,7 @@ public class CheckInPostActivity extends AppCompatActivity {
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
                                 realmRestaurant.setRatting(restaurantObj.getDouble("rating"));
+                                realmRestaurant.setPricePerHead(restaurantObj.getInt("price_per_head"));
 
                                 if(!restaurantObj.isNull("latitude")) {
                                     realmRestaurant.setRestaurantLat(restaurantObj.getDouble("latitude"));

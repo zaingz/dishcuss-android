@@ -479,7 +479,6 @@ public class HomeFragment2 extends Fragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
@@ -727,6 +726,7 @@ public class HomeFragment2 extends Fragment {
         realm.beginTransaction();
         User user = realm.where(User.class).findFirst();
         Log.e("U",""+user.getToken());
+
         realm.commitTransaction();
 
         OkHttpClient client = new OkHttpClient();
