@@ -18,9 +18,8 @@ import android.widget.LinearLayout;
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-import com.holygon.dishcuss.Activities.SearchMainActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
-import com.holygon.dishcuss.Model.Notifications;
+
+import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.Constants;
@@ -69,7 +68,7 @@ public class NearbyFragment extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
+                Intent intent= new Intent(getActivity(), SearchUserAndRestaurantActivity.class);
                 startActivity(intent);
             }
         });

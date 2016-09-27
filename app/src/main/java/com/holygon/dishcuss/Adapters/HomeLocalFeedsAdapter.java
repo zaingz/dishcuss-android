@@ -160,7 +160,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.review_share_count_tv.setText(""+localFeedReview.getReviewSharesCount());
 
                     holder.status.setText(localFeedReview.getSummary());
-                    holder.image_bookmark.setTag(0);
 
 //                    if(!localFeedReview.getReviewImage().equals("")){
 //
@@ -195,7 +194,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
-
+                    IsRestaurantFollowedData(localFeedReview.getReviewOnID(),holder.image_bookmark);
 
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -361,7 +360,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             }
                         }
                     });
-                    holder.image_bookmark.setTag(0);
+
+                    IsRestaurantFollowedData(localFeedCheckIn.getCheckInOnID(),holder.image_bookmark);
+
 
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -463,6 +464,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 {
                     Log.e("LocalFeed","Why so?");
                 }
+
         holder.setIsRecyclable(false);
     }
 
@@ -649,6 +651,64 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         });
         realm.commitTransaction();
         //            return UnLike(id,type);
+    }
+
+    void IsRestaurantFollowedData(int rid,final ImageView bookmark){
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        User user = realm.where(User.class).findFirst();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.IsRestaurantFollowed+rid)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+                Log.e("Follows",""+objStr);
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("follows")) {
+                                boolean f = jsonObj.getBoolean("follows");
+                                boolean b = jsonObj.getBoolean("likes");
+
+                                if (b) {
+                                    bookmark.setTag(1);
+                                    bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                                } else {
+                                    bookmark.setTag(0);
+                                    bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+
+                                }
+
+                                if (f) {
+//                                    follow_button_text.setText("Unfollow");
+                                } else {
+//                                    follow_button_text.setText("  Follow");
+                                }
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 }
 

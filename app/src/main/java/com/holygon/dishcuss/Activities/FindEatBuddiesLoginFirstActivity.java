@@ -1,11 +1,13 @@
 package com.holygon.dishcuss.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -17,7 +19,6 @@ import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.holygon.dishcuss.R;
@@ -25,9 +26,8 @@ import com.holygon.dishcuss.Utils.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-public class ActivityEatBuddiesTest extends AppCompatActivity {
+public class FindEatBuddiesLoginFirstActivity extends AppCompatActivity {
 
     CallbackManager callbackManager;
     String rawName;
@@ -37,15 +37,23 @@ public class ActivityEatBuddiesTest extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         facebookSDKInitialize();
         setContentView(R.layout.activity_eat_buddies_test);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_friends");
 
+        TextView headerName=(TextView)findViewById(R.id.app_toolbar_name);
+        headerName.setText("Login To Find EatBuddies");
+
         if(isLoggedIn()) {
             loginButton.setVisibility(View.GONE);
-            rawName= Constants.GetUserFacebookFriends(ActivityEatBuddiesTest.this);
-            Intent intent = new Intent(ActivityEatBuddiesTest.this,FindYourEatBuddiesActivity.class);
+            rawName= Constants.GetUserFacebookFriends(FindEatBuddiesLoginFirstActivity.this);
+            Intent intent = new Intent(FindEatBuddiesLoginFirstActivity.this,FindYourEatBuddiesActivity.class);
             intent.putExtra("jsondata", rawName);
             startActivity(intent);
+            finish();
         }
 
         getLoginDetails(loginButton);
@@ -69,11 +77,13 @@ public class ActivityEatBuddiesTest extends AppCompatActivity {
                         new GraphRequest.Callback() {
                             public void onCompleted(GraphResponse response) {
                                 Log.e("response: ", response + "");
-                                Intent intent = new Intent(ActivityEatBuddiesTest.this,FindYourEatBuddiesActivity.class);
+                                Intent intent = new Intent(FindEatBuddiesLoginFirstActivity.this,FindYourEatBuddiesActivity.class);
                                 try {
                                     JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                                    Constants.SetUserFacebookFriends(FindEatBuddiesLoginFirstActivity.this,rawName.toString());
                                     intent.putExtra("jsondata", rawName.toString());
                                     startActivity(intent);
+                                    finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -145,7 +155,7 @@ public class ActivityEatBuddiesTest extends AppCompatActivity {
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
                             Log.e("response: ", response + "");
-                            Intent intent = new Intent(ActivityEatBuddiesTest.this,FriendsList.class);
+                            Intent intent = new Intent(FindEatBuddiesLoginFirstActivity.this,FriendsList.class);
                             try {
                                 JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                 intent.putExtra("jsondata", rawName.toString());
@@ -170,4 +180,17 @@ public class ActivityEatBuddiesTest extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // todo: goto back activity from here
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

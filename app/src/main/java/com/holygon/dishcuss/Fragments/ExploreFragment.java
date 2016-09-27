@@ -15,21 +15,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.ExploreSelectedCategoryActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
-import com.holygon.dishcuss.Activities.SearchMainActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
+import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Adapters.ExploreAdapter;
-import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
-import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
@@ -46,7 +40,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -168,7 +161,7 @@ public class ExploreFragment extends Fragment{
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
+                Intent intent= new Intent(getActivity(), SearchUserAndRestaurantActivity.class);
                 startActivity(intent);
             }
         });

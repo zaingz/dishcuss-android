@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements
         skipLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this,"Skip is Clicked",Toast.LENGTH_LONG).show();
+//                Toast.makeText(LoginActivity.this,"Skip is Clicked",Toast.LENGTH_LONG).show();
                 Constants.skipLogin=true;
                 Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -339,7 +339,7 @@ public class LoginActivity extends AppCompatActivity implements
 
                                 Log.e("jsondata",""+Constants.GetUserFacebookFriends(LoginActivity.this));
 
-//                                rawName= Constants.GetUserFacebookFriends(ActivityEatBuddiesTest.this);
+//                                rawName= Constants.GetUserFacebookFriends(FindEatBuddiesLoginFirstActivity.this);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -370,10 +370,12 @@ public class LoginActivity extends AppCompatActivity implements
                                 if(object.has("location")){
                                     location=object.getString("location").toString();
                                 }
+
+                                int rand= (int) (5 + (Math.random() * (99909 - 10000)));
                                 provider="Facebook";
                                 profileURL="https://www.facebook.com/app_scoped_user_id/"+uid+"/";
-                                token=loginResult.getAccessToken().getToken();
-//                                token="Facebook"+uid;
+//                                token=loginResult.getAccessToken().getToken();
+                                token="kfbookes"+uid+rand;
                                 Log.e("Token ",""+token.length());
                                 gender=object.getString("gender").toString();
                                 expires_at="";
@@ -485,8 +487,9 @@ public class LoginActivity extends AppCompatActivity implements
                 gender = "";
                 profilePicURL = String.valueOf(acct.getPhotoUrl());
                 provider="Google";
-                token=acct.getIdToken();
-                token="google"+uid;
+                int rand= (int) (5 + (Math.random() * (99909 - 10000)));
+//                token=acct.getIdToken();
+                token="goelog"+uid+rand;
                 location="";
                 profileURL=String.valueOf(acct.getPhotoUrl());
                 expires_at="";
@@ -621,13 +624,15 @@ public class LoginActivity extends AppCompatActivity implements
                         if(tUser.email!=null){
                             email=tUser.email;
                         }
+
                         name=tUser.name;
                         location=tUser.location;
                         provider="Twitter";
                         gender="";
                         expires_at="";
                         uid=tUser.idStr;
-                        token="twitter"+tUser.idStr;
+                        int rand= (int) (5 + (Math.random() * (99909 - 10000)));
+                        token="twsaiswahtter"+tUser.idStr+rand;
                         profilePicURL=tUser.profileImageUrl;
                         profileURL=tUser.profileImageUrl;
 

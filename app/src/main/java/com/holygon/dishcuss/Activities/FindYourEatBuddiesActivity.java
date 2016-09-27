@@ -94,7 +94,7 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
     }
 
     void SendDataOnServer(){
-
+        progressBar.setVisibility(View.VISIBLE);
         Realm realm;
         User user;
         realm=Realm.getDefaultInstance();
@@ -149,6 +149,8 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
 
                             findYourEatBuddiesAdapter = new FindYourEatBuddiesAdapter(itemsData,FindYourEatBuddiesActivity.this);
                             offerList.setAdapter(findYourEatBuddiesAdapter);
+                            progressBar.setVisibility(View.GONE);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

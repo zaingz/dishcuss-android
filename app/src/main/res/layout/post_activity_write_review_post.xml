@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="6dp"
-                    android:text="Sikander Ali"
+                    android:text=""
                     android:layout_toRightOf="@id/write_reviewer_user_profile_image"
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"/>

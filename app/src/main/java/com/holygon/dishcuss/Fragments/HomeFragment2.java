@@ -1,6 +1,5 @@
 package com.holygon.dishcuss.Fragments;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -28,7 +27,7 @@ import android.widget.Toast;
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-import com.holygon.dishcuss.Activities.SearchMainActivity;
+import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
@@ -55,7 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -253,7 +251,7 @@ public class HomeFragment2 extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
+                Intent intent= new Intent(getActivity(), SearchUserAndRestaurantActivity.class);
                 startActivity(intent);
             }
         });
@@ -611,7 +609,8 @@ public class HomeFragment2 extends Fragment {
 
                                 JSONObject checkinObj = jsonDataCheckInObj.getJSONObject("checkin");
 
-                                JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+
+
 
                                 JSONArray checkinLikesArray = jsonDataCheckInObj.getJSONArray("likes");
                                 JSONArray checkinCommentsArray = jsonDataCheckInObj.getJSONArray("comments");
@@ -644,9 +643,13 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInWriterLocation(writerObj.getString("location"));
                                     localFeedCheckIn.setCheckInWriterAvatar(writerObj.getString("avatar"));
 
-                                    localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
-                                    localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
-                                    localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+                                    if(!checkinObj.isNull("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                        localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
+                                        localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
+                                        localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+                                    }
+
 
                                     localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
 

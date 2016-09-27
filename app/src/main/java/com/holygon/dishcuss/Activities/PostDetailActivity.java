@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -435,6 +436,9 @@ public class PostDetailActivity extends AppCompatActivity {
         postImage=(ImageView)findViewById(R.id.post_image);
         post_add_comment_edit_text=(EditText)findViewById(R.id.post_add_comment_edit_text);
         post_add_comment_edit_text_parent=(LinearLayout) findViewById(R.id.post_add_comment_edit_text_parent);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(post_add_comment_edit_text.getWindowToken(), 0);
     }
 
 

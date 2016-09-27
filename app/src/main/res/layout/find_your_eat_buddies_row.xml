@@ -23,6 +23,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+
+            <RelativeLayout
+                android:id="@+id/eat_buddies_user_profile_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/your_eat_buddies_profile_image"
@@ -59,6 +65,9 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+            </RelativeLayout>
+
+
                 <LinearLayout
                     android:id="@+id/follow_button_layout"
                     android:layout_alignParentRight="true"
@@ -85,6 +94,8 @@
 
 
                 </LinearLayout>
+
+
             </RelativeLayout>
 
         </LinearLayout>

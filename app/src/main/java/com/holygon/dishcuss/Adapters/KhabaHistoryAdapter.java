@@ -65,7 +65,16 @@ public class KhabaHistoryAdapter extends RecyclerView.Adapter<KhabaHistoryAdapte
 
         holder.khaba_restaurant_name.setText(imageViewArrayList.get(position).getRestaurantName());
         holder.khaba_restaurant_location.setText(imageViewArrayList.get(position).getRestaurantLocation());
-        holder.khaba_restaurant_time.setText(""+GetDate(imageViewArrayList.get(position).getCredit_time()));
+
+        Date date1 = GetDate("" + imageViewArrayList.get(position).getCredit_time());
+        SimpleDateFormat localDateFormatForTime1 = new SimpleDateFormat("h:mm a");
+        String gettime = localDateFormatForTime1.format(date1);
+        SimpleDateFormat localDateFormatForDay1 = new SimpleDateFormat("EEE");
+        String getday = localDateFormatForDay1.format(date1);
+        SimpleDateFormat localDateFormatForDate1 = new SimpleDateFormat("MMM d");
+        String getdates = localDateFormatForDate1.format(date1);
+
+        holder.khaba_restaurant_time.setText(getdates + ", " + gettime);
         holder.khaba_price.setText("PKR " +imageViewArrayList.get(position).getPrice());
 
         holder.setIsRecyclable(false);

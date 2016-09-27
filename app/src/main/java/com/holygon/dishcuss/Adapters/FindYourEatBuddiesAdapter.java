@@ -2,6 +2,7 @@ package com.holygon.dishcuss.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
@@ -45,6 +48,7 @@ public class FindYourEatBuddiesAdapter extends RecyclerView.Adapter<FindYourEatB
         public  de.hdodenhof.circleimageview.CircleImageView imageView;
         public TextView your_eat_buddies_user_name,follow_button_text;
         public LinearLayout follow_button_layout;
+        public RelativeLayout eat_buddies_user_profile_layout;
 
         public ViewHolder(View v) {
             super(v);
@@ -52,6 +56,7 @@ public class FindYourEatBuddiesAdapter extends RecyclerView.Adapter<FindYourEatB
             your_eat_buddies_user_name = (TextView) v.findViewById(R.id.your_eat_buddies_user_name);
             follow_button_text = (TextView) v.findViewById(R.id.follow_button_text);
             follow_button_layout = (LinearLayout) v.findViewById(R.id.follow_button_layout);
+            eat_buddies_user_profile_layout = (RelativeLayout) v.findViewById(R.id.eat_buddies_user_profile_layout);
         }
     }
 
@@ -84,6 +89,16 @@ public class FindYourEatBuddiesAdapter extends RecyclerView.Adapter<FindYourEatB
         {
             holder.follow_button_text.setText("UnFollow");
         }
+
+
+        holder.eat_buddies_user_profile_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                intent.putExtra("UserID", imageViewArrayList.get(position).getId());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.follow_button_layout.setOnClickListener(new View.OnClickListener() {
             @Override

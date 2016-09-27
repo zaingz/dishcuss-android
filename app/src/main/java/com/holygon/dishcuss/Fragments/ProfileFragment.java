@@ -3,11 +3,7 @@ package com.holygon.dishcuss.Fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,19 +18,16 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.holygon.dishcuss.Activities.ActivityEatBuddiesTest;
-import com.holygon.dishcuss.Activities.FindYourEatBuddiesActivity;
+import com.holygon.dishcuss.Activities.FindEatBuddiesLoginFirstActivity;
 import com.holygon.dishcuss.Activities.GetFreeFoodActivity;
 import com.holygon.dishcuss.Activities.KhabaHistoryActivity;
 import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.MyWalletActivity;
 import com.holygon.dishcuss.Activities.UpdateProfileActivity;
 import com.holygon.dishcuss.Activities.UserOffersActivity;
-import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
@@ -43,7 +36,6 @@ import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
@@ -59,10 +51,8 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -138,7 +128,7 @@ public class ProfileFragment extends Fragment{
             @Override
             public void onClick(View v) {
 //                Intent intent=new Intent(getActivity(), FindYourEatBuddiesActivity.class);
-                Intent intent=new Intent(getActivity(), ActivityEatBuddiesTest.class);
+                Intent intent=new Intent(getActivity(), FindEatBuddiesLoginFirstActivity.class);
                 startActivity(intent);
             }
         });
@@ -257,6 +247,7 @@ public class ProfileFragment extends Fragment{
 
     public void SignOutRequest(String token,final String provider){
         showSpinner("Please wait...");
+        Constants.SetUserLoginStatus(getActivity(),false);
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Token token=" + token)
                 .url(URLs.SIGN_OUT)
@@ -329,7 +320,6 @@ public class ProfileFragment extends Fragment{
 //                    userOffersModelRealmResults.deleteAllFromRealm();
 
                     realm.commitTransaction();
-                    Constants.SetUserLoginStatus(getActivity(),false);
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     DismissSpinner();

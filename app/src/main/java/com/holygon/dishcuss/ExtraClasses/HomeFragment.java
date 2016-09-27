@@ -24,8 +24,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-import com.holygon.dishcuss.Activities.SearchMainActivity;
-import com.holygon.dishcuss.Activities.SelectRestaurantSearchActivity;
+import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Fragments.HomeViewPagerFragment;
@@ -200,7 +199,7 @@ public class HomeFragment extends Fragment {
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), SearchMainActivity.class);
+                Intent intent= new Intent(getActivity(), SearchUserAndRestaurantActivity.class);
                 startActivity(intent);
             }
         });

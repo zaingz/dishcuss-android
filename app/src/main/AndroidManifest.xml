@@ -48,7 +48,7 @@
 
 
         <activity
-            android:name=".Activities.ActivityEatBuddiesTest"
+            android:name=".Activities.FindEatBuddiesLoginFirstActivity"
             android:theme="@style/MyMaterialTheme"/>
 
         <activity
@@ -86,7 +86,11 @@
             android:name=".Activities.SelectRestaurantSearchActivity"
             android:theme="@style/MyMaterialTheme" />
         <activity
-            android:name=".Activities.SearchMainActivity"
+            android:name=".ExtraClasses.SearchMainActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.SearchUserAndRestaurantActivity"
             android:theme="@style/MyMaterialTheme" />
         <activity
             android:name=".Chat.ChatScreenActivity"

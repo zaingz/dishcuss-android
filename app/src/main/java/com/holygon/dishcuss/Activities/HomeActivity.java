@@ -364,7 +364,9 @@ public class HomeActivity extends RuntimePermissionsActivity implements
             RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", user.getId()).findAll();
             if (userProfiles.size() > 0) {
 
-                Picasso.with(this).load(userProfiles.get(0).getAvatar()).into(target);
+                if(!userProfiles.get(0).getAvatar().equals("")) {
+                    Picasso.with(this).load(userProfiles.get(0).getAvatar()).into(target);
+                }
 //            ImageView imgView = new ImageView(this);
 //            Constants.PicassoImageSrc(userProfiles.get(0).getAvatar(), imgView, this);
 //            Drawable myDrawable = imgView.getDrawable();

@@ -98,7 +98,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
 
                 String objStr=response.body().string();
-                Log.e("ObjStr",""+objStr);
+                Log.e("KhabaHis",""+objStr);
                 try {
                     JSONObject jsonObj = new JSONObject(objStr);
                     JSONArray jsonDataArray=jsonObj.getJSONArray("khaba_history");

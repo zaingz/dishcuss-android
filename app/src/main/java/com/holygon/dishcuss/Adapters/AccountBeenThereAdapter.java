@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.UserBeenThere;
 import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmList;
 
 /**
@@ -45,6 +50,16 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     public AccountBeenThereAdapter(RealmList<UserBeenThere> userBeenTheres,Context mContext) {
         this.userBeenTheres=userBeenTheres;
         this.mContext=mContext;
+
+        Realm realm=Realm.getDefaultInstance();
+        realm.beginTransaction();
+        Collections.sort(this.userBeenTheres, new Comparator<UserBeenThere>() {
+            @Override
+            public int compare(UserBeenThere lhs, UserBeenThere rhs) {
+                return GetDate(rhs.getBeenThereTime()).compareTo(GetDate(lhs.getBeenThereTime()));
+            }
+        });
+        realm.commitTransaction();
     }
 
     @Override
@@ -78,5 +93,19 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     @Override
     public int getItemCount() {
         return userBeenTheres.size();
+    }
+
+    Date GetDate(String date){
+
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return convertedDate;
     }
 }

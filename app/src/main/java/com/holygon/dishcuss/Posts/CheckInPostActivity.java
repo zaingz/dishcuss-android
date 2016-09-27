@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,12 +31,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserBeenThere;
+import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
@@ -42,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -65,7 +73,6 @@ import okhttp3.Response;
  */
 public class CheckInPostActivity extends AppCompatActivity {
 
-
     OkHttpClient client;
     AutoCompleteTextView userLocation;
     EditText status;
@@ -74,9 +81,9 @@ public class CheckInPostActivity extends AppCompatActivity {
     ImageView imageView;
     ImageView select_photo_layout;
     String loc="";
-    double restaurantLongitude;
-    double restaurantLatitude;
-    int restaurantID;
+    double restaurantLongitude=0.0;
+    double restaurantLatitude=0.0;
+    int restaurantID=0;
     File file=null;
     UserProfile userProfile=new UserProfile();
     Realm realm;
@@ -89,11 +96,8 @@ public class CheckInPostActivity extends AppCompatActivity {
     ArrayList<Double> placeLong;
 
     ArrayAdapter<String> placeAdapter;
-    String postCategory,setPostURL;
-
-    public static String Review="Review";
-    public static String UploadPic="UploadPic";
-    public static String CheckIn="CheckIn";
+    TextView write_reviewer_user_name;
+    de.hdodenhof.circleimageview.CircleImageView write_reviewer_user_profile_image;
 
 
     //*******************PROGRESS******************************
@@ -114,8 +118,7 @@ public class CheckInPostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.post_activity_check_in_post);
-
+        setContentView(R.layout.post_activity_photo_post);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -124,25 +127,28 @@ public class CheckInPostActivity extends AppCompatActivity {
         User user = realm.where(User.class).findFirst();
         userProfile=GetUserData(user.getId());
 
+
         userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
         imageView= (ImageView) findViewById(R.id.imageView_pic_upload_photo);
         select_photo_layout= (ImageView) findViewById(R.id.select_photo);
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
-        headerName.setText("Check In");
+        headerName.setText("Upload A Photo");
 
 
-        TextView write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);
-        de.hdodenhof.circleimageview.CircleImageView
-                write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
+        write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);
+        write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
 
-        write_reviewer_user_name.setText(userProfile.getName());
-        if (!userProfile.getAvatar().equals(""))
-        {
-            Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
+        if(userProfile==null){
+            UserData(user.getId());
+        }else {
+            write_reviewer_user_name.setText(userProfile.getName());
+            if (!userProfile.getAvatar().equals(""))
+            {
+                Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
+            }
         }
-
 
         postClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,8 +157,7 @@ public class CheckInPostActivity extends AppCompatActivity {
                 if(!status.getText().toString().equals("")){
                     statusStr=status.getText().toString();
                 }
-
-                if(restaurantID!=0) {
+                if( restaurantID!=0) {
                     SendDataOnServer();
                 }else {
                     Toast.makeText(CheckInPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
@@ -302,6 +307,7 @@ public class CheckInPostActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
+
                 File f = new File(Environment.getExternalStorageDirectory().toString());
                 for (File temp : f.listFiles()) {
                     if (temp.getName().equals("temp.jpg")) {
@@ -320,10 +326,10 @@ public class CheckInPostActivity extends AppCompatActivity {
                             + "Phoenix" + File.separator + "default";
                     f.delete();
                     OutputStream outFile = null;
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+                    file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
                     try {
                         outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outFile);
                         outFile.flush();
                         outFile.close();
                     } catch (FileNotFoundException e) {
@@ -338,21 +344,34 @@ public class CheckInPostActivity extends AppCompatActivity {
                 }
 
             } else if (requestCode == 2) {
-                Uri selectedImage = data.getData();
-                String[] filePath = { MediaStore.Images.Media.DATA };
-                Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-                c.moveToFirst();
-                int columnIndex = c.getColumnIndex(filePath[0]);
-                imagePath = c.getString(columnIndex);
-                c.close();
-                Bitmap thumbnail = (BitmapFactory.decodeFile(imagePath));
-                Log.w("path of image", imagePath+"");
-                file=new File(imagePath);
-                imageView.setImageBitmap(thumbnail);
+
+                Uri selectedImageUri = data.getData();
+                String[] projection = { MediaStore.MediaColumns.DATA };
+                Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
+                        null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+
+                String selectedImagePath = cursor.getString(column_index);
+                Log.e("path", selectedImagePath);
+                file=new File(selectedImagePath);
+
+                Bitmap bm;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(selectedImagePath, options);
+                final int REQUIRED_SIZE = 200;
+                int scale = 1;
+                while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+                        && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                    scale *= 2;
+                options.inSampleSize = scale;
+                options.inJustDecodeBounds = false;
+                bm = BitmapFactory.decodeFile(selectedImagePath, options);
+
+                imageView.setImageBitmap(bm);
             }
-
         }
-
     }
 
 
@@ -610,7 +629,9 @@ public class CheckInPostActivity extends AppCompatActivity {
                             placeAdapter = new ArrayAdapter<String>(CheckInPostActivity.this, android.R.layout.simple_list_item_1, places);
                             userLocation.setAdapter(placeAdapter);
                             realm.close();
-                        } catch (JSONException e) {
+                        }
+                        catch (JSONException e)
+                        {
                             e.printStackTrace();
                         }
                     }
@@ -618,6 +639,156 @@ public class CheckInPostActivity extends AppCompatActivity {
             }
         });
     }
+    public String compressImage(String imageUri) {
+
+        String filePath = getRealPathFromURI(imageUri);
+        Bitmap scaledBitmap = null;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+//      by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
+//      you try the use the bitmap here, you will get null.
+        options.inJustDecodeBounds = true;
+        Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
+
+        int actualHeight = options.outHeight;
+        int actualWidth = options.outWidth;
+
+//      max Height and width values of the compressed image is taken as 816x612
+
+        float maxHeight = 816.0f;
+        float maxWidth = 612.0f;
+        float imgRatio = actualWidth / actualHeight;
+        float maxRatio = maxWidth / maxHeight;
+
+//      width and height values are set maintaining the aspect ratio of the image
+
+        if (actualHeight > maxHeight || actualWidth > maxWidth) {
+            if (imgRatio < maxRatio) {               imgRatio = maxHeight / actualHeight;                actualWidth = (int) (imgRatio * actualWidth);               actualHeight = (int) maxHeight;             } else if (imgRatio > maxRatio) {
+                imgRatio = maxWidth / actualWidth;
+                actualHeight = (int) (imgRatio * actualHeight);
+                actualWidth = (int) maxWidth;
+            } else {
+                actualHeight = (int) maxHeight;
+                actualWidth = (int) maxWidth;
+
+            }
+        }
+
+//      setting inSampleSize value allows to load a scaled down version of the original image
+
+        options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
+
+//      inJustDecodeBounds set to false to load the actual bitmap
+        options.inJustDecodeBounds = false;
+
+//      this options allow android to claim the bitmap memory if it runs low on memory
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[16 * 1024];
+
+        try {
+//          load the bitmap from its path
+            bmp = BitmapFactory.decodeFile(filePath, options);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
+
+        }
+        try {
+            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight,Bitmap.Config.ARGB_8888);
+        } catch (OutOfMemoryError exception) {
+            exception.printStackTrace();
+        }
+
+        float ratioX = actualWidth / (float) options.outWidth;
+        float ratioY = actualHeight / (float) options.outHeight;
+        float middleX = actualWidth / 2.0f;
+        float middleY = actualHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+//      check the rotation of the image and display it properly
+        ExifInterface exif;
+        try {
+            exif = new ExifInterface(filePath);
+
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, 0);
+            Log.d("EXIF", "Exif: " + orientation);
+            Matrix matrix = new Matrix();
+            if (orientation == 6) {
+                matrix.postRotate(90);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 3) {
+                matrix.postRotate(180);
+                Log.d("EXIF", "Exif: " + orientation);
+            } else if (orientation == 8) {
+                matrix.postRotate(270);
+                Log.d("EXIF", "Exif: " + orientation);
+            }
+            scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                    scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
+                    true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileOutputStream out = null;
+        String filename = getFilename();
+        try {
+            out = new FileOutputStream(filename);
+
+//          write the compressed bitmap at the destination specified by filename.
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return filename;
+    }
+
+    public String getFilename() {
+        File file = new File(Environment.getExternalStorageDirectory().getPath(), "MyFolder/Images");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String uriSting = (file.getAbsolutePath() + "/" + System.currentTimeMillis() + ".jpg");
+        return uriSting;
+
+    }
+
+    private String getRealPathFromURI(String contentURI) {
+        Uri contentUri = Uri.parse(contentURI);
+        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
+        if (cursor == null) {
+            return contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(index);
+        }
+    }
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int heightRatio = Math.round((float) height/ (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;      }       final float totalPixels = width * height;       final float totalReqPixelsCap = reqWidth * reqHeight * 2;       while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            inSampleSize++;
+        }
+
+        return inSampleSize;
+    }
+
     UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
         RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
@@ -628,5 +799,268 @@ public class CheckInPostActivity extends AppCompatActivity {
             return userProfiles.get(userProfiles.size()-1);
         }
         return null;
+    }
+
+    void UserData(int userID) {
+
+//        Log.e("User","Post Selection");
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_User_data+userID)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr = response.body().string();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("user"))
+                            {
+                                JSONObject userObj = jsonObj.getJSONObject("user");
+
+                                realm.beginTransaction();
+                                UserProfile userProfileRealm = realm.createObject(UserProfile.class);
+
+                                userProfileRealm.setId(userObj.getInt("id"));
+                                userProfileRealm.setName(userObj.getString("name"));
+                                userProfileRealm.setUsername(userObj.getString("username"));
+                                userProfileRealm.setEmail(userObj.getString("email"));
+                                userProfileRealm.setAvatar(userObj.getString("avatar"));
+                                userProfileRealm.setLocation(userObj.getString("location"));
+                                userProfileRealm.setGender(userObj.getString("gender"));
+                                userProfileRealm.setRole(userObj.getString("role"));
+
+                                //Arrays
+                                JSONArray jsonDataFollowingArray = userObj.getJSONArray("following");
+                                JSONArray jsonDataFollowersArray = userObj.getJSONArray("followers");
+                                JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
+                                JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
+
+
+
+                                for(int p=0;p<jsonDataPostsArray.length();p++){
+                                    JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
+                                    JSONObject checkinObj = postObj.getJSONObject("checkin");
+
+                                    if(checkinObj.has("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+
+                                        UserBeenThere userBeenThere = new UserBeenThere();
+                                        userBeenThere.setId(restaurantObj.getInt("id"));
+                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                    }
+
+
+                                    JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
+                                    for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
+                                        JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
+                                        PhotoModel photoModel = new PhotoModel();
+                                        photoModel.setId(photo.getInt("id"));
+                                        photoModel.setUrl(photo.getString("image_url"));
+                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+                                        userProfileRealm.getPhotoModelRealmList().add(managedPhotoModel);
+                                    }
+
+                                    JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
+                                    for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
+                                        JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
+                                        Comment comment= new Comment();
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        userProfileRealm.getCommentRealmList().add(managedComment);
+                                    }
+                                }
+
+                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+
+                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    ReviewModel reviewModel=realm.createObject(ReviewModel.class);
+
+                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+                                    reviewModel.setReview_title(reviewObj.getString("title"));
+                                    reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
+                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+
+                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+
+                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+
+                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+
+                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+
+                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+                                        Comment comment=realm.createObject(Comment.class);
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        reviewModel.getCommentRealmList().add(managedComment);
+                                    }
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+                                    userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
+
+                                }
+
+
+                                for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
+                                    JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
+                                    UserFollowing userFollowing=new UserFollowing();
+
+                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+
+                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+
+                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+                                    userProfileRealm.getUserFollowingRealmList().add(managedUserFollowing);
+                                }
+
+                                for(int fr=0;fr<jsonDataFollowersArray.length();fr++){
+                                    JSONObject jsonFollowingObject = jsonDataFollowersArray.getJSONObject(fr);
+
+                                    UserFollowing userFollowing=new UserFollowing();
+
+                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+
+                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+
+                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+                                    userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
+                                }
+
+                                userProfile=userProfileRealm;
+
+                                write_reviewer_user_name.setText(userProfile.getName());
+                                if (!userProfile.getAvatar().equals(""))
+                                {
+                                    Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
+                                }
+                                realm.commitTransaction();
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        realm.close();
+                    }
+                });
+            }
+        });
+    }
+
+    private void onCaptureImageResult(Intent data) {
+
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        Uri selectedImageUri = data.getData();
+        String[] projection = { MediaStore.MediaColumns.DATA };
+        Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
+                null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        cursor.moveToFirst();
+
+        String selectedImagePath = cursor.getString(column_index);
+        Log.e("path",selectedImagePath);
+        file=new File(selectedImagePath);
+        Log.e("file",""+file);
+
+
+
+
+        imageView.setImageBitmap(thumbnail);
     }
 }
