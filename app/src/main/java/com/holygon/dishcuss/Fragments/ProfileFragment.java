@@ -26,6 +26,7 @@ import com.holygon.dishcuss.Activities.GetFreeFoodActivity;
 import com.holygon.dishcuss.Activities.KhabaHistoryActivity;
 import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.MyWalletActivity;
+import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Activities.UpdateProfileActivity;
 import com.holygon.dishcuss.Activities.UserOffersActivity;
 import com.holygon.dishcuss.Model.Comment;
@@ -248,6 +249,7 @@ public class ProfileFragment extends Fragment{
     public void SignOutRequest(String token,final String provider){
         showSpinner("Please wait...");
         Constants.SetUserLoginStatus(getActivity(),false);
+        SplashActivity.isFeatureRestaurantsLoaded=false;
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Token token=" + token)
                 .url(URLs.SIGN_OUT)

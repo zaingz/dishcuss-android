@@ -16,7 +16,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -204,6 +206,34 @@ public final class Constants{
 //                    Log.d("TAG", "Prepare Load");
                 }
             });
+        }
+    }
+
+    public static void PicassoLargeImageBackgroundNewsFeed(String URL, final ImageView imageView, final ProgressBar pb, final Context context){
+        if(URL!=null && !URL.equals("")){
+            Picasso.with(context).load(URL)
+                    .resize(400,250)
+                    .onlyScaleDown()
+                    .centerCrop()
+                    .into(new Target(){
+
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            imageView.setVisibility(View.VISIBLE);
+                            pb.setVisibility(View.GONE);
+                            imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                        }
+
+                        @Override
+                        public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                        }
+
+                        @Override
+                        public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                        }
+                    });
         }
     }
 

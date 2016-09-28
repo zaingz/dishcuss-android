@@ -36,6 +36,7 @@ import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
@@ -157,10 +158,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             if (bundle != null) {
                 restaurantID = bundle.getInt("RestaurantID");
 
-                restaurant = GetRestaurantData(restaurantID);
+//                restaurant = GetRestaurantData(restaurantID);
 
                 if (restaurant != null) {
-                    SetValues();
+                  //  SetValues();
                 } else {
                     Log.e("", "ELSE");
                 }
@@ -417,6 +418,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                            // JSONArray jsonDataArray = jsonObj.getJSONArray("restaurant");
 
                             realm = Realm.getDefaultInstance();
+
+                            realm.beginTransaction();
+                            RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
+                            restaurantRealmResults.deleteAllFromRealm();
+                            realm.commitTransaction();
 
 //                            for (int i = 0; i < jsonDataArray.length(); i++)
                             if(jsonObj.has("restaurant"))

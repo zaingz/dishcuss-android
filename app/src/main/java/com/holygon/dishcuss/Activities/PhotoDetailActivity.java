@@ -16,9 +16,23 @@ import android.widget.TextView;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
+import com.holygon.dishcuss.Utils.URLs;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import io.realm.Realm;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 9/20/2016.
@@ -91,9 +105,9 @@ public class PhotoDetailActivity extends Activity {
                     if(Constants.isNetworkAvailable(PhotoDetailActivity.this)) {
                         int prev = Integer.valueOf(likesCount.getText().toString());
                         prev++;
-                        Log.e("Like : ",""+prev);
                         likesCount.setText("" + prev);
-                        GenericRoutes.Like(localFeedCheckIn.getCheckInID(), "post",PhotoDetailActivity.this);
+                        Like(localFeedCheckIn.getCheckInID(), "post",likesCount,photo_layout_like);
+                        photo_layout_like.setEnabled(false);
                     }
                 }
             }
@@ -127,5 +141,61 @@ public class PhotoDetailActivity extends Activity {
                 startActivity(intent);
             }
         });
+    }
+
+
+    public void Like(int id, String type, final TextView tv, final LinearLayout layout_like){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully liked!")) {
+                                    int prev = Integer.valueOf(tv.getText().toString());
+                                    prev--;
+                                    tv.setText("" + prev);
+                                }
+                            }
+                            layout_like.setEnabled(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        realm.commitTransaction();
+        //            return UnLike(id,type);
     }
 }

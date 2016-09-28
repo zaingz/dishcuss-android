@@ -76,6 +76,7 @@
                             android:textColorHint="@color/hint_color"
                             android:hint="Naeem057"
                             android:maxLength="15"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />
@@ -101,6 +102,7 @@
                             android:layout_width="match_parent"
                             android:textColorHint="@color/hint_color"
                             android:hint="Naeem Ibrahim"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                             android:inputType="text"
                             android:maxLength="18"
                             android:textColor="@color/colorAccent"
@@ -170,16 +172,19 @@
                             android:textSize="17dp"
                             android:layout_marginBottom="4dp"/>
 
-                        <EditText
-                            android:id="@+id/edt_user_gender"
+                        <LinearLayout
+                            android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:textColorHint="@color/hint_color"
-                            android:hint="male"
-                            android:inputType="text"
-                            android:textColor="@color/colorAccent"
-                            android:layout_height="wrap_content" />
-
-
+                            android:layout_height="wrap_content">
+                            <Spinner
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/user_gender" />
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="1dp"
+                                android:background="#8c8a8a"/>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout

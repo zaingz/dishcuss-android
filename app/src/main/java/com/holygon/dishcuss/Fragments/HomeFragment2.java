@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.holygon.dishcuss.Activities.BookmarkActivity;
+import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
@@ -77,6 +80,7 @@ public class HomeFragment2 extends Fragment {
     ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
     ArrayList<MyFeeds> peopleAroundYouList;
     boolean dataAlreadyExists=false;
+    Button Sign_Up_Click;
 
     private int NUM_PAGES =1;
     private List<ImageView> dots;
@@ -88,6 +92,9 @@ public class HomeFragment2 extends Fragment {
 
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
+    LinearLayout empty_feed;
+    int myFeedReview=0;
+    int myFeedCheckIns=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,6 +123,9 @@ public class HomeFragment2 extends Fragment {
         local_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.local_feeds_layout);
         my_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.my_feeds_layout);
         people_around_you_layout=(RelativeLayout)rootView.findViewById(R.id.people_around_you_layout);
+        empty_feed=(LinearLayout)rootView.findViewById(R.id.empty_feed);
+
+        Sign_Up_Click=(Button)rootView.findViewById(R.id.Sign_Up_Click);
 
         my_feeds_text=(TextView) rootView.findViewById(R.id.my_feeds_text);
         local_feeds_text=(TextView) rootView.findViewById(R.id.local_feeds_text);
@@ -188,8 +198,11 @@ public class HomeFragment2 extends Fragment {
                 peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
                 myFeedsRecyclerView.setVisibility(View.GONE);
+                empty_feed.setVisibility(View.GONE);
                 localFeedsRecyclerView.setVisibility(View.VISIBLE);
                 peopleAroundYouRecyclerView.setVisibility(View.GONE);
+
+
             }
         });
 
@@ -207,8 +220,14 @@ public class HomeFragment2 extends Fragment {
                 peopleAroundYouTextView.setTextColor(Color.WHITE);
 
                 myFeedsRecyclerView.setVisibility(View.GONE);
+                empty_feed.setVisibility(View.GONE);
                 localFeedsRecyclerView.setVisibility(View.GONE);
                 peopleAroundYouRecyclerView.setVisibility(View.VISIBLE);
+
+                if(peopleAroundYouList.size()<=0){
+                    peopleAroundYouRecyclerView.setVisibility(View.GONE);
+                    empty_feed.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -226,7 +245,13 @@ public class HomeFragment2 extends Fragment {
 
                 myFeedsRecyclerView.setVisibility(View.VISIBLE);
                 localFeedsRecyclerView.setVisibility(View.GONE);
+                empty_feed.setVisibility(View.GONE);
                 peopleAroundYouRecyclerView.setVisibility(View.GONE);
+
+                if(myFeedCheckIns==0 && myFeedReview==0){
+                    myFeedsRecyclerView.setVisibility(View.GONE);
+                    empty_feed.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -292,6 +317,17 @@ public class HomeFragment2 extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PunditSelectionActivity.class);
                 startActivity(intent);
+            }
+        });
+
+
+        Sign_Up_Click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -667,8 +703,11 @@ public class HomeFragment2 extends Fragment {
                                         localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
                                     }
 
-
-                                    localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+                                    if (checkinObj.has("restaurant_image")) {
+                                        if(checkinObj.isNull("restaurant_image")) {
+                                            localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+                                        }
+                                    }
 
 
                                     for (int p = 0; p < checkinPhotoArray.length(); p++) {
@@ -981,6 +1020,8 @@ public class HomeFragment2 extends Fragment {
 
                                 }
                             }
+                            myFeedCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                            myFeedReview=localFeeds.getLocalFeedReviewRealmList().size();
                             homeMyFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
                             myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
                             realm.commitTransaction();

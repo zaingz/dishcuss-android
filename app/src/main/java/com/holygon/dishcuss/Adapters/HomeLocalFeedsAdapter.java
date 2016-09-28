@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -76,6 +77,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         LinearLayout layout_comment;
         RelativeLayout user_profile_layout;
         TextView comment_TextView;
+        ProgressBar image_spinner;
 
         //Comments Data
         public LinearLayout comments_row;
@@ -103,6 +105,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
             user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             comment_TextView=(TextView) v.findViewById(R.id.comment_TextView);
+
+            image_spinner=(ProgressBar) v.findViewById(R.id.image_spinner);
 
 
             comments_row=(LinearLayout)v.findViewById(R.id.comments_);
@@ -326,9 +330,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                     if(localFeedCheckIn.getCheckInImage()!=null) {
                         if (!localFeedCheckIn.getCheckInImage().equals("")) {
-
-                            holder.feeds_post_image.setVisibility(View.VISIBLE);
-                            Constants.PicassoLargeImageBackground(localFeedCheckIn.getCheckInImage(), holder.feeds_post_image, mContext);
+                            holder.image_spinner.setVisibility(View.VISIBLE);
+                            Constants.PicassoLargeImageBackgroundNewsFeed(localFeedCheckIn.getCheckInImage(),holder.feeds_post_image,holder.image_spinner,mContext);
                         }
                     }
 

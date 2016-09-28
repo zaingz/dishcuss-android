@@ -134,7 +134,7 @@ public class CheckInPostActivity extends AppCompatActivity {
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
-        headerName.setText("Upload A Photo");
+        headerName.setText("Check In");
 
 
         write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);

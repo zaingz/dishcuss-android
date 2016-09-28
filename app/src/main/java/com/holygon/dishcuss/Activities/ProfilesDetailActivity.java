@@ -100,10 +100,10 @@ public class ProfilesDetailActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userID = bundle.getInt("UserID");
-                userProfile = GetUserData(userID);
+              //  userProfile = GetUserData(userID);
 
                 if (userProfile != null) {
-                    SetValues();
+//                    SetValues();
                 } else {
                     Log.e("", "ELSE");
                 }
@@ -267,6 +267,11 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
+
+                            realm.beginTransaction();
+                            RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).equalTo("id", userID).findAll();
+                            userProfileRealmResults.deleteAllFromRealm();
+                            realm.commitTransaction();
 
                             if(jsonObj.has("user"))
                             {

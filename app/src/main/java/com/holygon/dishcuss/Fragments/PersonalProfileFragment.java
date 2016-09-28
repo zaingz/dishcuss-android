@@ -115,7 +115,8 @@ public class PersonalProfileFragment extends Fragment{
 
             user= realm.where(User.class).findFirst();
             userID = user.getId();
-        if(PersonalProfileFragment.isCalledOnce || !Constants.isNetworkAvailable(getActivity())) {
+//        if(PersonalProfileFragment.isCalledOnce || !Constants.isNetworkAvailable(getActivity())) {
+        if(!Constants.isNetworkAvailable(getActivity())) {
             userProfile=GetUserData(userID);
             if(userProfile!=null)
             {
@@ -256,6 +257,13 @@ public class PersonalProfileFragment extends Fragment{
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
+
+                            realm.beginTransaction();
+                            RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).equalTo("id", userID).findAll();
+                            userProfileRealmResults.deleteAllFromRealm();
+                            realm.commitTransaction();
+
+
 
                             if(jsonObj.has("user"))
                             {

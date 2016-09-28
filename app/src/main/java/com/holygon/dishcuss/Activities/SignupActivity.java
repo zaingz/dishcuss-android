@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -64,7 +66,10 @@ public class SignupActivity extends AppCompatActivity implements
     LinearLayout back_to_sign_in_layout;
     TextView headerName;
 
-    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender;
+    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword;
+//            userGender;
+    Spinner userGender;
+    ArrayAdapter<String> adapterUserGender;
     AutoCompleteTextView userLocation;
     String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender;
 
@@ -140,8 +145,17 @@ public class SignupActivity extends AppCompatActivity implements
 
         userPassword=(EditText) findViewById(R.id.edt_user_password);
         userConfirmPassword=(EditText) findViewById(R.id.edt_user_retype_password);
-        userGender=(EditText) findViewById(R.id.edt_user_gender);
+        userGender=(Spinner) findViewById(R.id.user_gender);
 
+        final String[] genders = new String[]{
+                "male",
+                "female",
+        };
+
+
+        adapterUserGender   = new ArrayAdapter<String>(SignupActivity.this,
+                android.R.layout.simple_spinner_item, genders);
+        userGender.setAdapter(adapterUserGender);
 
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
         userLocation.setTextSize(20);
@@ -149,9 +163,22 @@ public class SignupActivity extends AppCompatActivity implements
         userLocation.setTextColor(Color.parseColor("#FFE4770A"));
         userLocation.setAdapter(mPlaceArrayAdapter);
 
-        if(!loc.equals("")){
-            userLocation.setText(loc);
-        }
+        userGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                strUserGender=genders[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+
+
+
+        });
+
 
     }
 
@@ -176,12 +203,17 @@ public class SignupActivity extends AppCompatActivity implements
 
     void SignUpClick(){
 
+        if(!loc.equals("")){
+            userLocation.setText(loc);
+        }else {
+            userLocation.setText("");
+        }
         strUserFullName = userFullName.getText().toString().trim();
         strUserName = userName.getText().toString().trim();
         strUserEmail=userEmail.getText().toString().trim();
         strUserPassword = userPassword.getText().toString().trim();
         strUserConfirmPassword = userConfirmPassword.getText().toString().trim();
-        strUserGender = userGender.getText().toString().toLowerCase().trim();
+        strUserGender=strUserGender.toLowerCase();
         strUserLocation = userLocation.getText().toString().trim();
 
 
@@ -197,7 +229,7 @@ public class SignupActivity extends AppCompatActivity implements
 
                             if(!strUserGender.isEmpty() && !strUserGender.equals("")){
 
-                                if(!strUserPassword.isEmpty() && !strUserPassword.equals("")){
+                                if(!strUserPassword.isEmpty() && !strUserPassword.equals("") && strUserPassword.length()>=8){
 
                                     if(!strUserConfirmPassword.isEmpty() && !strUserConfirmPassword.equals("")){
 
@@ -215,7 +247,7 @@ public class SignupActivity extends AppCompatActivity implements
                                     }
 
                                 }else {
-                                    Crouton.makeText(SignupActivity.this, "Enter Password for security", Style.ALERT).show();
+                                    Crouton.makeText(SignupActivity.this, "Enter Large Password for security", Style.ALERT).show();
                                 }
 
 
@@ -412,7 +444,6 @@ public class SignupActivity extends AppCompatActivity implements
             final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
             final String placeId = String.valueOf(item.placeId);
 
-
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                     .getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallbackUserLocation);
@@ -446,6 +477,18 @@ public class SignupActivity extends AppCompatActivity implements
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    public class YourItemSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            String selected = parent.getItemAtPosition(pos).toString();
+        }
+
+        public void onNothingSelected(AdapterView parent) {
+            // Do nothing.
         }
     }
 }

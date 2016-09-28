@@ -82,6 +82,10 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 if(Constants.GetUserLoginStatus(SplashActivity.this)){
+                    if(Constants.isNetworkAvailable(SplashActivity.this)) {
+                        DeleteOnStart();
+                    }
+
                     Constants.skipLogin=false;
                     Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
                     startActivity(intent);
@@ -126,6 +130,38 @@ public class SplashActivity extends AppCompatActivity {
 
         RealmResults<User> users = realm.where(User.class).findAll();
         users.deleteAllFromRealm();
+
+        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
+        result.deleteAllFromRealm();
+
+        RealmResults<Comment> comments = realm.where(Comment.class).findAll();
+        comments.deleteAllFromRealm();
+
+        RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
+        khabaHistoryModelRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
+        localFeedCheckInRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
+        localFeedReviewRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+        localFeedsRealmResults.deleteAllFromRealm();
+
+        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+        restaurantRealmResults.deleteAllFromRealm();
+
+        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+        userProfileRealmResults.deleteAllFromRealm();
+
+        realm.commitTransaction();
+    }
+
+    void DeleteOnStart(){
+
+        Realm realm= Realm.getDefaultInstance();
+        realm.beginTransaction();
 
         RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
         result.deleteAllFromRealm();
