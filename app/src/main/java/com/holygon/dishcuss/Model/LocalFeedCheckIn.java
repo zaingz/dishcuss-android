@@ -21,7 +21,7 @@ public class LocalFeedCheckIn extends RealmObject implements Parcelable{
     String checkInStatus;
     double checkInLat;
     double checkInLong;
-
+    Boolean isBookmarked;
 
     int checkInWriterID;
     String checkInWriterName;
@@ -63,6 +63,14 @@ public class LocalFeedCheckIn extends RealmObject implements Parcelable{
 
     public void setCommentRealmList(RealmList<Comment> commentRealmList) {
         this.commentRealmList = commentRealmList;
+    }
+
+    public Boolean getBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(Boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 
     public int getCheckInID() {

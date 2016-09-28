@@ -465,14 +465,29 @@ public class HomeFragment2 extends Fragment {
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
         realm.beginTransaction();
-//        User user = realm.where(User.class).findFirst();
-//        Log.e("",""+user.getToken());
-        realm.commitTransaction();
+        User user=null;
+        if(!Constants.skipLogin) {
+             user= realm.where(User.class).findFirst();
+             Log.e("UT",""+user.getToken());
+        }
+
+
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(URLs.All_LocalFeeds)
-                .build();
+        Request request;
+        if(!Constants.skipLogin && user!=null) {
+            request = new Request.Builder()
+                    .url(URLs.All_LocalFeeds)
+                    .addHeader("Authorization", "Token token=" + user.getToken())
+                    .build();
+        }
+        else
+        {
+            request = new Request.Builder()
+                    .url(URLs.All_LocalFeeds)
+                    .build();
+        }
+        realm.commitTransaction();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -533,6 +548,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedReview.setReviewID(jsonDataReviewObj.getInt("id"));
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
+                                    localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
@@ -629,6 +645,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInID(jsonDataCheckInObj.getInt("id"));
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
+                                    localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
 
                                     if(!checkinObj.isNull("lat")){
@@ -799,6 +816,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedReview.setReviewID(jsonDataReviewObj.getInt("id"));
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
+                                    localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
@@ -891,6 +909,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInID(jsonDataCheckInObj.getInt("id"));
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
+                                    localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
 
                                     if(!checkinObj.isNull("lat")){

@@ -185,7 +185,7 @@ public class SignupActivity extends AppCompatActivity implements
         strUserLocation = userLocation.getText().toString().trim();
 
 
-        if(!strUserName.isEmpty() && !strUserName.equals("")){
+        if(!strUserName.isEmpty() && !strUserName.equals("") && strUserName.length()>=4){
 
             if(!strUserFullName.isEmpty() && !strUserFullName.equals("")){
 

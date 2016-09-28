@@ -340,6 +340,7 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 realmRestaurant.setId(restaurantObj.getInt("id"));
                                 realmRestaurant.setName(restaurantObj.getString("name"));
+                                realmRestaurant.setType(restaurantObj.getString("typee"));
                                 realmRestaurant.setLocation(restaurantObj.getString("location"));
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
@@ -756,6 +757,7 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 realmRestaurant.setId(restaurantObj.getInt("id"));
                                 realmRestaurant.setName(restaurantObj.getString("name"));
+                                realmRestaurant.setType(restaurantObj.getString("typee"));
                                 realmRestaurant.setLocation(restaurantObj.getString("location"));
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));
@@ -1178,6 +1180,7 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 realmRestaurant.setId(restaurantObj.getInt("id"));
                                 realmRestaurant.setName(restaurantObj.getString("name"));
+                                realmRestaurant.setType(restaurantObj.getString("typee"));
                                 realmRestaurant.setLocation(restaurantObj.getString("location"));
                                 realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                 realmRestaurant.setClosing_time(restaurantObj.getString("closing"));

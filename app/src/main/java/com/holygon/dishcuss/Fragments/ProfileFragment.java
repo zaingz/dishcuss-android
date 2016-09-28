@@ -257,6 +257,7 @@ public class ProfileFragment extends Fragment{
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -286,40 +287,6 @@ public class ProfileFragment extends Fragment{
                                 });
                     }
 
-                    realm=Realm.getDefaultInstance();
-                    realm.beginTransaction();
-
-                    RealmResults<User> users = realm.where(User.class).findAll();
-                    users.deleteAllFromRealm();
-
-                    RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
-                    result.deleteAllFromRealm();
-
-                    RealmResults<Comment> comments = realm.where(Comment.class).findAll();
-                    comments.deleteAllFromRealm();
-
-                    RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
-                    khabaHistoryModelRealmResults.deleteAllFromRealm();
-
-                    RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
-                    localFeedCheckInRealmResults.deleteAllFromRealm();
-
-                    RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
-                    localFeedReviewRealmResults.deleteAllFromRealm();
-
-                    RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
-                    localFeedsRealmResults.deleteAllFromRealm();
-
-                    RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
-                    restaurantRealmResults.deleteAllFromRealm();
-
-                    RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
-                    userProfileRealmResults.deleteAllFromRealm();
-
-//                    RealmResults<UserOffersModel> userOffersModelRealmResults = realm.where(UserOffersModel.class).findAll();
-//                    userOffersModelRealmResults.deleteAllFromRealm();
-
-                    realm.commitTransaction();
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     DismissSpinner();

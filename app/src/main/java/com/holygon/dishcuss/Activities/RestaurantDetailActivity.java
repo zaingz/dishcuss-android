@@ -76,6 +76,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     Realm realm;
     boolean dataAlreadyExists = false;
     Restaurant restaurant=new Restaurant();
+    RealmList<FoodItems> foodItems;
 
     RealmList<FoodItems> foodItemsRealmList;
     RealmList<PhotoModel> photoModels;
@@ -92,6 +93,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count;
     TextView explore_restaurant_cost;
+    TextView restaurantType;
+    TextView restaurantCuisine;
 
 
     //*******************PROGRESS******************************
@@ -122,6 +125,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         cafeName = (TextView) findViewById(R.id.restaurant_detail_restaurant_name);
         explore_restaurant_cost = (TextView) findViewById(R.id.explore_restaurant_cost);
+        restaurantType = (TextView) findViewById(R.id.explore_type);
+        restaurantCuisine = (TextView) findViewById(R.id.explore_restaurant_cousine);
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
 
@@ -264,11 +269,37 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
     }
 
+
+    void GetFooDItems(){
+
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
+        realm.beginTransaction();
+        foodItems=restaurants.get(restaurants.size()-1).getFoodItemsArrayList();
+        realm.commitTransaction();
+        realm.close();
+
+    }
+
     void SetValues() {
         cafeName.setText(restaurant.getName());
         cafeAddress.setText(restaurant.getLocation());
         cafeTiming.setText(restaurant.getOpening_time()+" to "+restaurant.getClosing_time());
         explore_restaurant_cost.setText("  Rs "+restaurant.getPricePerHead()+"/head");
+        restaurantType.setText(""+restaurant.getType());
+        restaurantCuisine.setText("");
+        GetFooDItems();
+
+        for (int i=0;i<foodItems.size();i++) {
+            RealmList<FoodsCategory> foodsCategoryRealmList = foodItems.get(i).getFoodsCategories();
+            if (foodsCategoryRealmList.size() > 0) {
+                    if (restaurantCuisine.getText().toString().equals("")) {
+                        restaurantCuisine.setText(foodsCategoryRealmList.get(0).getCategoryName());
+                    }else {
+                        restaurantCuisine.setText(","+foodsCategoryRealmList.get(0).getCategoryName());
+                    }
+            }
+        }
 
         if(restaurant.getReview_count()>0){
             reviewsCount=restaurant.getReview_count();
@@ -397,6 +428,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
                                     realmRestaurant.setId(restaurantObj.getInt("id"));
                                     realmRestaurant.setName(restaurantObj.getString("name"));
+                                    realmRestaurant.setType(restaurantObj.getString("typee"));
                                     realmRestaurant.setLocation(restaurantObj.getString("location"));
                                     realmRestaurant.setOpening_time(restaurantObj.getString("opening"));
                                     realmRestaurant.setClosing_time(restaurantObj.getString("closing"));

@@ -425,6 +425,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
                                 realmRestaurant.setId(restaurantObj.getInt("id"));
                                 realmRestaurant.setName(restaurantObj.getString("name"));
+                                realmRestaurant.setType(restaurantObj.getString("typee"));
 
                                 places.add(restaurantObj.getString("name"));
                                 resID.add(restaurantObj.getInt("id"));

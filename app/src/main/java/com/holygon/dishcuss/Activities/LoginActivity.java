@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -41,7 +42,15 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.holygon.dishcuss.Fragments.LoginIntroFragment;
+import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FbDataModel;
+import com.holygon.dishcuss.Model.FeaturedRestaurant;
+import com.holygon.dishcuss.Model.KhabaHistoryModel;
+import com.holygon.dishcuss.Model.LocalFeedCheckIn;
+import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 
 import org.json.JSONArray;
@@ -68,6 +77,7 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -141,13 +151,14 @@ public class LoginActivity extends AppCompatActivity implements
         skipLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(LoginActivity.this,"Skip is Clicked",Toast.LENGTH_LONG).show();
                 Constants.skipLogin=true;
                 Intent intent=new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
+
+        DeleteAll();
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -172,6 +183,10 @@ public class LoginActivity extends AppCompatActivity implements
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+
+        if(isLoggedIn()) {
+            LoginManager.getInstance().logOut();
+        }
 
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,6 +222,12 @@ public class LoginActivity extends AppCompatActivity implements
 
         //Native Login
         NativeLogin();
+
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     @Override
@@ -578,21 +599,6 @@ public class LoginActivity extends AppCompatActivity implements
             }
         });
 
-
-//        //Adding callback to the button
-//        twitterLogin.setCallback(new Callback<TwitterSession>() {
-//            @Override
-//            public void success(Result<TwitterSession> result) {
-//                //If login succeeds passing the Calling the login method and passing Result object
-//                login(result);
-//            }
-//
-//            @Override
-//            public void failure(TwitterException exception) {
-//                //If failure occurs while login handle it here
-//                Log.d("TwitterKit", "Login with Twitter failure", exception);
-//            }
-//        });
     }
 
     //The login function accepting the result object
@@ -726,5 +732,40 @@ public class LoginActivity extends AppCompatActivity implements
         if(!message.isEmpty() && !message.equals("")){
             Crouton.makeText(LoginActivity.this,message, Style.ALERT).show();
         }
+    }
+
+    void DeleteAll(){
+
+        Realm realm= Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        RealmResults<com.holygon.dishcuss.Model.User> users = realm.where(com.holygon.dishcuss.Model.User.class).findAll();
+        users.deleteAllFromRealm();
+
+        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
+        result.deleteAllFromRealm();
+
+        RealmResults<Comment> comments = realm.where(Comment.class).findAll();
+        comments.deleteAllFromRealm();
+
+        RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
+        khabaHistoryModelRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
+        localFeedCheckInRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
+        localFeedReviewRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+        localFeedsRealmResults.deleteAllFromRealm();
+
+        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+        restaurantRealmResults.deleteAllFromRealm();
+
+        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+        userProfileRealmResults.deleteAllFromRealm();
+
+        realm.commitTransaction();
     }
 }

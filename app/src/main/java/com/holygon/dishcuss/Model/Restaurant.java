@@ -16,6 +16,7 @@ public class Restaurant extends RealmObject {
     String opening_time;
     String closing_time;
     String location;
+    String type;
     double restaurantLat;
     double restaurantLong;
     double ratting;
@@ -62,6 +63,14 @@ public class Restaurant extends RealmObject {
     public Restaurant() {
     }
 
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public double getDistanceAway() {
         return distanceAway;

@@ -23,6 +23,7 @@ public class LocalFeedReview extends RealmObject implements Parcelable {
     int rating;
     int reviewable_id;
     String reviewable_type;
+    Boolean isBookmarked;
 
     int reviewOnID;
     String reviewOnName;
@@ -55,6 +56,14 @@ public class LocalFeedReview extends RealmObject implements Parcelable {
 
     public void setCommentRealmList(RealmList<Comment> commentRealmList) {
         this.commentRealmList = commentRealmList;
+    }
+
+    public Boolean getBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(Boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 
     public int getReviewID() {

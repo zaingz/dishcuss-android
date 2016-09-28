@@ -194,7 +194,15 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
-                    IsRestaurantFollowedData(localFeedReview.getReviewOnID(),holder.image_bookmark);
+//                    IsRestaurantFollowedData(localFeedReview.getReviewOnID(),holder.image_bookmark);
+
+                    if(localFeedReview.getBookmarked()){
+                        holder.image_bookmark.setTag(1);
+                        holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                    }else {
+                        holder.image_bookmark.setTag(0);
+                        holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                    }
 
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -202,6 +210,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                             if((int)holder.image_bookmark.getTag()==0) {
                                 holder.image_bookmark.setTag(1);
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                localFeedReview.setBookmarked(true);
+                                realm.commitTransaction();
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
                                 if (Constants.isNetworkAvailable((Activity) mContext)) {
                                     if (!Constants.skipLogin) {
@@ -210,6 +222,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 }
                             }else {
                                 holder.image_bookmark.setTag(0);
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                localFeedReview.setBookmarked(false);
+                                realm.commitTransaction();
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
                                 if (Constants.isNetworkAvailable((Activity) mContext)) {
                                     if (!Constants.skipLogin) {
@@ -217,6 +233,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                     }
                                 }
                             }
+                            notifyDataSetChanged();
                         }
                     });
 
@@ -361,8 +378,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
-                    IsRestaurantFollowedData(localFeedCheckIn.getCheckInOnID(),holder.image_bookmark);
-
+//                    IsRestaurantFollowedData(localFeedCheckIn.getCheckInOnID(),holder.image_bookmark);
+                    if(localFeedCheckIn.getBookmarked()){
+                        holder.image_bookmark.setTag(1);
+                        holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                    }else {
+                        holder.image_bookmark.setTag(0);
+                        holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                    }
 
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -371,6 +394,10 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             if((int)holder.image_bookmark.getTag()==0) {
                                 holder.image_bookmark.setTag(1);
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                localFeedCheckIn.setBookmarked(true);
+                                realm.commitTransaction();
                                 if (!Constants.skipLogin) {
                                     if (Constants.isNetworkAvailable((Activity) mContext)) {
                                         RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
@@ -381,12 +408,18 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             {
                                 holder.image_bookmark.setTag(0);
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                localFeedCheckIn.setBookmarked(false);
+                                realm.commitTransaction();
+
                                 if (!Constants.skipLogin) {
                                     if (Constants.isNetworkAvailable((Activity) mContext)) {
                                         RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
                                     }
                                 }
                             }
+                            notifyDataSetChanged();
                         }
                     });
 
@@ -686,13 +719,15 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 boolean f = jsonObj.getBoolean("follows");
                                 boolean b = jsonObj.getBoolean("likes");
 
-                                if (b) {
+                                if (b)
+                                {
                                     bookmark.setTag(1);
                                     bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
-                                } else {
+                                }
+                                else
+                                {
                                     bookmark.setTag(0);
                                     bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
-
                                 }
 
                                 if (f) {

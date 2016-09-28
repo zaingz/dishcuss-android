@@ -12,8 +12,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.holygon.dishcuss.Model.Comment;
+import com.holygon.dishcuss.Model.FeaturedRestaurant;
+import com.holygon.dishcuss.Model.KhabaHistoryModel;
+import com.holygon.dishcuss.Model.LocalFeedCheckIn;
+import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by Naeem Ibrahim on 9/1/2016.
@@ -78,6 +90,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
                 else
                 {
+                    DeleteAll();
                     Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();
@@ -104,5 +117,40 @@ public class SplashActivity extends AppCompatActivity {
 //        animSetXY.setInterpolator(new LinearInterpolator(1f));
 //        animSetXY.setDuration(300);
 //        animSetXY.start();
+    }
+
+    void DeleteAll(){
+
+        Realm realm= Realm.getDefaultInstance();
+        realm.beginTransaction();
+
+        RealmResults<User> users = realm.where(User.class).findAll();
+        users.deleteAllFromRealm();
+
+        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
+        result.deleteAllFromRealm();
+
+        RealmResults<Comment> comments = realm.where(Comment.class).findAll();
+        comments.deleteAllFromRealm();
+
+        RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
+        khabaHistoryModelRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
+        localFeedCheckInRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
+        localFeedReviewRealmResults.deleteAllFromRealm();
+
+        RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+        localFeedsRealmResults.deleteAllFromRealm();
+
+        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+        restaurantRealmResults.deleteAllFromRealm();
+
+        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+        userProfileRealmResults.deleteAllFromRealm();
+
+        realm.commitTransaction();
     }
 }
