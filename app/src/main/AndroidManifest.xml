@@ -155,6 +155,18 @@
             android:theme="@style/MyMaterialTheme" />
 
         <activity
+            android:name=".Posts.CheckIn"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Posts.PhotoUpload"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Posts.SelectAndCropPictureActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
             android:name=".Posts.CheckInPostGoogleApiActivity"
             android:theme="@style/MyMaterialTheme" />
 
@@ -200,6 +212,44 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="80eafe8e17874d3e025e50743e1de478e8ecb5df" />
+
+
+
+        <!--GCM SERVICES-->
+
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.agilesoft.travel" />
+            </intent-filter>
+        </receiver>
+        <!-- [END gcm_receiver] -->
+
+        <!-- [START gcm_listener] -->
+        <service
+            android:name=".GCM.MyGcmListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <!-- [END gcm_listener] -->
+        <!-- [START instanceId_listener] -->
+        <service
+            android:name=".GCM.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <!-- [END instanceId_listener] -->
+        <service
+            android:name=".GCM.RegistrationIntentService"
+            android:exported="false"></service>
+
 
     </application>
 

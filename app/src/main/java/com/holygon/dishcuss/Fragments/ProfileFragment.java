@@ -2,7 +2,9 @@ package com.holygon.dishcuss.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +31,7 @@ import com.holygon.dishcuss.Activities.MyWalletActivity;
 import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Activities.UpdateProfileActivity;
 import com.holygon.dishcuss.Activities.UserOffersActivity;
+import com.holygon.dishcuss.GCM.QuickstartPreferences;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
@@ -236,6 +239,8 @@ public class ProfileFragment extends Fragment{
         mSpinner = new ProgressDialog(getActivity());
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -289,6 +294,9 @@ public class ProfileFragment extends Fragment{
                                 });
                     }
 
+                    SharedPreferences sharedPreferences;
+                    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER,false).apply();
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     DismissSpinner();

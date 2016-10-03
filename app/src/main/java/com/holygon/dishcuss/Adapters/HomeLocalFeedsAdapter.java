@@ -348,7 +348,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             Intent i = new Intent(mContext, PhotoDetailActivity.class);
                             i.putExtra("Type","CheckIn");
                             i.putExtra("MyClass", localFeedCheckIn);
-                            i.putExtra("Bitmap", bytes);
+                          //  i.putExtra("Bitmap", bytes);
                             mContext.startActivity(i);
                         }
 

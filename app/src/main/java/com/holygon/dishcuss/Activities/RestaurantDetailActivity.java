@@ -105,6 +105,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -188,7 +190,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             }
         });
 
-        if(Constants.isNetworkAvailable(RestaurantDetailActivity.this)) {
+        if(Constants.isNetworkAvailable(RestaurantDetailActivity.this) && !Constants.skipLogin) {
             IsRestaurantFollowedData(restaurantID);
         }
 

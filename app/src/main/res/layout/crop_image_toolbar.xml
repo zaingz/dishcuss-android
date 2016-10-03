@@ -1,0 +1,39 @@
+<android.support.v7.widget.Toolbar
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    app:theme="@style/ToolbarColoredBackArrow"
+    app:popupTheme="@style/Theme.Transparent"
+    app:layout_collapseMode="pin"
+    android:minHeight="?attr/actionBarSize"
+    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+    android:background="@drawable/toolbar_bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/toolbar_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crop Image"
+            android:layout_centerInParent="true"
+            android:textSize="23dp"
+            android:textStyle="bold"
+            android:paddingRight="30dp"
+            android:textColor="@android:color/white"/>
+
+        <ImageView
+            android:id="@+id/crop_done"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_tiick"
+            />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.Toolbar>

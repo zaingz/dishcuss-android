@@ -244,7 +244,7 @@ public class ChatScreenActivity extends AppCompatActivity {
 //                            mSocket.emit("add user", mUsername);
 //                            Toast.makeText(ChatScreenActivity.this.getApplicationContext(),
 //                                    "connect", Toast.LENGTH_LONG).show();
-                        isConnected = true;
+
                     }
 
                     if(mSocket.connected()){
@@ -266,8 +266,6 @@ public class ChatScreenActivity extends AppCompatActivity {
                                 jsonObj.put("username","Test User");
                                 jsonObj.put("email",guestEmail);
                             }
-
-
 
                             jsonObj.put("room",punditType);
                             mSocket.emit("p1_join",jsonObj.toString());
@@ -360,6 +358,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                         return;
                     }
 
+
                     userJoinID=id;
                     ChatMessage messages = new ChatMessage();
                     messages.setId(10101);
@@ -367,6 +366,7 @@ public class ChatScreenActivity extends AppCompatActivity {
                     messages.setMessage(message);
                     chatMessageArrayList.add(messages);
                     messageAdapter.notifyDataSetChanged();
+                    isConnected = true;
                     scrollToBottom();
                 }
             });

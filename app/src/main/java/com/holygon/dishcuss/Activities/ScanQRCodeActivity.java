@@ -41,6 +41,7 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
     Camera camera;
     OkHttpClient client;
     String message=null;
+    int OfferID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,11 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
         ScanQRCodeActivity.super.requestAppPermissions(new
                         String[]{Manifest.permission.CAMERA,}, R.string.runtime_permissions_txt,REQUEST_PERMISSIONS);
 
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            OfferID = bundle.getInt("OfferID");
+        }
 
         if(camera!=null){
             camera.stopPreview();
@@ -140,6 +146,7 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
 
         FormBody body = new FormBody.Builder()
                 .add("code",QRCode)
+                .add("offer_id",""+OfferID)
                 .build();
 
 
@@ -179,6 +186,7 @@ public class ScanQRCodeActivity  extends RuntimePermissionsActivity implements Z
             finish();
         }else {
             Toast.makeText(ScanQRCodeActivity.this,message,Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 }

@@ -74,6 +74,8 @@ public class PersonalProfileFragment extends Fragment{
         mSpinner = new ProgressDialog(getActivity());
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){

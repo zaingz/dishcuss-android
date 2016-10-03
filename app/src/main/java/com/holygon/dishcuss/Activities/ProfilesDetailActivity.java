@@ -75,6 +75,8 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -95,11 +97,16 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm = Realm.getDefaultInstance();
 
+        final User user = realm.where(User.class).findFirst();
+
         GetUI();
 
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userID = bundle.getInt("UserID");
+                if(user.getId()==userID){
+                    userFollowButton.setVisibility(View.GONE);
+                }
               //  userProfile = GetUserData(userID);
 
                 if (userProfile != null) {
@@ -111,25 +118,24 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                     UserData();
             }
 
-        if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+        if(Constants.isNetworkAvailable(ProfilesDetailActivity.this) && !Constants.skipLogin) {
             IsUserFollowedData(userID);
         }
         userFollowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(userFollowButton.getText().toString().equals("Un follow")){
-                    if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
-                        UnFollowUser(userID);
+                if (!Constants.skipLogin) {
+                    if (userFollowButton.getText().toString().equals("Un follow")) {
+                        if (Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+                            UnFollowUser(userID);
+                        }
+                        userFollowButton.setText("Follow");
+                    } else {
+                        if (Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
+                            FollowUser(userID);
+                        }
+                        userFollowButton.setText("Un follow");
                     }
-                    userFollowButton.setText("Follow");
-                }
-                else
-                {
-                    if(Constants.isNetworkAvailable(ProfilesDetailActivity.this)) {
-                        FollowUser(userID);
-                    }
-                    userFollowButton.setText("Un follow");
                 }
             }
         });

@@ -148,7 +148,9 @@ public class HomeFragment2 extends Fragment {
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
         if(Constants.isNetworkAvailable(getActivity())) {
             FetchAllLocalFeedsData();
-        }else {
+        }
+        else
+        {
             GetFeedsData();
         }
 
@@ -170,9 +172,11 @@ public class HomeFragment2 extends Fragment {
         }
         else
         {
+
             featuredRestaurantRealmResults = realm.where(FeaturedRestaurant.class).findAll();
             featuredRestaurantArrayList.addAll(featuredRestaurantRealmResults);
             NUM_PAGES=featuredRestaurantArrayList.size();
+//            Log.e("Else","Loaded "+NUM_PAGES);
             addDots(rootView);
             setupViewPager(viewPager,featuredRestaurantArrayList);
             selectDot(0);
@@ -294,7 +298,7 @@ public class HomeFragment2 extends Fragment {
 
         ImageView target =(ImageView) rootView.findViewById(R.id.image_notification);
         badge = new BadgeView(getActivity(), target);
-        if(!Constants.skipLogin) {
+        if(!Constants.skipLogin ) {
             Notifications();
         }
 
@@ -304,7 +308,9 @@ public class HomeFragment2 extends Fragment {
                 if(!Constants.skipLogin) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
                         startActivity(intent);
-                        badge.hide(true);
+                        if(badge.isShown()) {
+                            badge.hide(true);
+                        }
                 }
             }
         });
@@ -929,7 +935,7 @@ public class HomeFragment2 extends Fragment {
 
                                 JSONObject checkinObj = jsonDataCheckInObj.getJSONObject("checkin");
 
-                                JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+
 
                                 JSONArray checkinLikesArray = jsonDataCheckInObj.getJSONArray("likes");
                                 JSONArray checkinCommentsArray = jsonDataCheckInObj.getJSONArray("comments");
@@ -963,11 +969,18 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setCheckInWriterLocation(writerObj.getString("location"));
                                     localFeedCheckIn.setCheckInWriterAvatar(writerObj.getString("avatar"));
 
-                                    localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
-                                    localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
-                                    localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+                                    if(!checkinObj.isNull("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                        localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
+                                        localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
+                                        localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+                                    }
 
-                                    localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+                                    if (checkinObj.has("restaurant_image")) {
+                                        if(checkinObj.isNull("restaurant_image")) {
+                                            localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+                                        }
+                                    }
 
                                     for (int p = 0; p < checkinPhotoArray.length(); p++) {
 
@@ -1151,25 +1164,34 @@ public class HomeFragment2 extends Fragment {
 
                                 JSONObject c = jsonDataArray.getJSONObject(i);
 
+                                boolean isDataExist=false;
                                 realm.beginTransaction();
-                                Notifications notification = realm.createObject(Notifications.class);
-
-                                notification.setId(c.getInt("id"));
-                                notification.setBody(c.getString("body"));
-
-                                if (!c.isNull("notifier")) {
-
-                                    JSONObject notifier = c.getJSONObject("notifier");
-                                    notification.setUserID(notifier.getInt("id"));
-                                    notification.setUsername(notifier.getString("username"));
-                                    notification.setAvatarPic(notifier.getString("avatar"));
-
+                                RealmResults<Notifications> localFeedsRealmResults =realm.where(Notifications.class).equalTo("id",c.getInt("id")).findAll();
+                                if (localFeedsRealmResults.size() > 0) {
+                                    notificationsArrayList.add(localFeedsRealmResults.get(0));
+                                    isDataExist=true;
                                 }
-                                notificationsArrayList.add(notification);
                                 realm.commitTransaction();
+
+                                if(!isDataExist) {
+                                    realm.beginTransaction();
+                                    Notifications notification = realm.createObject(Notifications.class);
+
+                                    notification.setId(c.getInt("id"));
+                                    notification.setBody(c.getString("body"));
+
+                                    if (!c.isNull("notifier")) {
+
+                                        JSONObject notifier = c.getJSONObject("notifier");
+                                        notification.setUserID(notifier.getInt("id"));
+                                        notification.setUsername(notifier.getString("username"));
+                                        notification.setAvatarPic(notifier.getString("avatar"));
+
+                                    }
+                                    notificationsArrayList.add(notification);
+                                    realm.commitTransaction();
+                                }
                             }
-
-
 
                             if (notificationsArrayList.size() > 0) {
                                 NotificationActivity.newNotifications = notificationsArrayList.size();
@@ -1190,8 +1212,6 @@ public class HomeFragment2 extends Fragment {
             }
         });
         realm.close();
-
-
     }
 
 

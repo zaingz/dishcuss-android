@@ -104,7 +104,9 @@ public class NearbyFragment extends Fragment {
                 if(!Constants.skipLogin) {
                         Intent intent = new Intent(getActivity(), NotificationActivity.class);
                         startActivity(intent);
-                        HomeFragment2.badge.hide(true);
+                        if(HomeFragment2.badge.isShown()) {
+                            HomeFragment2.badge.hide(true);
+                        }
                 }
             }
         });

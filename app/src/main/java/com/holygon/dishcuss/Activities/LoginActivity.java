@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -8,11 +9,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -92,6 +96,7 @@ public class LoginActivity extends AppCompatActivity implements
     LoginButton fbButton;
     FbDataModel fbDataModel;
     CallbackManager callbackManager;
+    AlertDialog.Builder alert;
 
     //Google Plus Login
     Button googleLoginButton;
@@ -122,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements
     String message="";
     JSONArray rawName;
 
-    String email="",name="",username="",location="",profilePicURL="",gender="",provider="",uid="",profileURL="",token="",expires_at="";
+    String Str_Referral_Code="", email="",name="",username="",location="",profilePicURL="",gender="",provider="",uid="",profileURL="",token="",expires_at="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
         setContentView(R.layout.login_app_intro);
-
+        alert = new AlertDialog.Builder(this);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         TextView skipLogin=(TextView)findViewById(R.id.skip_login_tv);
 
@@ -184,9 +189,7 @@ public class LoginActivity extends AppCompatActivity implements
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
 
-        if(isLoggedIn()) {
-            LoginManager.getInstance().logOut();
-        }
+
 
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,6 +226,11 @@ public class LoginActivity extends AppCompatActivity implements
         //Native Login
         NativeLogin();
 
+        if(isLoggedIn()) {
+            LoginManager.getInstance().logOut();
+        }
+
+//        AlertDialog();
     }
 
     public boolean isLoggedIn() {
@@ -402,7 +410,11 @@ public class LoginActivity extends AppCompatActivity implements
                                 expires_at="";
 
                                 if(!isFacebookCalled){
-                                    SocialLoginSendDataOnServer();
+                                    if(!Constants.GetReferral(LoginActivity.this)) {
+                                        AlertDialog();
+                                    }else {
+                                        SocialLoginSendDataOnServer();
+                                    }
                                     isFacebookCalled=true;
                                 }
 
@@ -516,7 +528,11 @@ public class LoginActivity extends AppCompatActivity implements
                 expires_at="";
 
                 Log.e("G token",""+token);
-                SocialLoginSendDataOnServer();
+                if(!Constants.GetReferral(LoginActivity.this)) {
+                    AlertDialog();
+                }else {
+                    SocialLoginSendDataOnServer();
+                }
 
 
             } else {
@@ -642,7 +658,11 @@ public class LoginActivity extends AppCompatActivity implements
                         profilePicURL=tUser.profileImageUrl;
                         profileURL=tUser.profileImageUrl;
 
-                        SocialLoginSendDataOnServer();
+                        if(!Constants.GetReferral(LoginActivity.this)) {
+                            AlertDialog();
+                        }else {
+                            SocialLoginSendDataOnServer();
+                        }
                     }
                 });
     }
@@ -662,6 +682,8 @@ public class LoginActivity extends AppCompatActivity implements
 
     void SocialLoginSendDataOnServer(){
 
+
+        Log.e("SHAN",Str_Referral_Code);
         FormBody body = new FormBody.Builder()
                 .add("user[email]",email)
                 .add("user[name]", name)
@@ -669,6 +691,7 @@ public class LoginActivity extends AppCompatActivity implements
                 .add("user[username]", username)
                 .add("user[avatar]", profilePicURL)
                 .add("user[gender]", gender)
+                .add("user[referal_code]", Str_Referral_Code)
                 .add("user[identities_attributes][0][provider]", provider)
                 .add("user[identities_attributes][0][uid]", uid)
                 .add("user[identities_attributes][0][url]", profileURL)
@@ -742,8 +765,6 @@ public class LoginActivity extends AppCompatActivity implements
         RealmResults<com.holygon.dishcuss.Model.User> users = realm.where(com.holygon.dishcuss.Model.User.class).findAll();
         users.deleteAllFromRealm();
 
-        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
-        result.deleteAllFromRealm();
 
         RealmResults<Comment> comments = realm.where(Comment.class).findAll();
         comments.deleteAllFromRealm();
@@ -767,5 +788,31 @@ public class LoginActivity extends AppCompatActivity implements
         userProfileRealmResults.deleteAllFromRealm();
 
         realm.commitTransaction();
+    }
+
+    void AlertDialog(){
+        final EditText edittext = new EditText(LoginActivity.this);
+        alert.setTitle("Enter Referral Code if any ");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                Str_Referral_Code = edittext.getText().toString();
+                SocialLoginSendDataOnServer();
+                Constants.SetReferral(LoginActivity.this,true);
+                dialog.cancel();
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                SocialLoginSendDataOnServer();
+                dialog.cancel();
+            }
+        });
+
+        alert.show();
     }
 }

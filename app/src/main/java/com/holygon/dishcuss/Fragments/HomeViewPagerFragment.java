@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
@@ -30,6 +31,7 @@ public class HomeViewPagerFragment extends Fragment {
 
     LinearLayout parentLayout;
     TextView cafeName,cafeAddress,cafeTrending;
+    ProgressBar image_spinner;
 
     public HomeViewPagerFragment(FeaturedRestaurant featuredRestaurant){
         this.featuredRestaurant=featuredRestaurant;
@@ -49,9 +51,10 @@ public class HomeViewPagerFragment extends Fragment {
         parentLayout=(LinearLayout) rootView.findViewById(R.id.view_pager_parent_layout);
 
         cafeName=(TextView) rootView.findViewById(R.id.view_page_restaurant_name);
+        image_spinner=(ProgressBar)rootView.findViewById(R.id.image_spinner);
         cafeAddress=(TextView) rootView.findViewById(R.id.view_page_restaurant_address);
         cafeTrending=(TextView) rootView.findViewById(R.id.view_page_restaurant_trending);
-
+        image_spinner.setVisibility(View.VISIBLE);
 
         String imageUri = featuredRestaurant.getCover_image_url();
         Picasso.with(getActivity()).load(imageUri)
@@ -61,6 +64,7 @@ public class HomeViewPagerFragment extends Fragment {
                 .into(new Target(){
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                image_spinner.setVisibility(View.GONE);
                 parentLayout.setBackground(new BitmapDrawable(bitmap));
             }
 

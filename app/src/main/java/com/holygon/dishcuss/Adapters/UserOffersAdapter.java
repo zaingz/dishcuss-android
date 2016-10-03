@@ -57,7 +57,7 @@ public class UserOffersAdapter extends RecyclerView.Adapter<UserOffersAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.offer_restaurant_name.setText(imageViewArrayList.get(position).getRestaurantName());
         holder.offer_price.setText("PKR "+imageViewArrayList.get(position).getPoints());
         String imageUri = imageViewArrayList.get(position).getImg();
@@ -71,6 +71,7 @@ public class UserOffersAdapter extends RecyclerView.Adapter<UserOffersAdapter.Vi
             public void onClick(View v) {
                 if(!Constants.skipLogin) {
                     Intent intent = new Intent(mContext, ScanQRCodeActivity.class);
+                    intent.putExtra("OfferID",imageViewArrayList.get(position).getId());
                     mContext.startActivity(intent);
                 }
             }

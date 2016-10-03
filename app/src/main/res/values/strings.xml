@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Dishcuss</string>
 
+
+    <string name="can_not_crop">Cannot Crop</string>
     <string name="runtime_permissions_txt">Please enable ALL permissions from app settings.</string>
 
 
@@ -27,10 +29,9 @@
 
 
 
-
     <!--Api Keys-->
 
     <string name="facebook_app_id">225220431205544</string>
-    <string name="google_map_id">AIzaSyDZDxSg90EM27DOHGNEnmyt6g5RXjZY8-M</string>
+    <string name="google_map_id">AIzaSyAZRMaGfnnkVdCkYBnBz5071Gj09Jm59Es</string>
 
 </resources>

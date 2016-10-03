@@ -53,7 +53,6 @@ public class DishCussApplication extends Application {
         return mSocket;
     }
 
-
     @Override
     public void onCreate() {
         super.onCreate();

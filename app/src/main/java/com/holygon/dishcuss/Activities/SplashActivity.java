@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,14 +19,27 @@ import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
+import com.holygon.dishcuss.Utils.URLs;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 9/1/2016.
@@ -34,6 +48,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
     ImageView sp_2,sp_3,sp_4,sp_5,sp_6;
+    Realm realm;
 
     private static int SPLASH_TIME_OUT = 3000;
 
@@ -85,11 +100,9 @@ public class SplashActivity extends AppCompatActivity {
                     if(Constants.isNetworkAvailable(SplashActivity.this)) {
                         DeleteOnStart();
                     }
-
                     Constants.skipLogin=false;
                     Intent intent=new Intent(SplashActivity.this,HomeActivity.class);
                     startActivity(intent);
-
                     finish();
                 }
                 else
@@ -101,6 +114,8 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         }, SPLASH_TIME_OUT);
+
+        FeaturedRestaurantData();
     }
 
     @Override
@@ -131,8 +146,6 @@ public class SplashActivity extends AppCompatActivity {
         RealmResults<User> users = realm.where(User.class).findAll();
         users.deleteAllFromRealm();
 
-        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
-        result.deleteAllFromRealm();
 
         RealmResults<Comment> comments = realm.where(Comment.class).findAll();
         comments.deleteAllFromRealm();
@@ -163,8 +176,6 @@ public class SplashActivity extends AppCompatActivity {
         Realm realm= Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
-        result.deleteAllFromRealm();
 
         RealmResults<Comment> comments = realm.where(Comment.class).findAll();
         comments.deleteAllFromRealm();
@@ -189,4 +200,88 @@ public class SplashActivity extends AppCompatActivity {
 
         realm.commitTransaction();
     }
+
+
+    void FeaturedRestaurantData(){
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Featured_Restaurant_URL)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+                /** check if activity still exist */
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+//                            Log.e("Featured",objStr.toString());
+
+                            JSONArray jsonDataArray=jsonObj.getJSONArray("restaurants");
+
+                            realm =Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            RealmResults<FeaturedRestaurant> result = realm.where(FeaturedRestaurant.class).findAll();
+                            result.deleteAllFromRealm();
+                            realm.commitTransaction();
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+                                JSONObject featureRestaurantObj = jsonDataArray.getJSONObject(i);
+
+//                                dataAlreadyExists=false;
+
+//                                if(!dataAlreadyExists)
+                                {
+
+                                    realm.beginTransaction();
+                                    FeaturedRestaurant featuredRestaurant=realm.createObject(FeaturedRestaurant.class);
+                                    featuredRestaurant.setId(featureRestaurantObj.getInt("id"));
+                                    featuredRestaurant.setName(featureRestaurantObj.getString("name"));
+                                    featuredRestaurant.setLocation(featureRestaurantObj.getString("location"));
+
+                                    JSONObject featureRestaurantCoverImage = featureRestaurantObj.getJSONObject("cover_image");
+
+                                    featuredRestaurant.setCover_image_id(featureRestaurantCoverImage.getInt("id"));
+
+                                    JSONObject CoverImage = featureRestaurantCoverImage.getJSONObject("image");
+                                    JSONObject CoverImageURL = CoverImage.getJSONObject("image");
+
+                                    featuredRestaurant.setCover_image_url(CoverImageURL.getString("url"));
+
+                                    JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
+
+                                    featuredRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
+
+                                    JSONObject featureRestaurantOwner = featureRestaurantObj.getJSONObject("owner");
+
+                                    featuredRestaurant.setOwnerID(featureRestaurantOwner.getInt("id"));
+                                    realm.commitTransaction();
+                                }
+                            }
+
+                            isFeatureRestaurantsLoaded=true;
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
 }

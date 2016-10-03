@@ -44,6 +44,15 @@ public final class Constants{
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     public static GoogleApiClient mGoogleApiClient;
+    public static final String SENDER_ID_GCM ="289789351313";
+    // broadcast receiver intent filters
+    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    public static final String PUSH_NOTIFICATION = "pushNotification";
+
+    // type of push messages
+    public static final int PUSH_TYPE_CHATROOM = 1;
+    public static final int PUSH_TYPE_USER = 2;
 
     public static boolean skipLogin;
 
@@ -146,6 +155,19 @@ public final class Constants{
         return isLogin;
     }
 
+    public static void SetReferral(Context ctx, boolean isAdded){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("UserReferral",isAdded);
+        editor.commit();
+    }
+
+    public static boolean GetReferral(Context ctx){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
+        boolean isLogin = sharedPreferences.getBoolean("UserReferral", false);
+        return isLogin;
+    }
+
 
     public static void PicassoImageSrc(String URL, ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
@@ -188,7 +210,6 @@ public final class Constants{
             Picasso.with(context).load(URL)
                     .resize(400,250)
                     .onlyScaleDown()
-                    .centerCrop()
                     .into(new Target(){
 
                 @Override
@@ -212,15 +233,38 @@ public final class Constants{
     public static void PicassoLargeImageBackgroundNewsFeed(String URL, final ImageView imageView, final ProgressBar pb, final Context context){
         if(URL!=null && !URL.equals("")){
             Picasso.with(context).load(URL)
-                    .resize(400,250)
-                    .onlyScaleDown()
-                    .centerCrop()
+                    .placeholder(imageView.getDrawable())
                     .into(new Target(){
 
                         @Override
                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                             imageView.setVisibility(View.VISIBLE);
                             pb.setVisibility(View.GONE);
+                            imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                        }
+
+                        @Override
+                        public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                        }
+
+                        @Override
+                        public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                        }
+                    });
+        }
+    }
+
+    public static void PicassoLargeImageBackgroundPhotoDetail(String URL, final ImageView imageView, final Context context){
+        if(URL!=null && !URL.equals("")){
+            Picasso.with(context).load(URL)
+                    .placeholder(imageView.getDrawable())
+                    .into(new Target(){
+
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            imageView.setVisibility(View.VISIBLE);
                             imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
                         }
 

@@ -17,6 +17,7 @@ import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Posts.PhotoPostActivity;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
@@ -66,6 +67,7 @@ public class PhotoDetailActivity extends Activity {
         photo_bottom_layout = (LinearLayout) findViewById(R.id.photo_bottom_layout);
 
         photo = (ImageView) findViewById(R.id.photo);
+        photo.setVisibility(View.GONE);
 
         crossButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,18 +79,24 @@ public class PhotoDetailActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            byte[] bytes = bundle.getByteArray("Bitmap");
-            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            BitmapDrawable ob = new BitmapDrawable(getResources(), bmp);
-            photo.setBackground(ob);
+            if(bundle.containsKey("Bitmap")) {
+                byte[] bytes = bundle.getByteArray("Bitmap");
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                BitmapDrawable ob = new BitmapDrawable(getResources(), bmp);
+                photo.setBackground(ob);
+            }else {
+
+            }
+
             type=bundle.getString("Type");
             if(type.equals("CheckIn")){
-
                 localFeedCheckIn= bundle.getParcelable("MyClass");
                 likesCount.setText(""+localFeedCheckIn.getReviewLikesCount());
                 commentsCount.setText(""+localFeedCheckIn.getReviewCommentCount());
                 sharesCount.setText(""+localFeedCheckIn.getReviewSharesCount());
-
+                if(!bundle.containsKey("Bitmap")) {
+                    Constants.PicassoLargeImageBackgroundPhotoDetail(localFeedCheckIn.getCheckInImage(), photo, PhotoDetailActivity.this);
+                }
             }else if(type.equals("Photo")){
                 photo_bottom_layout.setVisibility(View.GONE);
             }

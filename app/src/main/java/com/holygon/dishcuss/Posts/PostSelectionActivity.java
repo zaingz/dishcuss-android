@@ -3,36 +3,14 @@ package com.holygon.dishcuss.Posts;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.holygon.dishcuss.Activities.ScanQRCodeActivity;
-import com.holygon.dishcuss.Model.Comment;
-import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Model.UserBeenThere;
-import com.holygon.dishcuss.Model.UserFollowing;
-import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
-import com.holygon.dishcuss.Utils.Constants;
-import com.holygon.dishcuss.Utils.URLs;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 8/11/2016.
@@ -75,7 +53,7 @@ public class PostSelectionActivity extends Activity {
         uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,PhotoPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this,PhotoUpload.class);
 //                intent.putExtra("PostCategory",CheckInPostActivity.UploadPic);
                 startActivity(intent);
                 finish();
@@ -85,7 +63,7 @@ public class PostSelectionActivity extends Activity {
         CheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PostSelectionActivity.this,CheckInPostActivity.class);
+                Intent intent=new Intent(PostSelectionActivity.this, CheckIn.class);
 //                intent.putExtra("PostCategory",CheckInPostActivity.CheckIn);
                 startActivity(intent);
                 finish();

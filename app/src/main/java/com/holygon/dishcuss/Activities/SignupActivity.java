@@ -66,12 +66,12 @@ public class SignupActivity extends AppCompatActivity implements
     LinearLayout back_to_sign_in_layout;
     TextView headerName;
 
-    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword;
+    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,referral_code_id;
 //            userGender;
     Spinner userGender;
     ArrayAdapter<String> adapterUserGender;
     AutoCompleteTextView userLocation;
-    String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender;
+    String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender,Str_Referral_Code;
 
     OkHttpClient client;
     LinearLayout signUpLayout;
@@ -99,6 +99,8 @@ public class SignupActivity extends AppCompatActivity implements
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
     private void DismissSpinner(){
         if(mSpinner!=null){
@@ -140,6 +142,8 @@ public class SignupActivity extends AppCompatActivity implements
         userFullName=(EditText) findViewById(R.id.edt_user_full_name);
         userName=(EditText) findViewById(R.id.edt_username);
         userEmail=(EditText) findViewById(R.id.edt_user_email);
+
+        referral_code_id=(EditText) findViewById(R.id.referral_code_id);
 
         userLocation=(AutoCompleteTextView) findViewById(R.id.edt_user_location);
 
@@ -215,6 +219,7 @@ public class SignupActivity extends AppCompatActivity implements
         strUserConfirmPassword = userConfirmPassword.getText().toString().trim();
         strUserGender=strUserGender.toLowerCase();
         strUserLocation = userLocation.getText().toString().trim();
+        Str_Referral_Code=referral_code_id.getText().toString().trim();
 
 
         if(!strUserName.isEmpty() && !strUserName.equals("") && strUserName.length()>=4){
@@ -306,6 +311,10 @@ public class SignupActivity extends AppCompatActivity implements
 
     void SendDataOnServer(){
 
+        if(!Str_Referral_Code.equals("")){
+            Constants.SetReferral(SignupActivity.this,true);
+        }
+
         FormBody body = new FormBody.Builder()
                 .add("user[name]",strUserFullName)
                 .add("user[email]", strUserEmail)
@@ -314,6 +323,7 @@ public class SignupActivity extends AppCompatActivity implements
                 .add("user[location]", strUserLocation)
                 .add("user[gender]", strUserGender)
                 .add("user[password]", strUserPassword)
+                .add("user[referal_code]", Str_Referral_Code)
                 .build();
 
         Request request = new Request.Builder()

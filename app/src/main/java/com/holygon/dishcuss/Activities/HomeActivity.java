@@ -2,7 +2,11 @@ package com.holygon.dishcuss.Activities;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,11 +14,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.view.Menu;
@@ -27,12 +33,15 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Fragments.PersonalProfileFragment;
 import com.holygon.dishcuss.Fragments.ProfileFragment;
 import com.holygon.dishcuss.Fragments.ExploreFragment;
 import com.holygon.dishcuss.Fragments.NearbyFragment;
+import com.holygon.dishcuss.GCM.QuickstartPreferences;
+import com.holygon.dishcuss.GCM.RegistrationIntentService;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.ReviewModel;
@@ -82,6 +91,11 @@ public class HomeActivity extends RuntimePermissionsActivity implements
     private int[] tabColors;
     final private int REQUEST_PERMISSIONS = 123;
 
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    SharedPreferences sharedPreferences;
+    boolean sentToken;
+    private boolean isReceiverRegistered;
+
     private boolean useMenuResource = false;
     private Menu menu;
     Realm realm;
@@ -112,7 +126,62 @@ public class HomeActivity extends RuntimePermissionsActivity implements
         if(Constants.skipLogin) {
            floatingActionButton.setVisibility(View.GONE);
         }
+        //on receiving push from server this
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
+                sharedPreferences=PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+                sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                if (!sentToken) {
+//                    Toast.makeText(getApplicationContext(), "GCM received", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        // Registering BroadcastReceiver
+        sharedPreferences=PreferenceManager.getDefaultSharedPreferences(HomeActivity.this);
+        sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+        registerReceiver();
+
+        if (checkPlayServices() && !sentToken) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
     }
+
+    private void registerReceiver() {
+        if (!isReceiverRegistered) {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                    new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+            isReceiverRegistered = true;
+        }
+    }
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i("Menu", "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        isReceiverRegistered = false;
+        super.onPause();
+    }
+
 
     @Override
     public void onPermissionsGranted(int requestCode) {

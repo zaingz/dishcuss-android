@@ -67,6 +67,17 @@
             android:textSize="18dp"
             android:layout_height="wrap_content" />
 
+        <ProgressBar
+            android:id="@+id/image_spinner"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:progressTint="#bcbcbc"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="true"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"

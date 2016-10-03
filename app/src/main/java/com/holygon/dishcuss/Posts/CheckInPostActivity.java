@@ -107,6 +107,8 @@ public class CheckInPostActivity extends AppCompatActivity {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -315,15 +317,19 @@ public class CheckInPostActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                try {
+                try
+                {
                     Bitmap bitmap;
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+
+
                     imageView.setImageBitmap(bitmap);
                     String path = android.os.Environment
                             .getExternalStorageDirectory()
                             + File.separator
                             + "Phoenix" + File.separator + "default";
+
                     f.delete();
                     OutputStream outFile = null;
                     file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");

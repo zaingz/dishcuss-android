@@ -79,4 +79,7 @@ public class URLs {
     //Is Restaurant Followed
     public static String IsRestaurantFollowed="http://dishcuss-api.herokuapp.com/restaurant/bookmarks/follows/";
 
+    //GCM TOKEN REGISTRATION
+    public static String userToken="http://dishcuss-api.herokuapp.com/user/gcm";
+
 }

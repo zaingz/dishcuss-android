@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class PostDetailActivity extends AppCompatActivity {
     LinearLayout post_add_comment_edit_text_parent;
     Realm realm;
     LayoutInflater inflater;
+    ProgressBar image_spinner;
 
 
     @Override
@@ -75,6 +77,7 @@ public class PostDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.post_details);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -314,7 +317,9 @@ public class PostDetailActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Constants.PicassoLargeImageBackground(""+localFeedCheckIn.getCheckInImage(),postImage,PostDetailActivity.this);
+                    postImage.setVisibility(View.GONE);
+                    image_spinner.setVisibility(View.VISIBLE);
+                    Constants.PicassoLargeImageBackgroundNewsFeed(localFeedCheckIn.getCheckInImage(),postImage,image_spinner,PostDetailActivity.this);
                 }
             }
             else
@@ -426,6 +431,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
     void GetUI(){
         comments_row=(LinearLayout)findViewById(R.id.comments_);
+        image_spinner=(ProgressBar)findViewById(R.id.image_spinner);
         Name=(TextView)findViewById(R.id.post_detail_reviewer_user_name);
         time=(TextView)findViewById(R.id.post_detail_post_time);
         status=(TextView)findViewById(R.id.post_detail_post_status);

@@ -1,17 +1,13 @@
 package com.holygon.dishcuss.Posts;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -24,11 +20,9 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.playlog.internal.LogEvent;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
@@ -48,11 +42,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -66,10 +60,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 8/11/2016.
+ * Created by Naeem Ibrahim on 9/30/2016.
  */
-public class WriteReviewPostActivity extends AppCompatActivity {
-
+public class PhotoUpload  extends AppCompatActivity {
 
     OkHttpClient client;
     AutoCompleteTextView userLocation;
@@ -77,12 +70,14 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     String statusStr="";
     String imagePath="";
     ImageView imageView;
+    ImageView select_photo_layout;
     String loc="";
-    double restaurantLongitude;
-    double restaurantLatitude;
-    int restaurantID;
+    double restaurantLongitude=0.0;
+    double restaurantLatitude=0.0;
+    int restaurantID=0;
     File file=null;
     UserProfile userProfile=new UserProfile();
+    Realm realm;
 
     TextView headerName,postClick;
 
@@ -92,13 +87,8 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     ArrayList<Double> placeLong;
 
     ArrayAdapter<String> placeAdapter;
-
-    Realm realm;
-
     TextView write_reviewer_user_name;
     de.hdodenhof.circleimageview.CircleImageView write_reviewer_user_profile_image;
-
-
 
 
     //*******************PROGRESS******************************
@@ -108,8 +98,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
-        mSpinner.setCancelable(false);
-        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -117,45 +105,40 @@ public class WriteReviewPostActivity extends AppCompatActivity {
             mSpinner.dismiss();
         }
     }
-
-//*******************PROGRESS******************************
-
+    //*******************PROGRESS******************************
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.post_activity_write_review_post);
+        setContentView(R.layout.crop_image);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         client = new OkHttpClient();
-
         realm = Realm.getDefaultInstance();
         User user = realm.where(User.class).findFirst();
         userProfile=GetUserData(user.getId());
 
+
         userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
+        imageView= (ImageView) findViewById(R.id.imageView_pic_upload_photo);
+        select_photo_layout= (ImageView) findViewById(R.id.select_photo);
         status=(EditText)findViewById(R.id.post_status);
         headerName=(TextView)findViewById(R.id.toolbar_name);
         postClick=(TextView)findViewById(R.id.click_post);
-        headerName.setText("Write a review");
-
+        headerName.setText("Upload A photo");
         write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);
         write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
 
 
         if(userProfile==null){
             UserData(user.getId());
-        }
-        else
-        {
+        }else {
             write_reviewer_user_name.setText(userProfile.getName());
             if (!userProfile.getAvatar().equals(""))
             {
-                Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,WriteReviewPostActivity.this);
+                Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,PhotoUpload.this);
             }
         }
-
 
         postClick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,16 +147,22 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                 if(!status.getText().toString().equals("")){
                     statusStr=status.getText().toString();
                 }
-
-                if(!statusStr.equals("") && restaurantID!=0) {
+                if( restaurantID!=0) {
                     SendDataOnServer();
                 }else {
-                    Toast.makeText(WriteReviewPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
+                    Toast.makeText(PhotoUpload.this,"Data Missing",Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-
+        select_photo_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setVisibility(View.VISIBLE);
+                Intent i = new Intent(PhotoUpload.this, SelectAndCropPictureActivity.class);
+                startActivityForResult(i, 2);
+            }
+        });
 
         userLocation.addTextChangedListener(new CheckPercentage());
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
@@ -199,11 +188,12 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
 
             restaurantID=resID.get(position);
-            Log.e("Restaurant",""+restaurantID);
             restaurantLatitude=placeLat.get(position);
             restaurantLongitude=placeLong.get(position);
         }
     };
+
+
     void SendDataOnServer(){
         showSpinner("Please wait...");
         // Get a Realm instance for this thread
@@ -213,17 +203,35 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         User user = realm.where(User.class).findFirst();
 
         RequestBody requestBody;
-
+        if(file!=null){
             requestBody= new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("review[title]","Write Review")
-                    .addFormDataPart("review[summary]",statusStr)
-                    .addFormDataPart("review[rating]", "")
-                    .addFormDataPart("review[reviewable_id]",""+restaurantID)
+                    .addFormDataPart("post[image][]", file.getName(),
+                            RequestBody.create(MediaType.parse("text/csv"), file))
+                    .addFormDataPart("post[title]","Upload a picture")
+                    .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[checkin_attributes][address]", ""+userLocation.getText().toString())
+                    .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
+                    .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
+                    .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
                     .build();
 
+        }else {
+            requestBody= new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("post[image][]", "")
+                    .addFormDataPart("post[title]","Upload a picture")
+                    .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[checkin_attributes][address]", ""+userLocation.getText().toString())
+                    .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
+                    .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
+                    .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
+                    .build();
+
+        }
+
         Request request = new Request.Builder()
-                .url(URLs.Restaurant_Review)
+                .url(URLs.Posts)
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .post(requestBody)
                 .build();
@@ -240,9 +248,8 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                     String obj=response.body().string();
                     Log.e("Res",""+obj);
                     JSONObject jsonObject=new JSONObject(obj);
-                    if(jsonObject.has("review")){
+                    if(jsonObject.has("post")){
                         Log.e("","Post Successfully");
-                        finish();
                     }
                     else  if(jsonObject.has("message")){
                         Log.e("","Not Posted");
@@ -254,111 +261,29 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                 }
                 finally
                 {
-                    DismissSpinner();
                 }
 
             }
         });
     }
 
-    private void SelectImage() {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(WriteReviewPostActivity.this);
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, 1);
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
-                }
-                else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (resultCode == RESULT_OK) {
-            if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-                    imageView.setImageBitmap(bitmap);
-                    String path = android.os.Environment
-                            .getExternalStorageDirectory()
-                            + File.separator
-                            + "Phoenix" + File.separator + "default";
-                    f.delete();
-                    OutputStream outFile = null;
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    try {
-                        outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-                        outFile.flush();
-                        outFile.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else if (requestCode == 2) {
-                Uri selectedImageUri = data.getData();
-                String[] projection = { MediaStore.MediaColumns.DATA };
-                Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
-                        null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                cursor.moveToFirst();
-
-                String selectedImagePath = cursor.getString(column_index);
-                Log.e("path", selectedImagePath);
-                File f=new File(selectedImagePath);
-
-                Bitmap bm;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(selectedImagePath, options);
-                final int REQUIRED_SIZE = 200;
-                int scale = 1;
-                while (options.outWidth / scale / 2 >= REQUIRED_SIZE
-                        && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                    scale *= 2;
-                options.inSampleSize = scale;
-                options.inJustDecodeBounds = false;
-                bm = BitmapFactory.decodeFile(selectedImagePath, options);
-
-                imageView.setImageBitmap(bm);
+            if (requestCode == 2) {
+                File pictureFile = (File) data.getExtras().get("result");
+                Log.e("File: ", "" + pictureFile);
+                file = new File(pictureFile.getPath());
+                Bitmap bitmap = BitmapFactory.decodeFile(pictureFile.toString());
+                imageView.setImageBitmap(bitmap);
             }
-
         }
-
     }
 
 
@@ -385,6 +310,8 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
 
     void RestaurantData(String type) {
+
+        Log.e("RES DATA","Called");
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -612,10 +539,12 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
                             }
 //                            placeAdapter.notifyDataSetChanged();
-                            placeAdapter = new ArrayAdapter<String>(WriteReviewPostActivity.this, android.R.layout.simple_list_item_1, places);
+                            placeAdapter = new ArrayAdapter<String>(PhotoUpload.this, android.R.layout.simple_list_item_1, places);
                             userLocation.setAdapter(placeAdapter);
                             realm.close();
-                        } catch (JSONException e) {
+                        }
+                        catch (JSONException e)
+                        {
                             e.printStackTrace();
                         }
                     }
@@ -623,7 +552,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
             }
         });
     }
-
 
     UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
@@ -636,7 +564,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         }
         return null;
     }
-
 
     void UserData(int userID) {
 
@@ -845,7 +772,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
                                 write_reviewer_user_name.setText(userProfile.getName());
                                 if (!userProfile.getAvatar().equals(""))
                                 {
-                                    Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,WriteReviewPostActivity.this);
+                                    Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,PhotoUpload.this);
                                 }
                                 realm.commitTransaction();
 
@@ -860,4 +787,51 @@ public class WriteReviewPostActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    public File bitmapConvertToFile(Bitmap bitmap) {
+        FileOutputStream fileOutputStream = null;
+        File bitmapFile = null;
+        try {
+            File file = new File(Environment.getExternalStoragePublicDirectory("image_crop_sample"),"");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            bitmapFile = new File(file, "IMG_" + (new SimpleDateFormat("yyyyMMddHHmmss")).format(Calendar.getInstance().getTime()) + ".jpg");
+            fileOutputStream = new FileOutputStream(bitmapFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            MediaScannerConnection.scanFile(this, new String[]{bitmapFile.getAbsolutePath()}, null, new MediaScannerConnection.MediaScannerConnectionClient() {
+                @Override
+                public void onMediaScannerConnected() {
+
+                }
+
+                @Override
+                public void onScanCompleted(String path, Uri uri) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(PhotoUpload.this,"file saved",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        return bitmapFile;
+    }
+
+
 }

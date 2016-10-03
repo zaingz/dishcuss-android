@@ -1,19 +1,19 @@
 {
   "project_info": {
-    "project_number": "236923129670",
-    "project_id": "dishcuss-1381"
+    "project_number": "289789351313",
+    "project_id": "dishcuss-145308"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:236923129670:android:29fd281531f8940e",
+        "mobilesdk_app_id": "1:289789351313:android:29fd281531f8940e",
         "android_client_info": {
           "package_name": "com.holygon.dishcuss"
         }
       },
       "oauth_client": [
         {
-          "client_id": "236923129670-lvrcpqkultusdl4hn8rc388p0dqtr2s3.apps.googleusercontent.com",
+          "client_id": "289789351313-itsr262r19nmlfp4787bpalftp8nm78n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.holygon.dishcuss",
@@ -21,13 +21,13 @@
           }
         },
         {
-          "client_id": "236923129670-lhon4spubi50igosur6q6na2dvjc7278.apps.googleusercontent.com",
+          "client_id": "289789351313-9sbsf7si9sa1q8jevhe26p4g0mft12kv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBP0nUXxVfESLY9jv5ZDTwPrgL99aKV7Ps"
+          "current_key": "AIzaSyAGPqZ1_7nWpopteAEPhiRZ5F02v_-KC-g"
         }
       ],
       "services": {
