@@ -159,6 +159,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 restaurantID = bundle.getInt("RestaurantID");
+                Log.e("restaurantID",""+restaurantID);
 
 //                restaurant = GetRestaurantData(restaurantID);
 

@@ -20,6 +20,7 @@ import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
@@ -89,7 +90,9 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        SendDataOnServer();
+        if(!Constants.skipLogin) {
+            SendDataOnServer();
+        }
 
     }
 

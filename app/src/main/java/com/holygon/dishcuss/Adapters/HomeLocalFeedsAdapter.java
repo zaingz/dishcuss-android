@@ -165,6 +165,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                     holder.status.setText(localFeedReview.getSummary());
 
+
+
 //                    if(!localFeedReview.getReviewImage().equals("")){
 //
 //                        holder.feeds_post_image.setVisibility(View.VISIBLE);
@@ -182,6 +184,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             mContext.startActivity(intent);
                         }
                     });
+
 
                     holder.layout_like.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -217,27 +220,36 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 Realm realm=Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 localFeedReview.setBookmarked(true);
+
+                                BookmarkSetting(localFeedReview.getReviewOnID(),true);
                                 realm.commitTransaction();
+
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
                                 if (Constants.isNetworkAvailable((Activity) mContext)) {
                                     if (!Constants.skipLogin) {
                                         RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
                                     }
                                 }
-                            }else {
+
+
+                            }else{
                                 holder.image_bookmark.setTag(0);
                                 Realm realm=Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 localFeedReview.setBookmarked(false);
+                                BookmarkSetting(localFeedReview.getReviewOnID(),false);
                                 realm.commitTransaction();
+
                                 holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
                                 if (Constants.isNetworkAvailable((Activity) mContext)) {
                                     if (!Constants.skipLogin) {
                                         RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
                                     }
                                 }
+
                             }
                             notifyDataSetChanged();
+
                         }
                     });
 
@@ -400,12 +412,17 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 Realm realm=Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 localFeedCheckIn.setBookmarked(true);
+
+                                BookmarkSetting(localFeedCheckIn.getCheckInOnID(),true);
                                 realm.commitTransaction();
+
                                 if (!Constants.skipLogin) {
                                     if (Constants.isNetworkAvailable((Activity) mContext)) {
                                         RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
                                     }
                                 }
+
+
                             }
                             else
                             {
@@ -414,6 +431,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 Realm realm=Realm.getDefaultInstance();
                                 realm.beginTransaction();
                                 localFeedCheckIn.setBookmarked(false);
+                                BookmarkSetting(localFeedCheckIn.getCheckInOnID(),false);
                                 realm.commitTransaction();
 
                                 if (!Constants.skipLogin) {
@@ -421,7 +439,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                         RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
                                     }
                                 }
+
                             }
+
                             notifyDataSetChanged();
                         }
                     });
@@ -594,7 +614,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
 
+        realm.commitTransaction();
         realm.close();
+
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -631,8 +653,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 });
             }
         });
-        realm.commitTransaction();
-        //            return UnLike(id,type);
     }
 
     public void RestaurantBookmarked(final int id, final String type){
@@ -649,7 +669,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
 
+        realm.commitTransaction();
         realm.close();
+
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -685,7 +707,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 });
             }
         });
-        realm.commitTransaction();
         //            return UnLike(id,type);
     }
 
@@ -747,6 +768,22 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 });
             }
         });
+    }
+
+    void BookmarkSetting(int restaurantID,boolean isMarked){
+        for(int i=0;i<objects.size();i++){
+            if(objects.get(i).getClass().equals(io.realm.LocalFeedCheckInRealmProxy.class)){
+                final LocalFeedCheckIn localFeedO = (LocalFeedCheckIn) objects.get(i);
+                if(localFeedO.getCheckInOnID()==restaurantID){
+                    localFeedO.setBookmarked(isMarked);
+                }
+            }else if(objects.get(i).getClass().equals(io.realm.LocalFeedReviewRealmProxy.class)){
+                final LocalFeedReview localFeedO= (LocalFeedReview) objects.get(i);
+                if(localFeedO.getReviewOnID()==restaurantID){
+                    localFeedO.setBookmarked(isMarked);
+                }
+            }
+        }
     }
 }
 

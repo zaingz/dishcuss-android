@@ -21,6 +21,7 @@
             android:paddingBottom="3dp">
 
             <RelativeLayout
+                android:id="@+id/user_profile_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 

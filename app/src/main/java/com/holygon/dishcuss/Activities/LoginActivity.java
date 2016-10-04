@@ -53,6 +53,7 @@ import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
@@ -765,6 +766,8 @@ public class LoginActivity extends AppCompatActivity implements
         RealmResults<com.holygon.dishcuss.Model.User> users = realm.where(com.holygon.dishcuss.Model.User.class).findAll();
         users.deleteAllFromRealm();
 
+        RealmResults<Notifications> notificationsRealmResults = realm.where(Notifications.class).findAll();
+        notificationsRealmResults.deleteAllFromRealm();
 
         RealmResults<Comment> comments = realm.where(Comment.class).findAll();
         comments.deleteAllFromRealm();

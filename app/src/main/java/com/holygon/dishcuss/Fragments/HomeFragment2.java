@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
+import com.holygon.dishcuss.Helper.EndlessRecyclerOnScrollListener;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
@@ -74,7 +77,8 @@ public class HomeFragment2 extends Fragment {
     private ViewPager viewPager;
     AppCompatActivity activity;
     RecyclerView localFeedsRecyclerView,myFeedsRecyclerView,peopleAroundYouRecyclerView;
-    private RecyclerView.LayoutManager localFeedsLayoutManager,myFeedsLayoutManager,peopleAroundYouLayoutManager;
+    private RecyclerView.LayoutManager myFeedsLayoutManager,peopleAroundYouLayoutManager;
+    private LinearLayoutManager localFeedsLayoutManager;
     RelativeLayout local_feeds_layout,my_feeds_layout,people_around_you_layout;
     TextView local_feeds_text,my_feeds_text,peopleAroundYouTextView;
     ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
@@ -92,7 +96,7 @@ public class HomeFragment2 extends Fragment {
 
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
-    LinearLayout empty_feed;
+    NestedScrollView empty_feed;
     int myFeedReview=0;
     int myFeedCheckIns=0;
 
@@ -123,7 +127,7 @@ public class HomeFragment2 extends Fragment {
         local_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.local_feeds_layout);
         my_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.my_feeds_layout);
         people_around_you_layout=(RelativeLayout)rootView.findViewById(R.id.people_around_you_layout);
-        empty_feed=(LinearLayout)rootView.findViewById(R.id.empty_feed);
+        empty_feed=(NestedScrollView)rootView.findViewById(R.id.empty_feed);
 
         Sign_Up_Click=(Button)rootView.findViewById(R.id.Sign_Up_Click);
 
@@ -146,8 +150,15 @@ public class HomeFragment2 extends Fragment {
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
+//        localFeedsRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(localFeedsLayoutManager) {
+//            @Override
+//            public void onLoadMore(int current_page) {
+//                // do something...
+//            }
+//        });
         if(Constants.isNetworkAvailable(getActivity())) {
             FetchAllLocalFeedsData();
+
         }
         else
         {
@@ -228,7 +239,8 @@ public class HomeFragment2 extends Fragment {
                 localFeedsRecyclerView.setVisibility(View.GONE);
                 peopleAroundYouRecyclerView.setVisibility(View.VISIBLE);
 
-                if(peopleAroundYouList.size()<=0){
+//                if(peopleAroundYouList.size()<=0 && !Constants.skipLogin){
+                if(Constants.skipLogin){
                     peopleAroundYouRecyclerView.setVisibility(View.GONE);
                     empty_feed.setVisibility(View.VISIBLE);
                 }
@@ -252,7 +264,8 @@ public class HomeFragment2 extends Fragment {
                 empty_feed.setVisibility(View.GONE);
                 peopleAroundYouRecyclerView.setVisibility(View.GONE);
 
-                if(myFeedCheckIns==0 && myFeedReview==0){
+//                if(myFeedCheckIns==0 && myFeedReview==0 && !Constants.skipLogin){
+                if(Constants.skipLogin){
                     myFeedsRecyclerView.setVisibility(View.GONE);
                     empty_feed.setVisibility(View.VISIBLE);
                 }
@@ -1186,8 +1199,8 @@ public class HomeFragment2 extends Fragment {
                                         notification.setUserID(notifier.getInt("id"));
                                         notification.setUsername(notifier.getString("username"));
                                         notification.setAvatarPic(notifier.getString("avatar"));
-
                                     }
+
                                     notificationsArrayList.add(notification);
                                     realm.commitTransaction();
                                 }

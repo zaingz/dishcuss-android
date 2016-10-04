@@ -98,6 +98,7 @@ public class GenericRoutes {
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
 
+        realm.commitTransaction();
         realm.close();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -124,7 +125,7 @@ public class GenericRoutes {
             }
         });
 
-        realm.commitTransaction();
+
     }
 
 

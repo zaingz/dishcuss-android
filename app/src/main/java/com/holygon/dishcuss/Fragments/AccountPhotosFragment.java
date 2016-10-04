@@ -76,7 +76,9 @@ public class AccountPhotosFragment extends Fragment {
             RealmList<PhotoModel> photoModels = userProfiles.get(0).getPhotoModelRealmList();
 
             for (int j = 0; j < photoModels.size(); j++) {
-                itemsData.add(photoModels.get(j).getUrl());
+                if(!photoModels.get(j).getUrl().equals("")) {
+                    itemsData.add(photoModels.get(j).getUrl());
+                }
             }
             realm.commitTransaction();
             realm.close();

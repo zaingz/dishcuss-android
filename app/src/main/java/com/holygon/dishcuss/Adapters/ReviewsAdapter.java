@@ -11,20 +11,33 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.PostDetailActivity;
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.Realm;
 import io.realm.RealmList;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 7/23/2016.
@@ -39,6 +52,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         public TextView reviewTitle,reviewTime,reviewSummary,reviewLikesCount,reviewCommentsCount,reviewSharesCount,review_comments_count_tv;
         LinearLayout layout_like,layout_comment;
         LinearLayout comment_row;
+        RelativeLayout user_profile_layout;
         public de.hdodenhof.circleimageview.CircleImageView profileImageView;
         public ViewHolder(View v) {
             super(v);
@@ -51,6 +65,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             reviewSharesCount = (TextView) v.findViewById(R.id.row_review_shares_count);
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
+            user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             profileImageView=(de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.account_reviews_profile_image);
             comment_row=(LinearLayout)v.findViewById(R.id.review_comments);
         }
@@ -85,13 +100,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.layout_like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Constants.skipLogin) {
+                if(!Constants.skipLogin) {
                     if(Constants.isNetworkAvailable((Activity) mContext)) {
                         int prev = Integer.valueOf(holder.reviewLikesCount.getText().toString());
-                        prev=prev + 1;
+                        prev++;
                         holder.reviewLikesCount.setText("" + prev);
-                        GenericRoutes.Like(mReviewModels.get(position).getReview_ID(), "review", (Activity) mContext);
-
+                        holder.layout_like.setEnabled(false);
+                        Like(mReviewModels.get(position).getReview_ID(), "review",holder.reviewLikesCount,holder.layout_like);
                     }
                 }
             }
@@ -131,6 +146,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             }
         });
 
+        holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                intent.putExtra("UserID", mReviewModels.get(position).getReview_reviewer_ID());
+                mContext.startActivity(intent);
+                ((Activity)mContext).finish();
+            }
+        });
 
         commentRealmList=mReviewModels.get(position).getCommentRealmList();
 
@@ -182,5 +206,61 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     @Override
     public int getItemCount() {
         return mReviewModels.size();
+    }
+
+
+    public void Like(int id, String type, final TextView tv, final LinearLayout layout_like){
+
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.close();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully liked!")) {
+                                    int prev = Integer.valueOf(tv.getText().toString());
+                                    prev--;
+                                    tv.setText("" + prev);
+                                }
+                            }
+                            layout_like.setEnabled(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        realm.commitTransaction();
+        //            return UnLike(id,type);
     }
 }

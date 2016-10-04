@@ -161,6 +161,8 @@
                             android:layout_width="match_parent"
                             android:textColorHint="@color/hint_color"
                             android:hint="12-12-2002"
+                            android:clickable="true"
+                            android:cursorVisible="false"
                             android:inputType="text"
                             android:textColor="@color/colorAccent"
                             android:layout_height="wrap_content" />

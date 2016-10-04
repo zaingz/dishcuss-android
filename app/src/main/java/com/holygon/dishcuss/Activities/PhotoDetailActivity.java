@@ -80,6 +80,8 @@ public class PhotoDetailActivity extends Activity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             if(bundle.containsKey("Bitmap")) {
+                photo.setVisibility(View.VISIBLE);
+                photo_bottom_layout.setVisibility(View.GONE);
                 byte[] bytes = bundle.getByteArray("Bitmap");
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 BitmapDrawable ob = new BitmapDrawable(getResources(), bmp);

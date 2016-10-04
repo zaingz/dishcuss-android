@@ -1,13 +1,17 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.UserBeenThere;
 import com.holygon.dishcuss.Model.UserFollowing;
@@ -37,9 +41,11 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView user_profile_been_there_restaurant_name,user_profile_been_there_restaurant_address;
         public TextView user_profile_been_there_time;
+        public RelativeLayout local_feeds_restaurant_relative_layout;
         public ImageView user_profile_been_there_restaurant_image;
         public ViewHolder(View v) {
             super(v);
+            local_feeds_restaurant_relative_layout=(RelativeLayout) v.findViewById(R.id.local_feeds_restaurant_relative_layout);
             user_profile_been_there_restaurant_name = (TextView) v.findViewById(R.id.user_profile_been_there_restaurant_name);
             user_profile_been_there_restaurant_address = (TextView) v.findViewById(R.id.user_profile_been_there_restaurant_address);
             user_profile_been_there_time = (TextView) v.findViewById(R.id.user_profile_been_there_time);
@@ -70,7 +76,7 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.user_profile_been_there_restaurant_name.setText(userBeenTheres.get(position).getRestaurantName());
         holder.user_profile_been_there_restaurant_address.setText(userBeenTheres.get(position).getRestaurantLocation());
         if(userBeenTheres.get(position).getCover_image_url()!=null) {
@@ -78,6 +84,16 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
                 Constants.PicassoImageBackground(userBeenTheres.get(position).getCover_image_url(), holder.user_profile_been_there_restaurant_image, mContext);
             }
         }
+
+        holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, RestaurantDetailActivity.class);
+                intent.putExtra("RestaurantID", userBeenTheres.get(position).getId());
+                mContext.startActivity(intent);
+                ((Activity)mContext).finish();
+            }
+        });
 
         Date date=Constants.GetDate(userBeenTheres.get(position).getBeenThereTime());
         SimpleDateFormat localDateFormatForTime = new SimpleDateFormat("h:mm a");

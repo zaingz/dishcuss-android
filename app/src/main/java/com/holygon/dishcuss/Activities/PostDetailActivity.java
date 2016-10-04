@@ -2,6 +2,7 @@ package com.holygon.dishcuss.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
@@ -162,6 +163,11 @@ public class PostDetailActivity extends AppCompatActivity {
                     TextView commentLikes = (TextView) child.findViewById(R.id.comment_Like);
                     commentLikes.setOnClickListener(LikeClick);
                     commentLikes.setTag(commentRealmList.get(i).getCommentID());
+
+                    commentator_profile_image.setOnClickListener(RedirectUser);
+                    commentator_profile_image.setTag(commentRealmList.get(i).getCommentatorID());
+                    commentatorName.setOnClickListener(RedirectUser);
+                    commentatorName.setTag(commentRealmList.get(i).getCommentatorID());
 
                     commentatorName.setText(commentRealmList.get(i).getCommentatorName());
                     commentatorComment.setText(commentRealmList.get(i).getCommentSummary());
@@ -391,6 +397,15 @@ public class PostDetailActivity extends AppCompatActivity {
             int idxStr = (int) v.getTag();
             Like(idxStr,"comment");
             Toast.makeText(PostDetailActivity.this,"Liked "+idxStr,Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    View.OnClickListener RedirectUser = new View.OnClickListener() {
+        public void onClick(View v) {
+            int idxStr = (int) v.getTag();
+            Intent intent=new Intent(PostDetailActivity.this, ProfilesDetailActivity.class);
+            intent.putExtra("UserID", idxStr);
+            startActivity(intent);
         }
     };
 

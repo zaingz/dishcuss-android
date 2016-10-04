@@ -96,7 +96,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm = Realm.getDefaultInstance();
-
+        
         final User user = realm.where(User.class).findFirst();
 
         GetUI();
@@ -104,8 +104,10 @@ public class ProfilesDetailActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 userID = bundle.getInt("UserID");
-                if(user.getId()==userID){
-                    userFollowButton.setVisibility(View.GONE);
+                if(!Constants.skipLogin) {
+                    if (user.getId() == userID) {
+                        userFollowButton.setVisibility(View.GONE);
+                    }
                 }
               //  userProfile = GetUserData(userID);
 

@@ -172,7 +172,7 @@ public class NotificationActivity extends AppCompatActivity {
                 .url(URLs.Get_Notification+"/seen")
                 .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
-
+        realm.commitTransaction();
         realm.close();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -198,8 +198,6 @@ public class NotificationActivity extends AppCompatActivity {
                 }
             }
         });
-
-        realm.commitTransaction();
 
     }
 

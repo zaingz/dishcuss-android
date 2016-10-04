@@ -56,6 +56,9 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
         if(imageUri!=null && !imageUri.equals("")) {
             Picasso.with(mContext).load(imageUri).into(holder.imageView);
         }
+        if(imageUri.equals("")){
+            holder.imageView.setVisibility(View.GONE);
+        }
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

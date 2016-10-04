@@ -1,12 +1,16 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.UserFollowing;
@@ -28,8 +32,10 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView user_profile_follower_user_name,user_profile_follower_user_followers_count;
         public de.hdodenhof.circleimageview.CircleImageView profileImageView;
+        RelativeLayout user_profile_layout;
         public ViewHolder(View v) {
             super(v);
+            user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             user_profile_follower_user_name = (TextView)v.findViewById(R.id.user_profile_follower_user_name);
             user_profile_follower_user_followers_count = (TextView)v.findViewById(R.id.user_profile_follower_user_followers_count);
             profileImageView=(de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.user_profile_follower_profile_image);
@@ -49,7 +55,7 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.user_profile_follower_user_name.setText(userFollowings.get(position).getName());
         holder.user_profile_follower_user_followers_count.setText(""+userFollowings.get(position).getFollowerCount());
         if(userFollowings.get(position).getAvatar()!=null) {
@@ -57,6 +63,17 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
                 Constants.PicassoImageSrc(userFollowings.get(position).getAvatar(), holder.profileImageView, mContext);
             }
         }
+
+
+        holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
+                intent.putExtra("UserID", userFollowings.get(position).getId());
+                mContext.startActivity(intent);
+                ((Activity)mContext).finish();
+            }
+        });
 
         holder.setIsRecyclable(false);
     }

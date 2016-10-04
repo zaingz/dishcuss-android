@@ -186,10 +186,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="70dp"/>
 
-
-            <LinearLayout
+            <android.support.v4.widget.NestedScrollView
                 android:visibility="gone"
                 android:id="@+id/empty_feed"
+                app:layout_scrollFlags="scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -222,6 +226,8 @@
                     android:background="@drawable/feature_button_corner"/>
 
             </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
 
         </LinearLayout>
 

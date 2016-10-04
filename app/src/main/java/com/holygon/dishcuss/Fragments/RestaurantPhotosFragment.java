@@ -80,7 +80,9 @@ public class RestaurantPhotosFragment extends Fragment {
             for (int j=0;j<photoModels.size();j++){
 //                Log.e("Photo ID : ",""+photoModels.get(j).getId());
 //                Log.e("Photo URL : ",""+photoModels.get(j).getUrl());
-                itemsData.add(photoModels.get(j).getUrl());
+                if(!photoModels.get(j).getUrl().equals("")) {
+                    itemsData.add(photoModels.get(j).getUrl());
+                }
             }
         }
 

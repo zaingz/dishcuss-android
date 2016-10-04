@@ -53,15 +53,15 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         whatsAppShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
-                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
-                share.setPackage("com.whatsapp");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(share, "Share"));
-
+                if(!Constants.skipLogin) {
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
+                    share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is " + user.getReferral_code());
+                    share.setPackage("com.whatsapp");
+                    share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(share, "Share"));
+                }
             }
         });
 
@@ -69,14 +69,15 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         twitterShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
-                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
-                share.setPackage("com.twitter.android");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(share, "Share"));
+                if (!Constants.skipLogin) {
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
+                    share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is " + user.getReferral_code());
+                    share.setPackage("com.twitter.android");
+                    share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(share, "Share"));
+                }
             }
         });
 
@@ -84,22 +85,24 @@ public class GetFreeFoodActivity extends AppCompatActivity {
         facebookShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("text/plain");
-                share.putExtra(Intent.EXTRA_SUBJECT,  "Lets Enjoy on Dishcuss");
-                share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is "+user.getReferral_code());
-                share.setPackage("com.facebook.katana");
-                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(share, "Share"));
-
+                if(!Constants.skipLogin) {
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("text/plain");
+                    share.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
+                    share.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is " + user.getReferral_code());
+                    share.setPackage("com.facebook.katana");
+                    share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(share, "Share"));
+                }
             }
         });
 
         localShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InviteFriends();
+                if(!Constants.skipLogin) {
+                    InviteFriends();
+                }
             }
         });
     }

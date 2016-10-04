@@ -1,6 +1,10 @@
 package com.holygon.dishcuss.Activities;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +44,7 @@ import com.holygon.dishcuss.Utils.URLs;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.regex.Pattern;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
@@ -61,10 +68,13 @@ public class UpdateProfileActivity extends AppCompatActivity implements
 
     TextView headerName;
 
-    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender,userDOB;
+    EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender;
+    static EditText userDOB;
     AutoCompleteTextView userLocation;
     String strUserFullName,strUserName,strUserEmail, strUserPassword,strUserConfirmPassword,strUserLocation,strUserGender,strUserDOB;
     LinearLayout Password_parent,ConfirmPassword_parent;
+
+
 
     OkHttpClient client;
     LinearLayout signUpLayout;
@@ -128,6 +138,18 @@ public class UpdateProfileActivity extends AppCompatActivity implements
             userConfirmPassword.setText("123");
             userPassword.setText("123");
         }
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(userDOB.getWindowToken(), 0);
+
+        userDOB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(userDOB.getWindowToken(), 0);
+                showDatePickerDialog();
+            }
+        });
     }
 
 
@@ -460,6 +482,32 @@ public class UpdateProfileActivity extends AppCompatActivity implements
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    public void showDatePickerDialog() {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(this.getFragmentManager(), "datePicker");
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            month = month + 1;
+            userDOB.setText(day + "-" + month++ + "-" + year);
         }
     }
 }
