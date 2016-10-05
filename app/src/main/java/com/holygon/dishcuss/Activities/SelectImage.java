@@ -1,5 +1,4 @@
-package com.holygon.dishcuss.Posts;
-
+package com.holygon.dishcuss.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -22,21 +21,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.holygon.dishcuss.R;
 import com.naver.android.helloyako.imagecrop.view.ImageCropView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
- * Created by Naeem Ibrahim on 9/30/2016.
+ * Created by Naeem Ibrahim on 10/5/2016.
  */
-public class SelectAndCropPictureActivity extends AppCompatActivity {
+public class SelectImage  extends AppCompatActivity {
     public static final String TAG = "CropActivity";
 
     private ImageCropView imageCropView;
@@ -49,7 +49,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
 
     private void SelectImage() {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(SelectAndCropPictureActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SelectImage.this);
         builder.setTitle("Add Photo!");
         builder.setCancelable(false);
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -108,7 +108,8 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
         select_image_button=(Button)findViewById(R.id.select_image_button);
         crop_image_button=(Button)findViewById(R.id.crop_btn);
         crop_image_button.setVisibility(View.GONE);
-
+        TextView headerName=(TextView)findViewById(R.id.toolbar_name);
+        headerName.setText("Select Image");
         imageCropView.setGridInnerMode(ImageCropView.GRID_ON);
         imageCropView.setGridOuterMode(ImageCropView.GRID_ON);
         images_parent_layout.setVisibility(View.GONE);
@@ -128,7 +129,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                 if(isPossibleCrop(1,1)){
                     imageCropView.setAspectRatio(1, 1);
                 } else {
-                    Toast.makeText(SelectAndCropPictureActivity.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectImage.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,7 +141,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                 if(isPossibleCrop(3,4)){
                     imageCropView.setAspectRatio(3, 4);
                 } else {
-                    Toast.makeText(SelectAndCropPictureActivity.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectImage.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -152,7 +153,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                 if(isPossibleCrop(4,3)){
                     imageCropView.setAspectRatio(4, 3);
                 } else {
-                    Toast.makeText(SelectAndCropPictureActivity.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectImage.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -164,7 +165,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                 if(isPossibleCrop(16,9)){
                     imageCropView.setAspectRatio(16, 9);
                 } else {
-                    Toast.makeText(SelectAndCropPictureActivity.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectImage.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -176,7 +177,7 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                 if(isPossibleCrop(9,16)){
                     imageCropView.setAspectRatio(9, 16);
                 } else {
-                    Toast.makeText(SelectAndCropPictureActivity.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SelectImage.this,R.string.can_not_crop,Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -323,11 +324,9 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                           // Toast.makeText(SelectAndCropPictureActivity.this,"file saved",Toast.LENGTH_LONG).show();
                             Intent returnIntent = new Intent();
                             returnIntent.putExtra("result",files);
                             setResult(Activity.RESULT_OK,returnIntent);
-//                            DismissSpinner();
                             finish();
                         }
                     });
@@ -337,14 +336,10 @@ public class SelectAndCropPictureActivity extends AppCompatActivity {
             e.printStackTrace();
         } finally {
             if (fileOutputStream != null) {
-                try
-                {
+                try {
                     fileOutputStream.flush();
                     fileOutputStream.close();
-                }
-                catch (Exception e)
-                {
-
+                } catch (Exception e) {
                 }
             }
         }

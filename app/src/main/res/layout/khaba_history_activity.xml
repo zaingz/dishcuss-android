@@ -23,6 +23,50 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
+        <LinearLayout
+            android:id="@+id/sign_up_first"
+            android:visibility="visible"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/empty_feed"/>
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorAccent1"
+                android:text="Follow peoples to Track their Dinelines"/>
+
+            <Button
+                android:layout_gravity="center"
+                android:id="@+id/Sign_Up_Click"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="signup"
+                android:textColor="#fff"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/feature_button_corner"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/user_data_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <ProgressBar
                 android:id="@+id/native_progress_bar"
                 android:layout_width="40dp"
@@ -38,6 +82,8 @@
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         </LinearLayout>
 

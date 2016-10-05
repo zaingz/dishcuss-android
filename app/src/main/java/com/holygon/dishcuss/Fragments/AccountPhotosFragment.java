@@ -35,11 +35,13 @@ public class AccountPhotosFragment extends Fragment {
 
     public AccountPhotosFragment(int userID) {
         this.userID =userID;
+        SetImageURL();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -54,7 +56,7 @@ public class AccountPhotosFragment extends Fragment {
         nearbySearchRecyclerView.setLayoutManager(gridLayout);
         nearbySearchRecyclerView.setHasFixedSize(true);
 
-        SetImageURL();
+
 
         nearbySearchRecyclerView.setNestedScrollingEnabled(false);
         PhotosAdapter adapter = new PhotosAdapter(itemsData,getActivity());

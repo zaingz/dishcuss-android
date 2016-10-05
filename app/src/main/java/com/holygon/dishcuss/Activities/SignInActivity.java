@@ -151,6 +151,7 @@ public class SignInActivity extends AppCompatActivity {
                         user.setName(usersJsonObject.getString("name"));
                         user.setUsername(usersJsonObject.getString("username"));
                         user.setEmail(usersJsonObject.getString("email"));
+                        user.setAvatar(usersJsonObject.getString("avatar"));
                         user.setGender(usersJsonObject.getString("gender"));
                         user.setProvider(usersJsonObject.getString("provider"));
                         user.setToken(usersJsonObject.getString("token"));

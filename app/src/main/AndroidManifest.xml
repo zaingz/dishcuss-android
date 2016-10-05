@@ -167,6 +167,10 @@
             android:theme="@style/MyMaterialTheme" />
 
         <activity
+            android:name=".Activities.SelectImage"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
             android:name=".Posts.CheckInPostGoogleApiActivity"
             android:theme="@style/MyMaterialTheme" />
 

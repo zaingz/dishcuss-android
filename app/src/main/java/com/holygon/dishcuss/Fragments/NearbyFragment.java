@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,7 @@ public class NearbyFragment extends Fragment {
 
         if(!Constants.skipLogin){
 
+            Log.e("Notifications",""+NotificationActivity.newNotifications);
             if (NotificationActivity.newNotifications > 0) {
                 HomeFragment2.badge.show(true);
                 HomeFragment2.badge.setText("" + NotificationActivity.newNotifications);

@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,6 +49,8 @@ public class KhabaHistoryActivity extends AppCompatActivity {
     int userID;
     Realm realm;
     ProgressBar progressBar;
+    LinearLayout userDataLayout,sign_up_first;
+    Button Sign_Up_Click;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,14 +67,37 @@ public class KhabaHistoryActivity extends AppCompatActivity {
 
         gridLayout = new LinearLayoutManager(this);
         offerList = (RecyclerView)findViewById(R.id.khaba_history_recycler_view);
+        sign_up_first = (LinearLayout) findViewById(R.id.sign_up_first);
+        userDataLayout = (LinearLayout) findViewById(R.id.user_data_layout);
+
 
 
         offerList.setLayoutManager(gridLayout);
         offerList.setHasFixedSize(true);
         offerList.setNestedScrollingEnabled(false);
-        if(!Constants.skipLogin) {
+        if(!Constants.skipLogin)
+        {
+            sign_up_first.setVisibility(View.GONE);
+            userDataLayout.setVisibility(View.VISIBLE);
             FetchMyFeedsData();
         }
+        else
+        {
+            sign_up_first.setVisibility(View.VISIBLE);
+            userDataLayout.setVisibility(View.GONE);
+        }
+
+        Sign_Up_Click=(Button)findViewById(R.id.Sign_Up_Click);
+
+        Sign_Up_Click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(KhabaHistoryActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
 

@@ -359,6 +359,7 @@ public class SignupActivity extends AppCompatActivity implements
                                 user.setDob(usersJsonObject.getString("date_of_birth"));
                                 user.setLocation(usersJsonObject.getString("location"));
                                 user.setUsername(usersJsonObject.getString("username"));
+                                user.setAvatar(usersJsonObject.getString("avatar"));
                                 user.setEmail(usersJsonObject.getString("email"));
                                 user.setGender(usersJsonObject.getString("gender"));
                                 user.setProvider(usersJsonObject.getString("provider"));

@@ -1,10 +1,12 @@
 package com.holygon.dishcuss.Chat;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,8 +84,13 @@ public class ChatScreenActivity extends AppCompatActivity {
 
         DishCussApplication app = (DishCussApplication) this.getApplication();
         mSocket = app.getSocket();
-        int rand= (int) (5 + (Math.random() * (99909 - 10000)));
-        guestEmail="guest"+rand+"@gmail.com";
+
+        guestEmail=getDeviceName()+"@gmail.com";
+        guestEmail = guestEmail.replaceAll(" ", "_");
+        guestEmail.trim();
+
+//        Log.e("Email",guestEmail);
+
         mSocket.on(Socket.EVENT_CONNECT,onConnect);
         mSocket.on(Socket.EVENT_DISCONNECT,onDisconnect);
         mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
@@ -604,5 +611,37 @@ public class ChatScreenActivity extends AppCompatActivity {
             return userProfiles.get(userProfiles.size()-1);
         }
         return null;
+    }
+
+    /** Returns the consumer friendly device name */
+
+    public static String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        }
+
+        return capitalize(manufacturer) + " " + model;
+    }
+
+    private static String capitalize(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        char[] arr = str.toCharArray();
+        boolean capitalizeNext = true;
+        String phrase = "";
+        for (char c : arr) {
+            if (capitalizeNext && Character.isLetter(c)) {
+                phrase += Character.toUpperCase(c);
+                capitalizeNext = false;
+                continue;
+            } else if (Character.isWhitespace(c)) {
+                capitalizeNext = true;
+            }
+            phrase += c;
+        }
+        return phrase;
     }
 }

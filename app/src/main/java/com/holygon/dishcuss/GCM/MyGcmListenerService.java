@@ -30,8 +30,10 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.holygon.dishcuss.Activities.HomeActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.SignInActivity;
+import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
+import com.holygon.dishcuss.Utils.DishCussApplication;
 
 public class MyGcmListenerService extends GcmListenerService {
 
@@ -58,11 +60,17 @@ public class MyGcmListenerService extends GcmListenerService {
 
 
         sendNotification(message,title);
+        DishCussApplication app = (DishCussApplication) this.getApplication();
+        if (!app.isAppIsInBackground(getApplicationContext()))
+        {
+            NotificationActivity.newNotifications++;
+            Log.e("Notifications",""+NotificationActivity.newNotifications);
+        }
     }
 
     private void sendNotification(String message,String title) {
 
-        Intent intent = new Intent(this, NotificationActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

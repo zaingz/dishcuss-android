@@ -51,11 +51,20 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 //        holder.imageView.setImageResource(imageViewArrayList.get(position));
-        String imageUri = imageViewArrayList.get(position);
+        final String imageUri = imageViewArrayList.get(position);
 //        Log.e("ImageUri",imageUri);
+
+
         if(imageUri!=null && !imageUri.equals("")) {
-            Picasso.with(mContext).load(imageUri).into(holder.imageView);
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.with(mContext).load(imageUri).into(holder.imageView);
+                }
+            });
+
         }
+
         if(imageUri.equals("")){
             holder.imageView.setVisibility(View.GONE);
         }

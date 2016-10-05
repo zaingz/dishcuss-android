@@ -249,6 +249,8 @@ public class PersonalProfileFragment extends Fragment{
 
                 final String objStr = response.body().string();
 
+                Log.e("Object",""+objStr);
+
                 if (getActivity()==null) {
                     return;
                 }

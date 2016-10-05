@@ -204,6 +204,24 @@ public class ProfileFragment extends Fragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Resumed","Called");
+
+        if(Constants.skipLogin){
+            login_first.setText("Login or SignUp");
+            profileSettings.setVisibility(View.GONE);
+            my_wallet_TextView.setText("My Wallet");
+        }
+        else
+        {
+            login_first.setText("Signout");
+            profileSettings.setVisibility(View.VISIBLE);
+            FetchMyFeedsData();
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (mGoogleApiClient != null) {

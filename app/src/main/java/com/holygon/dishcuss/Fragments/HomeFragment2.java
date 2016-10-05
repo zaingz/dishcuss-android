@@ -142,7 +142,7 @@ public class HomeFragment2 extends Fragment {
         myFeedsLayoutManager = new LinearLayoutManager(activity);
         myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
         if(!Constants.skipLogin) {
-            if (Constants.isNetworkAvailable(getActivity())) {
+            if(Constants.isNetworkAvailable(getActivity())){
                 FetchMyFeedsData();
             }
         }

@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,6 +47,9 @@ public class UserOffersActivity extends AppCompatActivity {
     int userID;
     Realm realm;
 
+    LinearLayout userDataLayout,sign_up_first;
+    Button Sign_Up_Click;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +63,8 @@ public class UserOffersActivity extends AppCompatActivity {
         progressBar=(ProgressBar)findViewById(R.id.native_progress_bar);
         header.setText("Offers");
 
+        sign_up_first = (LinearLayout) findViewById(R.id.sign_up_first);
+        userDataLayout = (LinearLayout) findViewById(R.id.user_data_layout);
         gridLayout = new GridLayoutManager(UserOffersActivity.this,2);
         offerList = (RecyclerView)findViewById(R.id.user_offer_list);
 
@@ -65,8 +73,25 @@ public class UserOffersActivity extends AppCompatActivity {
 //        offerList.setNestedScrollingEnabled(false);
 
         if(!Constants.skipLogin){
+            sign_up_first.setVisibility(View.GONE);
+            userDataLayout.setVisibility(View.VISIBLE);
             FetchMyFeedsData();
+        }else {
+            sign_up_first.setVisibility(View.VISIBLE);
+            userDataLayout.setVisibility(View.GONE);
         }
+
+        Sign_Up_Click=(Button)findViewById(R.id.Sign_Up_Click);
+
+        Sign_Up_Click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(UserOffersActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
 

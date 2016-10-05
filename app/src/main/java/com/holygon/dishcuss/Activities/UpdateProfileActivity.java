@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,12 +39,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.holygon.dishcuss.Adapters.PlaceArrayAdapter;
 import com.holygon.dishcuss.Model.User;
+import com.holygon.dishcuss.Posts.SelectAndCropPictureActivity;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.regex.Pattern;
@@ -54,8 +58,11 @@ import io.realm.RealmObject;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -67,6 +74,8 @@ public class UpdateProfileActivity extends AppCompatActivity implements
 
 
     TextView headerName;
+
+    de.hdodenhof.circleimageview.CircleImageView profileImage;
 
     EditText userFullName,userName,userEmail,userPassword,userConfirmPassword,userGender;
     static EditText userDOB;
@@ -117,6 +126,9 @@ public class UpdateProfileActivity extends AppCompatActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.update_user_profile_activity);
+
+        profileImage=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.update_user_profile_image);
+
         final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -150,6 +162,39 @@ public class UpdateProfileActivity extends AppCompatActivity implements
                 showDatePickerDialog();
             }
         });
+
+
+        if(!user.getAvatar().equals("")){
+            Constants.PicassoImageSrc(user.getAvatar(),profileImage,UpdateProfileActivity.this);
+        }
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UpdateProfileActivity.this, SelectImage.class);
+                startActivityForResult(i, 2);
+            }
+        });
+    }
+
+    File file=null;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
+                File pictureFile = (File) data.getExtras().get("result");
+
+                Log.e("File: ", "" + pictureFile);
+                file = new File(pictureFile.getPath());
+                Bitmap bitmap = BitmapFactory.decodeFile(pictureFile.toString());
+                profileImage.setImageBitmap(bitmap);
+                UpdateImage();
+            }
+        }
     }
 
 
@@ -509,5 +554,63 @@ public class UpdateProfileActivity extends AppCompatActivity implements
             month = month + 1;
             userDOB.setText(day + "-" + month++ + "-" + year);
         }
+    }
+
+
+    void UpdateImage(){
+        showSpinner("Please wait...");
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        User user = realm.where(User.class).findFirst();
+
+        RequestBody requestBody;
+
+            requestBody= new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("user[avatar]", file.getName(),
+                            RequestBody.create(MediaType.parse("text/csv"), file))
+                    .build();
+
+        Request request = new Request.Builder()
+                .url(URLs.USER_IMAGE_UPLOAD)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try{
+                    String obj=response.body().string();
+                    Log.e("Res",""+obj);
+                    JSONObject jsonObject=new JSONObject(obj);
+                    if(jsonObject.has("user")){
+
+                        JSONObject usersJsonObject = jsonObject.getJSONObject("user");
+
+                        Realm realm1=Realm.getDefaultInstance();
+                        User user1 = realm1.where(User.class).equalTo("id", usersJsonObject.getInt("id")).findFirst(); // Create managed objects directly
+                        realm1.beginTransaction();
+                        user1.setAvatar(usersJsonObject.getString("avatar"));
+                        realm1.commitTransaction();
+                        realm1.close();
+
+                    }
+                    DismissSpinner();
+                }catch (Exception e){
+                    Log.i("Exception ::",""+ e.getMessage());
+                }
+                finally
+                {
+                }
+
+            }
+        });
     }
 }

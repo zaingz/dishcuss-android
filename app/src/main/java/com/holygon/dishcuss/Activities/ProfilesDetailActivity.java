@@ -96,7 +96,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm = Realm.getDefaultInstance();
-        
+
         final User user = realm.where(User.class).findFirst();
 
         GetUI();

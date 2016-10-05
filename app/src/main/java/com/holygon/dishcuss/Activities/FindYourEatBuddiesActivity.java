@@ -16,9 +16,17 @@ import android.widget.TextView;
 import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Adapters.UserOffersAdapter;
+import com.holygon.dishcuss.Model.Comment;
+import com.holygon.dishcuss.Model.KhabaHistoryModel;
+import com.holygon.dishcuss.Model.LocalFeedCheckIn;
+import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.MyFeeds;
+import com.holygon.dishcuss.Model.Notifications;
+import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserOffersModel;
+import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
@@ -31,6 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -178,4 +187,6 @@ public class FindYourEatBuddiesActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
 }
