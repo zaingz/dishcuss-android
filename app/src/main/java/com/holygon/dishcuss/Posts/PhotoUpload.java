@@ -216,10 +216,12 @@ public class PhotoUpload  extends AppCompatActivity {
                     .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
                     .build();
 
-        }else {
+        }
+        else
+        {
             requestBody= new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("post[image][]", "")
+//                    .addFormDataPart("post[image][]", "")
                     .addFormDataPart("post[title]","Upload a picture")
                     .addFormDataPart("post[status]",statusStr)
                     .addFormDataPart("post[checkin_attributes][address]", ""+userLocation.getText().toString())
@@ -227,7 +229,6 @@ public class PhotoUpload  extends AppCompatActivity {
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
                     .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
                     .build();
-
         }
 
         Request request = new Request.Builder()

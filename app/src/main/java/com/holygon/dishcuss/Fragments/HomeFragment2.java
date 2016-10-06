@@ -150,12 +150,27 @@ public class HomeFragment2 extends Fragment {
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
-//        localFeedsRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(localFeedsLayoutManager) {
-//            @Override
-//            public void onLoadMore(int current_page) {
-//                // do something...
-//            }
-//        });
+
+        localFeedsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e("Position",""+localFeedsLayoutManager.findFirstVisibleItemPosition());
+                if(localFeedsLayoutManager.findFirstVisibleItemPosition()==0){
+                //    FetchAllLocalFeedsData();
+                }
+            }
+        });
+        localFeedsRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(localFeedsLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page,int current_item) {
+                // do something...
+                Log.e("Current Item",""+current_item);
+                FetchAllLocalFeedsDataOnLoad(current_item);
+            }
+        });
         if(Constants.isNetworkAvailable(getActivity())) {
             FetchAllLocalFeedsData();
 
@@ -795,6 +810,292 @@ public class HomeFragment2 extends Fragment {
         });
     }
 
+
+
+    void FetchAllLocalFeedsDataOnLoad(int offset){
+        progressBar.setVisibility(View.VISIBLE);
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        User user=null;
+        if(!Constants.skipLogin) {
+            user= realm.where(User.class).findFirst();
+            Log.e("UT",""+user.getToken());
+        }
+
+
+
+        OkHttpClient client = new OkHttpClient();
+        Request request;
+        if(!Constants.skipLogin && user!=null) {
+            request = new Request.Builder()
+                    .url(URLs.All_LocalFeeds+"?offset="+offset)
+                    .addHeader("Authorization", "Token token=" + user.getToken())
+                    .build();
+        }
+        else
+        {
+            request = new Request.Builder()
+                    .url(URLs.All_LocalFeeds)
+                    .build();
+        }
+        realm.commitTransaction();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+                /** check if activity still exist */
+                if (getActivity() == null) {
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+                                return;
+                            }
+
+                            JSONArray jsonDataReviewsArray=jsonObj.getJSONArray("review");
+                            JSONArray jsonDataCheckInArray=jsonObj.getJSONArray("checkin");
+
+                            //    realm =Realm.getDefaultInstance();
+
+
+                            realm.beginTransaction();
+                            LocalFeeds localFeeds=realm.createObject(LocalFeeds.class);
+
+
+
+                            for (int i = 0; i < jsonDataReviewsArray.length(); i++) {
+
+                                JSONObject jsonDataReviewObj = jsonDataReviewsArray.getJSONObject(i);
+
+
+                                JSONObject reviewerObj = jsonDataReviewObj.getJSONObject("reviewer");
+
+                                JSONArray reviewLikesArray = jsonDataReviewObj.getJSONArray("likes");
+                                JSONArray reviewCommentsArray = jsonDataReviewObj.getJSONArray("comments");
+                                JSONArray reviewShareArray = jsonDataReviewObj.getJSONArray("reports");
+
+
+//                                if(!dataAlreadyExists)
+                                {
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    LocalFeedReview localFeedReview=realm.createObject(LocalFeedReview.class);
+
+                                    localFeedReview.setReviewID(jsonDataReviewObj.getInt("id"));
+                                    localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
+                                    localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
+                                    localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
+                                    localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
+                                    if(!jsonDataReviewObj.isNull("rating")){
+                                        localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
+                                    }
+                                    if(!jsonDataReviewObj.isNull("reviewable_id")) {
+                                        localFeedReview.setReviewable_id(jsonDataReviewObj.getInt("reviewable_id"));
+                                    }
+                                    localFeedReview.setReviewable_type(jsonDataReviewObj.getString("reviewable_type"));
+
+
+                                    JSONObject reviewOnObj = jsonDataReviewObj.getJSONObject("review_on");
+
+                                    if(reviewOnObj.has("id")){
+                                        localFeedReview.setReviewOnID(reviewOnObj.getInt("id"));
+                                        localFeedReview.setReviewOnName(reviewOnObj.getString("name"));
+                                        localFeedReview.setReviewOnLocation(reviewOnObj.getString("location"));
+                                    }
+
+
+
+                                    localFeedReview.setReviewImage(jsonDataReviewObj.getString("image"));
+
+                                    localFeedReview.setReviewerID(reviewerObj.getInt("id"));
+                                    localFeedReview.setReviewerName(reviewerObj.getString("name"));
+                                    localFeedReview.setReviewerLocation(reviewerObj.getString("location"));
+                                    localFeedReview.setReviewerAvatar(reviewerObj.getString("avatar"));
+
+                                    localFeedReview.setReviewLikesCount(reviewLikesArray.length());
+                                    localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
+                                    localFeedReview.setReviewSharesCount(reviewShareArray.length());
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedReview.getCommentRealmList().add(managedComment);
+
+                                    }
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    localFeeds.getLocalFeedReviewRealmList().add(localFeedReview);
+                                }
+                            }
+
+
+                            for (int i = 0; i < jsonDataCheckInArray.length(); i++) {
+
+                                JSONObject jsonDataCheckInObj = jsonDataCheckInArray.getJSONObject(i);
+
+                                JSONObject writerObj = jsonDataCheckInObj.getJSONObject("writer");
+
+                                JSONObject checkinObj = jsonDataCheckInObj.getJSONObject("checkin");
+
+
+
+
+                                JSONArray checkinLikesArray = jsonDataCheckInObj.getJSONArray("likes");
+                                JSONArray checkinCommentsArray = jsonDataCheckInObj.getJSONArray("comments");
+                                JSONArray checkinPhotoArray = jsonDataCheckInObj.getJSONArray("photos");
+
+
+//                                if(!dataAlreadyExists)
+                                {
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    LocalFeedCheckIn localFeedCheckIn=realm.createObject(LocalFeedCheckIn.class);
+
+//                                    localFeedCheckIn.setCheckInID(checkinObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInID(jsonDataCheckInObj.getInt("id"));
+                                    localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
+                                    localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
+                                    localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
+                                    localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
+
+                                    if(!checkinObj.isNull("lat")){
+                                        localFeedCheckIn.setCheckInLat(checkinObj.getDouble("lat"));
+                                    }
+                                    if(!checkinObj.isNull("long")) {
+                                        localFeedCheckIn.setCheckInLong(checkinObj.getDouble("long"));
+                                    }
+
+                                    localFeedCheckIn.setCheckInWriterID(writerObj.getInt("id"));
+                                    localFeedCheckIn.setCheckInWriterName(writerObj.getString("name"));
+                                    localFeedCheckIn.setCheckInWriterLocation(writerObj.getString("location"));
+                                    localFeedCheckIn.setCheckInWriterAvatar(writerObj.getString("avatar"));
+
+                                    if(!checkinObj.isNull("restaurant")) {
+                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                        localFeedCheckIn.setCheckInOnID(restaurantObj.getInt("id"));
+                                        localFeedCheckIn.setCheckInOnName(restaurantObj.getString("name"));
+                                        localFeedCheckIn.setCheckInOnLocation(restaurantObj.getString("location"));
+                                    }
+
+                                    if (checkinObj.has("restaurant_image")) {
+                                        if(checkinObj.isNull("restaurant_image")) {
+                                            localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
+                                        }
+                                    }
+
+
+                                    for (int p = 0; p < checkinPhotoArray.length(); p++) {
+
+                                        JSONObject photo = checkinPhotoArray.getJSONObject(p);
+
+                                        PhotoModel photoModel=new PhotoModel();
+                                        photoModel.setId(photo.getInt("id"));
+                                        photoModel.setUrl(photo.getString("image_url"));
+                                        localFeedCheckIn.setCheckInImage(photo.getString("image_url"));
+                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+                                        localFeedCheckIn.getPhotoModels().add(managedPhotoModel);
+                                    }
+
+                                    localFeedCheckIn.setReviewLikesCount(checkinLikesArray.length());
+                                    localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
+                                    localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
+
+
+
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+
+                                    for (int c = 0; c < checkinCommentsArray.length(); c++) {
+                                        JSONObject commentObj = checkinCommentsArray.getJSONObject(c);
+
+                                        Comment comment=realm.createObject(Comment.class);
+
+                                        comment.setCommentID(commentObj.getInt("id"));
+                                        comment.setCommentTitle(commentObj.getString("title"));
+                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+                                        comment.setCommentSummary(commentObj.getString("comment"));
+
+
+                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+                                        comment.setCommentatorName(commentatorObj.getString("name"));
+                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+
+                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+                                        comment.setCommentLikesCount(commentLikeArray.length());
+
+                                        final Comment managedComment = realm.copyToRealm(comment);
+                                        localFeedCheckIn.getCommentRealmList().add(managedComment);
+                                    }
+
+                                    realm.commitTransaction();
+                                    realm.beginTransaction();
+                                    localFeeds.getLocalFeedCheckInRealmList().add(localFeedCheckIn);
+                                }
+                            }
+
+
+                            HomeLocalFeedsAdapter.Notify(localFeeds.getLocalFeedReviewRealmList(),localFeeds.getLocalFeedCheckInRealmList());
+//                            HomeLocalFeedsAdapter.instance.Notify();
+                            homeLocalFeedsAdapter.notifyDataSetChanged();
+//                            homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
+//                            localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
+                            realm.commitTransaction();
+                            realm.close();
+                            progressBar.setVisibility(View.GONE);
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+        });
+    }
 
     //
     void FetchMyFeedsData(){

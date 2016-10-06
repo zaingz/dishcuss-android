@@ -499,7 +499,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     public void run() {
                         try
                         {
-//                            Log.e("Obj", obj.toString());
+                            Log.e("Obj", obj.toString());
                             JSONObject jsonObject = new JSONObject(obj);
                             if (jsonObject.has("comment")) {
                                 Comment comment = new Comment();

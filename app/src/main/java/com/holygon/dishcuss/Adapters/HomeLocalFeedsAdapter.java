@@ -1,16 +1,20 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,12 +34,20 @@ import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;
 import com.holygon.dishcuss.Utils.URLs;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,8 +60,11 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -59,11 +74,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
     private LocalFeeds localFeeds;
     private Context mContext;
+    File file=null;
     RealmList<LocalFeedReview> localFeedReviewRealmList;
     RealmList<LocalFeedCheckIn> localFeedCheckInRealmList;
     RealmList<Comment> commentRealmList;
 
-    List<Object> objects=new ArrayList<>();
+    static List<Object> objects=new ArrayList<>();
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName,restaurantAddress,status;
@@ -75,6 +93,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         public RelativeLayout local_feeds_restaurant_relative_layout;
         LinearLayout layout_like;
         LinearLayout layout_comment;
+        LinearLayout layout_share;
         RelativeLayout user_profile_layout;
         TextView comment_TextView;
         ProgressBar image_spinner;
@@ -82,6 +101,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         //Comments Data
         public LinearLayout comments_row;
         public LinearLayout comments_add_row;
+
+
 
 
         public ViewHolder(View v) {
@@ -103,6 +124,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
+            layout_share=(LinearLayout)v.findViewById(R.id.layout_share);
             user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             comment_TextView=(TextView) v.findViewById(R.id.comment_TextView);
 
@@ -114,6 +136,9 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
         }
     }
+
+
+
 
     public HomeLocalFeedsAdapter(LocalFeeds localFeeds, Context context) {
         this.localFeeds=localFeeds;
@@ -145,6 +170,28 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
+
+
+
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(((Activity)mContext));
+        mSpinner.setTitle(title);
+        mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
+    }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+
+//*******************PROGRESS******************************
+
 
     @Override
     public void onBindViewHolder(final ViewHolder holder,final int position) {
@@ -284,6 +331,25 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             intent.putExtra("Type","Review");
                             intent.putExtra("MyClass", localFeedReview);
                             mContext.startActivity(intent);
+                        }
+                    });
+
+                    holder.layout_share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!Constants.skipLogin && Constants.isNetworkAvailable((Activity) mContext)) {
+
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+
+                                int shareCount = Integer.parseInt(holder.review_share_count_tv.getText().toString());
+                                shareCount++;
+                                holder.review_share_count_tv.setText(""+shareCount);
+                                localFeedReview.setReviewSharesCount(shareCount);
+                                realm.commitTransaction();
+                                ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID());
+                                notifyDataSetChanged();
+                            }
                         }
                     });
 
@@ -447,6 +513,25 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     });
 
 
+                    holder.layout_share.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!Constants.skipLogin && Constants.isNetworkAvailable((Activity) mContext)) {
+
+                                Realm realm=Realm.getDefaultInstance();
+                                realm.beginTransaction();
+
+                                int shareCount = Integer.parseInt(holder.review_share_count_tv.getText().toString());
+                                shareCount++;
+                                holder.review_share_count_tv.setText(""+shareCount);
+                                localFeedCheckIn.setReviewSharesCount(shareCount);
+                                realm.commitTransaction();
+                                SharePost(localFeedCheckIn.getCheckInImage(), localFeedCheckIn.getCheckInStatus(), localFeedCheckIn.getCheckInLat(), localFeedCheckIn.getCheckInLong(), localFeedCheckIn.getCheckInOnID());
+                                notifyDataSetChanged();
+                            }
+                        }
+                    });
+
                     holder.user_profile_layout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -535,7 +620,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
 
-    Date GetDate(String date){
+    static Date GetDate(String date){
 
 //        String segments[] = date.split("\\+");
 //        String d = segments[0];
@@ -556,7 +641,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
 
-    List<Object> Merge(RealmList<LocalFeedReview> A,RealmList<LocalFeedCheckIn> B) {
+    static List<Object> Merge(RealmList<LocalFeedReview> A,RealmList<LocalFeedCheckIn> B) {
 
         List<Object> C=new ArrayList<>();
         int i, j, m, n,k;
@@ -784,6 +869,220 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 }
             }
         }
+    }
+
+    void ReviewShare(String statusStr, int restaurantID){
+        showSpinner("Please Wait...");
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        RequestBody requestBody;
+
+        requestBody= new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("review[title]","Write Review")
+                .addFormDataPart("review[summary]",statusStr)
+                .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[reviewable_id]",""+restaurantID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(URLs.Restaurant_Review)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client;
+        client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try{
+                    String obj=response.body().string();
+                    Log.e("Res",""+obj);
+                    JSONObject jsonObject=new JSONObject(obj);
+                    if(jsonObject.has("review")){
+                        Log.e("","Post Successfully");
+                    }
+                    else  if(jsonObject.has("message")){
+                        Log.e("","Not Posted");
+                    }
+                    DismissSpinner();
+                }catch (Exception e){
+                    Log.i("Exception ::",""+ e.getMessage());
+                }
+                finally
+                {
+                    DismissSpinner();
+                }
+
+            }
+        });
+    }
+
+    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID){
+
+        showSpinner("Please wait...");
+
+        Picasso.with(mContext).load(imageURL).into(new Target(){
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                file=bitmapConvertToFile(bitmap);
+            }
+            @Override
+            public void onBitmapFailed(final Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(final Drawable placeHolderDrawable) {
+            }
+        });
+
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        RequestBody requestBody;
+        if(file!=null){
+            requestBody= new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("post[image][]", file.getName(),
+                            RequestBody.create(MediaType.parse("text/csv"), file))
+                    .addFormDataPart("post[title]","Post")
+                    .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
+                    .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
+                    .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
+                    .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
+                    .build();
+
+        }
+        else
+        {
+            requestBody= new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+//                    .addFormDataPart("post[image][]", "")
+                    .addFormDataPart("post[title]","Post")
+                    .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
+                    .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
+                    .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
+                    .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
+                    .build();
+        }
+
+
+        Request request = new Request.Builder()
+                .url(URLs.Posts)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client;
+        client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try{
+                    String obj=response.body().string();
+                    Log.e("Res",""+obj);
+                    JSONObject jsonObject=new JSONObject(obj);
+                    if(jsonObject.has("post")){
+                        Log.e("","Post Successfully");
+                    }
+                    else  if(jsonObject.has("message")){
+                        Log.e("","Not Posted");
+                    }
+                    DismissSpinner();
+                }catch (Exception e){
+                    Log.i("Exception ::",""+ e.getMessage());
+                }
+                finally
+                {
+                }
+
+            }
+        });
+    }
+
+
+    public File bitmapConvertToFile(Bitmap bitmap) {
+//        showSpinner("Croping...");
+        FileOutputStream fileOutputStream = null;
+        File files=null;
+        try {
+            final File file = new File(Environment.getExternalStoragePublicDirectory("image_crop_sample"),"");
+            if (!file.exists()) {
+                file.mkdir();
+            }else {
+                file.delete();
+                file.mkdir();
+            }
+
+
+            files = new File(file, "IMG_1" + ".jpg");
+            fileOutputStream = new FileOutputStream(files);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            MediaScannerConnection.scanFile(mContext, new String[]{files.getAbsolutePath()}, null, new MediaScannerConnection.MediaScannerConnectionClient() {
+                @Override
+                public void onMediaScannerConnected() {
+
+                }
+
+                @Override
+                public void onScanCompleted(String path, Uri uri) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fileOutputStream != null) {
+                try
+                {
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }
+
+        return files;
+    }
+
+
+
+    public static void Notify( RealmList<LocalFeedReview> localFeedReviewRealmLists, RealmList<LocalFeedCheckIn> localFeedCheckInRealmLists){
+//        Log.e("New Review",""+localFeedReviewRealmLists.size());
+//        Log.e("New CheckIn",""+localFeedCheckInRealmLists.size());
+//        Log.e("Review",""+localFeeds.getLocalFeedReviewRealmList().size());
+//        Log.e("CheckIn",""+localFeeds.getLocalFeedCheckInRealmList().size());
+//        Log.e("objects",""+objects.size());
+        objects.addAll(Merge(localFeedReviewRealmLists,localFeedCheckInRealmLists));
+//        objects.addAll(localFeedReviewRealmLists);
+//        objects.addAll(localFeedCheckInRealmLists);
+//        localFeeds.getLocalFeedReviewRealmList().addAll(localFeedReviewRealmLists);
+//        localFeeds.getLocalFeedCheckInRealmList().addAll(localFeedCheckInRealmLists);
+//        Log.e("New objects",""+objects.size());
+//        notifyDataSetChanged();
     }
 }
 

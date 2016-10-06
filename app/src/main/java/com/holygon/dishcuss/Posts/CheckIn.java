@@ -216,10 +216,11 @@ public class CheckIn extends AppCompatActivity {
                     .addFormDataPart("post[checkin_attributes][restaurant_id]",""+restaurantID)
                     .build();
 
-        }else {
+        }
+        else{
             requestBody= new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
-                    .addFormDataPart("post[image][]", "")
+//                    .addFormDataPart("post[image][]", "")
                     .addFormDataPart("post[title]","CheckIn")
                     .addFormDataPart("post[status]",statusStr)
                     .addFormDataPart("post[checkin_attributes][address]", ""+userLocation.getText().toString())
