@@ -13,12 +13,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="customRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/starbar</item>
+        <item name="android:minHeight">50dip</item>
+        <item name="android:maxHeight">50dip</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
 
@@ -77,5 +86,6 @@
     <style name="MySplashTheme" parent="MyMaterialTheme.Base">
         <item name="android:windowNoTitle">true</item>
     </style>
+
 
 </resources>

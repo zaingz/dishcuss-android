@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
 import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
@@ -35,8 +37,10 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -50,7 +54,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView reviewTitle,reviewTime,reviewSummary,reviewLikesCount,reviewCommentsCount,reviewSharesCount,review_comments_count_tv;
-        LinearLayout layout_like,layout_comment;
+        LinearLayout layout_like,layout_comment,layout_share;
         LinearLayout comment_row;
         RelativeLayout user_profile_layout;
         public de.hdodenhof.circleimageview.CircleImageView profileImageView;
@@ -64,6 +68,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
             reviewCommentsCount = (TextView) v.findViewById(R.id.row_review_comments_count);
             reviewSharesCount = (TextView) v.findViewById(R.id.row_review_shares_count);
             layout_like=(LinearLayout)v.findViewById(R.id.layout_like);
+            layout_share=(LinearLayout)v.findViewById(R.id.layout_share);
             layout_comment=(LinearLayout)v.findViewById(R.id.layout_comment);
             user_profile_layout=(RelativeLayout)v.findViewById(R.id.user_profile_layout);
             profileImageView=(de.hdodenhof.circleimageview.CircleImageView) v.findViewById(R.id.account_reviews_profile_image);
@@ -113,14 +118,25 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
 
 
+        holder.layout_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReviewShare(mReviewModels.get(position).getReview_summary(),mReviewModels.get(position).getReview_On_ID());
+            }
+        });
+
        final ReviewModel reviewModel=  mReviewModels.get(position);
 
         holder.layout_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext, PostDetailActivity.class);
-                intent.putExtra("Type","Review2");
-                intent.putExtra("MyClass",reviewModel );
+//                Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                intent.putExtra("Type","Review2");
+//                intent.putExtra("MyClass",reviewModel );
+//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",reviewModel.getReview_ID());
+                intent.putExtra("Type","Review");
                 mContext.startActivity(intent);
             }
         });
@@ -128,9 +144,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.reviewCommentsCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext, PostDetailActivity.class);
-                intent.putExtra("Type","Review2");
-                intent.putExtra("MyClass",reviewModel );
+//                Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                intent.putExtra("Type","Review2");
+//                intent.putExtra("MyClass",reviewModel );
+//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",reviewModel.getReview_ID());
+                intent.putExtra("Type","Review");
                 mContext.startActivity(intent);
             }
         });
@@ -139,9 +159,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.review_comments_count_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext, PostDetailActivity.class);
-                intent.putExtra("Type","Review2");
-                intent.putExtra("MyClass",reviewModel );
+//                Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                intent.putExtra("Type","Review2");
+//                intent.putExtra("MyClass",reviewModel );
+//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",reviewModel.getReview_ID());
+                intent.putExtra("Type","Review");
                 mContext.startActivity(intent);
             }
         });
@@ -262,5 +286,81 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         });
         realm.commitTransaction();
         //            return UnLike(id,type);
+    }
+
+
+    //*******************PROGRESS******************************
+    private ProgressDialog mSpinner;
+
+    private void showSpinner(String title) {
+        mSpinner = new ProgressDialog(mContext);
+        mSpinner.setTitle(title);
+        mSpinner.show();
+        mSpinner.setCancelable(false);
+        mSpinner.setCanceledOnTouchOutside(false);
+    }
+
+    private void DismissSpinner(){
+        if(mSpinner!=null){
+            mSpinner.dismiss();
+        }
+    }
+//*******************PROGRESS******************************
+
+    void ReviewShare(String statusStr, int restaurantID){
+        showSpinner("Please Wait...");
+        // Get a Realm instance for this thread
+        Realm realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        RequestBody requestBody;
+
+        requestBody= new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("review[title]","Write Review")
+                .addFormDataPart("review[summary]",statusStr)
+                .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[reviewable_id]",""+restaurantID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(URLs.Restaurant_Review)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .post(requestBody)
+                .build();
+
+        OkHttpClient client;
+        client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                try{
+                    String obj=response.body().string();
+                    Log.e("Res",""+obj);
+                    JSONObject jsonObject=new JSONObject(obj);
+                    if(jsonObject.has("review")){
+                        Log.e("","Post Successfully");
+                    }
+                    else  if(jsonObject.has("message")){
+                        Log.e("","Not Posted");
+                    }
+                    DismissSpinner();
+                }catch (Exception e){
+                    Log.i("Exception ::",""+ e.getMessage());
+                }
+                finally
+                {
+                    DismissSpinner();
+                }
+
+            }
+        });
     }
 }

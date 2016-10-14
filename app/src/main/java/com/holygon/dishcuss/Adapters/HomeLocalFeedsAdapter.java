@@ -20,10 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
 import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
+import com.holygon.dishcuss.Activities.ReplyActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
@@ -86,6 +89,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView restaurantName,restaurantAddress,status;
         ImageView image_bookmark;
+        ImageView like_toggle_image;
         public TextView local_feeds_user_name,local_feeds_user_review_time;
         public TextView review_likes_count_tv,review_comments_count_tv,review_share_count_tv;
         public ImageView local_feeds_restaurant_image,feeds_post_image;
@@ -105,11 +109,13 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
 
+
         public ViewHolder(View v) {
             super(v);
             restaurantName = (TextView) v.findViewById(R.id.local_feeds_restaurant_name);
             restaurantAddress = (TextView) v.findViewById(R.id.local_feeds_restaurant_address);
             image_bookmark = (ImageView) v.findViewById(R.id.image_bookmark);
+            like_toggle_image = (ImageView) v.findViewById(R.id.like_toggle_image);
             local_feeds_user_name = (TextView) v.findViewById(R.id.local_feeds_user_name);
             local_feeds_user_review_time = (TextView) v.findViewById(R.id.local_feeds_user_review_time);
             review_likes_count_tv = (TextView) v.findViewById(R.id.review_likes_count_tv);
@@ -173,11 +179,11 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
 
-    //*******************PROGRESS******************************
+//*******************PROGRESS******************************
     private ProgressDialog mSpinner;
 
     private void showSpinner(String title) {
-        mSpinner = new ProgressDialog(((Activity)mContext));
+        mSpinner = new ProgressDialog(mContext);
         mSpinner.setTitle(title);
         mSpinner.show();
         mSpinner.setCancelable(false);
@@ -189,7 +195,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
             mSpinner.dismiss();
         }
     }
-
 //*******************PROGRESS******************************
 
 
@@ -233,16 +238,50 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     });
 
 
+                    if(localFeedReview.getLiked()){
+                        holder.like_toggle_image.setTag(1);
+                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_likes_count));
+                    }else {
+                        holder.like_toggle_image.setTag(0);
+                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_for_like));
+                    }
+
                     holder.layout_like.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
-                                    int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                    prev++;
-                                    holder.review_likes_count_tv.setText("" + prev);
-                                    holder.layout_like.setEnabled(false);
-                                    Like(localFeedReview.getReviewID(), "review",holder.review_likes_count_tv,holder.layout_like);
+                                    if((int)holder.like_toggle_image.getTag()==0) {
+                                        int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                        prev++;
+                                        holder.review_likes_count_tv.setText("" + prev);
+//                                        Toast.makeText(mContext,holder.review_likes_count_tv.getText().toString(),Toast.LENGTH_SHORT).show();
+                                        holder.like_toggle_image.setTag(1);
+                                        Realm realm=Realm.getDefaultInstance();
+                                        realm.beginTransaction();
+                                        localFeedReview.setReviewLikesCount(prev);
+                                        localFeedReview.setLiked(true);
+                                        realm.commitTransaction();
+                                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_likes_count));
+                                        Like(localFeedReview.getReviewID(),"review",holder.review_likes_count_tv,holder.layout_like);
+                                    }
+                                    else
+                                    {
+                                        holder.like_toggle_image.setTag(0);
+                                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_for_like));
+                                        int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                        prev--;
+                                        holder.review_likes_count_tv.setText("" + prev);
+//                                        Toast.makeText(mContext,holder.review_likes_count_tv.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                                        Realm realm=Realm.getDefaultInstance();
+                                        realm.beginTransaction();
+                                        localFeedReview.setReviewLikesCount(prev);
+                                        localFeedReview.setLiked(false);
+                                        realm.commitTransaction();
+                                        UnLike(localFeedReview.getReviewID(),"review",holder.review_likes_count_tv,holder.layout_like);
+                                    }
+                                    notifyDataSetChanged();
                                 }
                             }
                         }
@@ -250,13 +289,16 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 //                    IsRestaurantFollowedData(localFeedReview.getReviewOnID(),holder.image_bookmark);
 
+
                     if(localFeedReview.getBookmarked()){
                         holder.image_bookmark.setTag(1);
                         holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
-                    }else {
+                    }else{
                         holder.image_bookmark.setTag(0);
                         holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
                     }
+
+
 
                     holder.image_bookmark.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -305,9 +347,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
 
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            intent.putExtra("Type","Review");
+//                            intent.putExtra("MyClass", localFeedReview);
+//                            mContext.startActivity(intent);
+
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedReview.getReviewID());
                             intent.putExtra("Type","Review");
-                            intent.putExtra("MyClass", localFeedReview);
                             mContext.startActivity(intent);
                         }
                     });
@@ -316,9 +363,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
 
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            intent.putExtra("Type","Review");
+//                            intent.putExtra("MyClass", localFeedReview);
+//                            mContext.startActivity(intent);
+
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedReview.getReviewID());
                             intent.putExtra("Type","Review");
-                            intent.putExtra("MyClass", localFeedReview);
                             mContext.startActivity(intent);
                         }
                     });
@@ -327,9 +379,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.layout_comment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            intent.putExtra("Type","Review");
+//                            intent.putExtra("MyClass", localFeedReview);
+//                            mContext.startActivity(intent);
+
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedReview.getReviewID());
                             intent.putExtra("Type","Review");
-                            intent.putExtra("MyClass", localFeedReview);
                             mContext.startActivity(intent);
                         }
                     });
@@ -444,20 +501,58 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         }
                     });
 
+
+                    //                    IsRestaurantFollowedData(localFeedCheckIn.getCheckInOnID(),holder.image_bookmark);
+                    if(localFeedCheckIn.getLiked()){
+                        holder.like_toggle_image.setTag(1);
+                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_likes_count));
+                    }else {
+                        holder.like_toggle_image.setTag(0);
+                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_for_like));
+                    }
+
                     holder.layout_like.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if(!Constants.skipLogin) {
                                 if(Constants.isNetworkAvailable((Activity) mContext)) {
-                                    int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
-                                    prev++;
-                                    holder.review_likes_count_tv.setText("" + prev);
-                                    holder.layout_like.setEnabled(false);
-                                    Like(localFeedCheckIn.getCheckInID(), "post",holder.review_likes_count_tv,holder.layout_like);
+                                    if((int)holder.like_toggle_image.getTag()==0) {
+                                        int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                        prev++;
+                                        holder.review_likes_count_tv.setText("" + prev);
+//                                        Toast.makeText(mContext,holder.review_likes_count_tv.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                                        holder.like_toggle_image.setTag(1);
+                                        Realm realm=Realm.getDefaultInstance();
+                                        realm.beginTransaction();
+                                        localFeedCheckIn.setReviewLikesCount(prev);
+                                        localFeedCheckIn.setLiked(true);
+                                        realm.commitTransaction();
+                                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_likes_count));
+                                        Like(localFeedCheckIn.getCheckInID(), "post",holder.review_likes_count_tv,holder.layout_like);
+                                    }
+                                    else
+                                    {
+                                        holder.like_toggle_image.setTag(0);
+                                        holder.like_toggle_image.setBackground(mContext.getResources().getDrawable(R.drawable.icon_for_like));
+                                        int prev = Integer.valueOf(holder.review_likes_count_tv.getText().toString());
+                                        prev--;
+                                        holder.review_likes_count_tv.setText("" + prev);
+//                                        Toast.makeText(mContext,holder.review_likes_count_tv.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                                        Realm realm=Realm.getDefaultInstance();
+                                        realm.beginTransaction();
+                                        localFeedCheckIn.setReviewLikesCount(prev);
+                                        localFeedCheckIn.setLiked(false);
+                                        realm.commitTransaction();
+                                        UnLike(localFeedCheckIn.getCheckInID(), "post",holder.review_likes_count_tv,holder.layout_like);
+                                    }
+                                    notifyDataSetChanged();
                                 }
                             }
                         }
                     });
+
 
 //                    IsRestaurantFollowedData(localFeedCheckIn.getCheckInOnID(),holder.image_bookmark);
                     if(localFeedCheckIn.getBookmarked()){
@@ -487,7 +582,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                         RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
                                     }
                                 }
-
 
                             }
                             else
@@ -547,9 +641,14 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.review_comments_count_tv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
-                            intent.putExtra("Type","CheckIn");
-                            intent.putExtra("MyClass", localFeedCheckIn);
+//                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            intent.putExtra("Type","CheckIn");
+//                            intent.putExtra("MyClass", localFeedCheckIn);
+//                            mContext.startActivity(intent);
+
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                            intent.putExtra("Type","Post");
                             mContext.startActivity(intent);
                         }
                     });
@@ -557,18 +656,27 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.comment_TextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
-                            intent.putExtra("Type","CheckIn");
-                            intent.putExtra("MyClass", localFeedCheckIn);
+                           // Intent intent=new Intent(mContext, PostDetailActivity.class);
+                           // intent.putExtra("Type","CheckIn");
+                           // intent.putExtra("MyClass", localFeedCheckIn);
+                           // mContext.startActivity(intent);
+
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                            intent.putExtra("Type","Post");
                             mContext.startActivity(intent);
                         }
                     });
                     holder.layout_comment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent=new Intent(mContext, PostDetailActivity.class);
-                            intent.putExtra("Type","CheckIn");
-                            intent.putExtra("MyClass", localFeedCheckIn);
+//                            Intent intent=new Intent(mContext, PostDetailActivity.class);
+//                            intent.putExtra("Type","CheckIn");
+//                            intent.putExtra("MyClass", localFeedCheckIn);
+//                            mContext.startActivity(intent);
+                            Intent intent = new Intent(mContext, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                            intent.putExtra("Type","Post");
                             mContext.startActivity(intent);
                         }
                     });
@@ -725,9 +833,59 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                                 String message= jsonObj.getString("message");
                                 if(!message.equals("Successfully liked!")) {
-                                    int prev = Integer.valueOf(tv.getText().toString());
-                                    prev--;
-                                    tv.setText("" + prev);
+
+                                }
+                            }
+                            layout_like.setEnabled(true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    public void UnLike(int id, String type, final TextView tv, final LinearLayout layout_like){
+        // Get a Realm instance for this thread
+        Realm realm=Realm.getDefaultInstance();
+        // Persist your data in a transaction
+        realm.beginTransaction();
+        final User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.RC_UN_Like_+type+"/"+id)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+
+        realm.commitTransaction();
+        realm.close();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            if(jsonObj.has("message")){
+
+                                String message= jsonObj.getString("message");
+                                if(!message.equals("Successfully unliked!")) {
                                 }
                             }
                             layout_like.setEnabled(true);
@@ -1069,7 +1227,6 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
     }
 
 
-
     public static void Notify( RealmList<LocalFeedReview> localFeedReviewRealmLists, RealmList<LocalFeedCheckIn> localFeedCheckInRealmLists){
 //        Log.e("New Review",""+localFeedReviewRealmLists.size());
 //        Log.e("New CheckIn",""+localFeedCheckInRealmLists.size());
@@ -1082,7 +1239,13 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 //        localFeeds.getLocalFeedReviewRealmList().addAll(localFeedReviewRealmLists);
 //        localFeeds.getLocalFeedCheckInRealmList().addAll(localFeedCheckInRealmLists);
 //        Log.e("New objects",""+objects.size());
-//        notifyDataSetChanged();
+    }
+
+    public static void NotifyCheckIns(RealmList<LocalFeedCheckIn> localFeedCheckInRealmLists){
+        objects.addAll(localFeedCheckInRealmLists);
+    }
+    public static void NotifyReviews( RealmList<LocalFeedReview> localFeedReviewRealmLists){
+        objects.addAll(localFeedReviewRealmLists);
     }
 }
 

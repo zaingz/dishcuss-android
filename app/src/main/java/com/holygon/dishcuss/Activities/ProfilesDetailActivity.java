@@ -22,6 +22,7 @@ import com.holygon.dishcuss.Fragments.AccountPhotosFragment;
 import com.holygon.dishcuss.Fragments.AccountReviewsFragment;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
+import com.holygon.dishcuss.Model.Reply;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
@@ -311,16 +312,18 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                     JSONObject checkinObj = postObj.getJSONObject("checkin");
 
                                     if(checkinObj.has("restaurant")) {
-                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+                                        if(!checkinObj.isNull("restaurant")) {
+                                            JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
 
-                                        UserBeenThere userBeenThere = new UserBeenThere();
-                                        userBeenThere.setId(restaurantObj.getInt("id"));
-                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                            UserBeenThere userBeenThere = new UserBeenThere();
+                                            userBeenThere.setId(restaurantObj.getInt("id"));
+                                            userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+                                            userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+                                            userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+                                            userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+                                            final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+                                            userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+                                        }
                                     }
 
 
@@ -338,7 +341,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                     commentsCount =jsonDataCommentsArray.length();
                                     for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
                                         JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
-                                        Comment comment= new Comment();
+                                        Comment comment=realm.createObject(Comment.class);
                                         comment.setCommentID(commentObj.getInt("id"));
                                         comment.setCommentTitle(commentObj.getString("title"));
                                         comment.setCommentUpdated_at(commentObj.getString("created_at"));
@@ -349,6 +352,35 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                         comment.setCommentatorImage(commentatorObj.getString("avatar"));
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
+
+
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=new Reply();
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         userProfileRealm.getCommentRealmList().add(managedComment);
                                     }
@@ -374,6 +406,11 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                                     reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
                                     reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
                                     reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+
+                                    JSONObject reviewOnObj=reviewObj.getJSONObject("review_on");
+                                    if(reviewOnObj.has("id")) {
+                                        reviewModel.setReview_On_ID(reviewOnObj.getInt("id"));
+                                    }
 
                                     JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
                                     JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");

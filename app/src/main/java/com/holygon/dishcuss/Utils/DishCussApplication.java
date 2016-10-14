@@ -17,6 +17,7 @@ import com.facebook.login.widget.LoginButton;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.holygon.dishcuss.Helper.FontsOverride;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
@@ -61,6 +62,8 @@ public class DishCussApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+       // FontsOverride.setDefaultFont(this, "MONOSPACE", "Heathergreen.ttf");
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name("com.holygon.dishcuss")

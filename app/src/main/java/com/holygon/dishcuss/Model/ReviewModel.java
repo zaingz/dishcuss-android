@@ -14,6 +14,7 @@ public class ReviewModel extends RealmObject implements Parcelable {
 
 
     int review_ID;
+    int review_On_ID;
     String updated_at;
     String review_title;
     String review_summary;
@@ -33,12 +34,22 @@ public class ReviewModel extends RealmObject implements Parcelable {
     }
 
 
+
+
     public RealmList<Comment> getCommentRealmList() {
         return commentRealmList;
     }
 
     public void setCommentRealmList(RealmList<Comment> commentRealmList) {
         this.commentRealmList = commentRealmList;
+    }
+
+    public int getReview_On_ID() {
+        return review_On_ID;
+    }
+
+    public void setReview_On_ID(int review_On_ID) {
+        this.review_On_ID = review_On_ID;
     }
 
     public String getUpdated_at() {

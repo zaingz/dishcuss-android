@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.FoodItems;
+import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
@@ -186,5 +187,11 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         }else if(imagesCount==3){
             holder.CardView_explore_restaurant_image_4.setVisibility(View.GONE);
         }
+    }
+
+
+    public void UpdateList(ArrayList<Restaurant> restaurantRealmList) {
+        this.restaurantRealmList.addAll(restaurantRealmList);
+        notifyDataSetChanged();
     }
 }

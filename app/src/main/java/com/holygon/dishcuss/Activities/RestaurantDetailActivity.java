@@ -527,6 +527,11 @@ public class RestaurantDetailActivity extends AppCompatActivity {
                                         reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
                                         reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
 
+                                        JSONObject reviewOnObj=reviewObj.getJSONObject("review_on");
+                                        if(reviewOnObj.has("id")) {
+                                            reviewModel.setReview_On_ID(reviewOnObj.getInt("id"));
+                                        }
+
                                         JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
                                         JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
                                         JSONArray reviewShareArray = reviewObj.getJSONArray("reports");

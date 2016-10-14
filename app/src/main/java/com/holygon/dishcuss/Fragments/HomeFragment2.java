@@ -5,10 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +34,10 @@ import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
+import com.holygon.dishcuss.Adapters.HomeMyFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
 import com.holygon.dishcuss.Helper.EndlessRecyclerOnScrollListener;
+import com.holygon.dishcuss.Helper.LocalFeedsRecyclerOnScrollListener;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
@@ -45,6 +46,7 @@ import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.PhotoModel;
+import com.holygon.dishcuss.Model.Reply;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
@@ -77,12 +79,13 @@ public class HomeFragment2 extends Fragment {
     private ViewPager viewPager;
     AppCompatActivity activity;
     RecyclerView localFeedsRecyclerView,myFeedsRecyclerView,peopleAroundYouRecyclerView;
-    private RecyclerView.LayoutManager myFeedsLayoutManager,peopleAroundYouLayoutManager;
-    private LinearLayoutManager localFeedsLayoutManager;
+    private RecyclerView.LayoutManager myFeedsLayoutManager;
+    private LinearLayoutManager localFeedsLayoutManager,peopleAroundYouLayoutManager;
     RelativeLayout local_feeds_layout,my_feeds_layout,people_around_you_layout;
     TextView local_feeds_text,my_feeds_text,peopleAroundYouTextView;
     ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
-    ArrayList<MyFeeds> peopleAroundYouList;
+    ArrayList<MyFeeds> peopleAroundYouListServerData;
+    ArrayList<MyFeeds> peopleAroundYouListLoadedData;
     boolean dataAlreadyExists=false;
     Button Sign_Up_Click;
 
@@ -90,13 +93,17 @@ public class HomeFragment2 extends Fragment {
     private List<ImageView> dots;
     HomePeopleAroundAdapter homePeopleAroundAdapter;
     HomeLocalFeedsAdapter homeLocalFeedsAdapter;
-    HomeLocalFeedsAdapter homeMyFeedsAdapter;
-    ProgressBar progressBar;
+    HomeMyFeedsAdapter homeMyFeedsAdapter;
+
+
+    public static int localFeedsCheckIns=0;
+    public static int localFeedsReviews=0;
 
 
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
     NestedScrollView empty_feed;
+    LinearLayout local_parent_linearLayout,my_feed_parent_linearLayout,people_parent_linearLayout;
     int myFeedReview=0;
     int myFeedCheckIns=0;
 
@@ -109,7 +116,7 @@ public class HomeFragment2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.home_fragment2, container, false);
+        final View rootView = inflater.inflate(R.layout.home_fragment2, container, false);
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
@@ -129,50 +136,31 @@ public class HomeFragment2 extends Fragment {
         people_around_you_layout=(RelativeLayout)rootView.findViewById(R.id.people_around_you_layout);
         empty_feed=(NestedScrollView)rootView.findViewById(R.id.empty_feed);
 
+        local_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.local_parent_linearLayout);
+        my_feed_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.my_feed_parent_linearLayout);
+        people_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.people_parent_linearLayout);
+
         Sign_Up_Click=(Button)rootView.findViewById(R.id.Sign_Up_Click);
 
         my_feeds_text=(TextView) rootView.findViewById(R.id.my_feeds_text);
         local_feeds_text=(TextView) rootView.findViewById(R.id.local_feeds_text);
         peopleAroundYouTextView=(TextView) rootView.findViewById(R.id.people_around_you);
 
-        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
-
-
-        //My Feed
-        myFeedsLayoutManager = new LinearLayoutManager(activity);
-        myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
-        if(!Constants.skipLogin) {
-            if(Constants.isNetworkAvailable(getActivity())){
-                FetchMyFeedsData();
-            }
-        }
 
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
-
-        localFeedsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e("Position",""+localFeedsLayoutManager.findFirstVisibleItemPosition());
-                if(localFeedsLayoutManager.findFirstVisibleItemPosition()==0){
-                //    FetchAllLocalFeedsData();
-                }
-            }
-        });
-        localFeedsRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(localFeedsLayoutManager) {
+        localFeedsRecyclerView.setOnScrollListener(new LocalFeedsRecyclerOnScrollListener(localFeedsLayoutManager) {
             @Override
             public void onLoadMore(int current_page,int current_item) {
                 // do something...
                 Log.e("Current Item",""+current_item);
-                FetchAllLocalFeedsDataOnLoad(current_item);
+                FetchAllLocalFeedsDataOnScroll(current_item,rootView);
             }
         });
         if(Constants.isNetworkAvailable(getActivity())) {
-            FetchAllLocalFeedsData();
+
+            FetchAllLocalFeedsData(rootView);
 
         }
         else
@@ -180,14 +168,58 @@ public class HomeFragment2 extends Fragment {
             GetFeedsData();
         }
 
+
+
+        //My Feed
+        myFeedsLayoutManager = new LinearLayoutManager(activity);
+        myFeedsRecyclerView.setLayoutManager(myFeedsLayoutManager);
+        if(!Constants.skipLogin) {
+            if(Constants.isNetworkAvailable(getActivity())){
+                FetchMyFeedsData(rootView);
+            }
+        }
+
         //People Around You
         peopleAroundYouLayoutManager = new LinearLayoutManager(activity);
         peopleAroundYouRecyclerView.setLayoutManager(peopleAroundYouLayoutManager);
-        peopleAroundYouList =new ArrayList<>();
-        homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
-        myFeedsRecyclerView.setAdapter(homePeopleAroundAdapter);
+        peopleAroundYouListServerData =new ArrayList<>();
+        peopleAroundYouListLoadedData =new ArrayList<>();
+        peopleAroundYouRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(peopleAroundYouLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page,int current_item) {
+                final ProgressBar progressBar;
+                progressBar=(ProgressBar)rootView.findViewById(R.id.people_native_progress_below);
+                progressBar.setVisibility(View.VISIBLE);
+
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }, 2*1000);
+                // do something...
+                peopleAroundYouListLoadedData =new ArrayList<>();
+                int newLoad=current_item+10;
+                if(peopleAroundYouListServerData.size()>=newLoad)
+                {
+                    for (int j = current_item; j <newLoad; j++) {
+                        peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(j));
+                    }
+                }
+                else
+                {
+                    for (int j = current_item; j<peopleAroundYouListServerData.size() ; j++) {
+                        peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(j));
+                    }
+                }
+
+                homePeopleAroundAdapter.UpdateList(peopleAroundYouListLoadedData);
+            }
+        });
         if(!Constants.skipLogin) {
-            FetchPeoplesAroundYou();
+            FetchPeoplesAroundYou(rootView);
         }
 
         //Features Restaurant
@@ -211,10 +243,6 @@ public class HomeFragment2 extends Fragment {
         local_feeds_text.setTextColor(Color.WHITE);
         my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
 
-        myFeedsRecyclerView.setVisibility(View.GONE);
-        localFeedsRecyclerView.setVisibility(View.VISIBLE);
-
-
         local_feeds_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,10 +255,10 @@ public class HomeFragment2 extends Fragment {
                 my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
                 peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
-                myFeedsRecyclerView.setVisibility(View.GONE);
+                my_feed_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
-                localFeedsRecyclerView.setVisibility(View.VISIBLE);
-                peopleAroundYouRecyclerView.setVisibility(View.GONE);
+                local_parent_linearLayout.setVisibility(View.VISIBLE);
+                people_parent_linearLayout.setVisibility(View.GONE);
 
 
             }
@@ -249,14 +277,14 @@ public class HomeFragment2 extends Fragment {
                 my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
                 peopleAroundYouTextView.setTextColor(Color.WHITE);
 
-                myFeedsRecyclerView.setVisibility(View.GONE);
+                my_feed_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
-                localFeedsRecyclerView.setVisibility(View.GONE);
-                peopleAroundYouRecyclerView.setVisibility(View.VISIBLE);
+                local_parent_linearLayout.setVisibility(View.GONE);
+                people_parent_linearLayout.setVisibility(View.VISIBLE);
 
-//                if(peopleAroundYouList.size()<=0 && !Constants.skipLogin){
+//                if(peopleAroundYouListServerData.size()<=0 && !Constants.skipLogin){
                 if(Constants.skipLogin){
-                    peopleAroundYouRecyclerView.setVisibility(View.GONE);
+                    people_parent_linearLayout.setVisibility(View.GONE);
                     empty_feed.setVisibility(View.VISIBLE);
                 }
             }
@@ -274,14 +302,14 @@ public class HomeFragment2 extends Fragment {
                 my_feeds_text.setTextColor(Color.WHITE);
                 peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
-                myFeedsRecyclerView.setVisibility(View.VISIBLE);
-                localFeedsRecyclerView.setVisibility(View.GONE);
+                my_feed_parent_linearLayout.setVisibility(View.VISIBLE);
+                local_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
-                peopleAroundYouRecyclerView.setVisibility(View.GONE);
+                people_parent_linearLayout.setVisibility(View.GONE);
 
 //                if(myFeedCheckIns==0 && myFeedReview==0 && !Constants.skipLogin){
                 if(Constants.skipLogin){
-                    myFeedsRecyclerView.setVisibility(View.GONE);
+                    my_feed_parent_linearLayout.setVisibility(View.GONE);
                     empty_feed.setVisibility(View.VISIBLE);
                 }
             }
@@ -529,7 +557,9 @@ public class HomeFragment2 extends Fragment {
     }
 
 
-    void FetchAllLocalFeedsData(){
+    void FetchAllLocalFeedsData(View v){
+        final ProgressBar progressBar;
+        progressBar=(ProgressBar)v.findViewById(R.id.local_native_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -619,6 +649,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
                                     localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
+                                    localFeedReview.setLiked(jsonDataReviewObj.getBoolean("review_likes"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
@@ -673,6 +704,33 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedReview.getCommentRealmList().add(managedComment);
 
@@ -716,6 +774,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
                                     localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
+                                    localFeedCheckIn.setLiked(jsonDataCheckInObj.getBoolean("checkin_likes"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
 
                                     if(!checkinObj.isNull("lat")){
@@ -785,6 +844,33 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedCheckIn.getCommentRealmList().add(managedComment);
                                     }
@@ -795,6 +881,7 @@ public class HomeFragment2 extends Fragment {
 
                                 }
                             }
+                            progressBar.setVisibility(View.GONE);
                             homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
                             localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
                             realm.commitTransaction();
@@ -812,7 +899,9 @@ public class HomeFragment2 extends Fragment {
 
 
 
-    void FetchAllLocalFeedsDataOnLoad(int offset){
+    void FetchAllLocalFeedsDataOnScroll(int offset, View v){
+        final ProgressBar progressBar;
+        progressBar=(ProgressBar)v.findViewById(R.id.local_native_progress_below);
         progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
@@ -878,7 +967,6 @@ public class HomeFragment2 extends Fragment {
                             LocalFeeds localFeeds=realm.createObject(LocalFeeds.class);
 
 
-
                             for (int i = 0; i < jsonDataReviewsArray.length(); i++) {
 
                                 JSONObject jsonDataReviewObj = jsonDataReviewsArray.getJSONObject(i);
@@ -902,6 +990,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
                                     localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
+                                    localFeedReview.setLiked(jsonDataReviewObj.getBoolean("review_likes"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
@@ -956,6 +1045,34 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedReview.getCommentRealmList().add(managedComment);
 
@@ -999,6 +1116,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
                                     localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
+                                    localFeedCheckIn.setLiked(jsonDataCheckInObj.getBoolean("checkin_likes"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
 
                                     if(!checkinObj.isNull("lat")){
@@ -1068,6 +1186,34 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedCheckIn.getCommentRealmList().add(managedComment);
                                     }
@@ -1079,11 +1225,26 @@ public class HomeFragment2 extends Fragment {
                             }
 
 
-                            HomeLocalFeedsAdapter.Notify(localFeeds.getLocalFeedReviewRealmList(),localFeeds.getLocalFeedCheckInRealmList());
-//                            HomeLocalFeedsAdapter.instance.Notify();
+                            if(localFeeds.getLocalFeedReviewRealmList().size()>0 &&localFeeds.getLocalFeedCheckInRealmList().size()>0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                                HomeLocalFeedsAdapter.Notify(localFeeds.getLocalFeedReviewRealmList(),localFeeds.getLocalFeedCheckInRealmList());
+                            }
+                            else if(localFeeds.getLocalFeedReviewRealmList().size()==0 &&localFeeds.getLocalFeedCheckInRealmList().size()>0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                                HomeLocalFeedsAdapter.NotifyCheckIns(localFeeds.getLocalFeedCheckInRealmList());
+                            }
+                            else if(localFeeds.getLocalFeedReviewRealmList().size()>0 &&localFeeds.getLocalFeedCheckInRealmList().size()==0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                                HomeLocalFeedsAdapter.NotifyReviews(localFeeds.getLocalFeedReviewRealmList());
+                            }
+
                             homeLocalFeedsAdapter.notifyDataSetChanged();
-//                            homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
-//                            localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
                             realm.commitTransaction();
                             realm.close();
                             progressBar.setVisibility(View.GONE);
@@ -1098,7 +1259,10 @@ public class HomeFragment2 extends Fragment {
     }
 
     //
-    void FetchMyFeedsData(){
+    void FetchMyFeedsData(View view){
+        final ProgressBar progressBar;
+        progressBar=(ProgressBar)view.findViewById(R.id.my_native_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -1148,6 +1312,11 @@ public class HomeFragment2 extends Fragment {
 
 
                             realm.beginTransaction();
+                            RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+                            localFeedsRealmResults.deleteAllFromRealm();
+                            realm.commitTransaction();
+
+                            realm.beginTransaction();
                             LocalFeeds localFeeds=realm.createObject(LocalFeeds.class);
 
 
@@ -1176,6 +1345,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedReview.setUpdated_at(jsonDataReviewObj.getString("updated_at"));
                                     localFeedReview.setTitle(jsonDataReviewObj.getString("title"));
                                     localFeedReview.setBookmarked(jsonDataReviewObj.getBoolean("bookmark"));
+                                    localFeedReview.setLiked(jsonDataReviewObj.getBoolean("review_likes"));
                                     localFeedReview.setSummary(jsonDataReviewObj.getString("summary"));
                                     if(!jsonDataReviewObj.isNull("rating")){
                                         localFeedReview.setRating(jsonDataReviewObj.getInt("rating"));
@@ -1227,6 +1397,33 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedReview.getCommentRealmList().add(managedComment);
 
@@ -1269,6 +1466,7 @@ public class HomeFragment2 extends Fragment {
                                     localFeedCheckIn.setUpdated_at(jsonDataCheckInObj.getString("updated_at"));
                                     localFeedCheckIn.setCheckInTitle(jsonDataCheckInObj.getString("title"));
                                     localFeedCheckIn.setBookmarked(jsonDataCheckInObj.getBoolean("bookmark"));
+                                    localFeedCheckIn.setLiked(jsonDataCheckInObj.getBoolean("checkin_likes"));
                                     localFeedCheckIn.setCheckInStatus(jsonDataCheckInObj.getString("status"));
 
                                     if(!checkinObj.isNull("lat")){
@@ -1337,6 +1535,33 @@ public class HomeFragment2 extends Fragment {
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
 
+                                        JSONArray replyArray=commentObj.getJSONArray("replies");
+                                        realm.commitTransaction();
+                                        realm.beginTransaction();
+
+                                        for(int r=0;r<replyArray.length();r++){
+                                            JSONObject replyObj=replyArray.getJSONObject(r);
+
+                                            Reply reply=realm.createObject(Reply.class);
+
+                                            reply.setCommentID(replyObj.getInt("id"));
+                                            reply.setCommentTitle(replyObj.getString("title"));
+                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
+                                            reply.setCommentSummary(replyObj.getString("comment"));
+
+                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
+                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
+                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
+                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
+
+                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
+                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
+
+                                            final Reply manageReply = realm.copyToRealm(reply);
+                                            comment.getReplyRealmList().add(manageReply);
+
+                                        }
+
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         localFeedCheckIn.getCommentRealmList().add(managedComment);
                                     }
@@ -1347,9 +1572,10 @@ public class HomeFragment2 extends Fragment {
 
                                 }
                             }
+                            progressBar.setVisibility(View.GONE);
                             myFeedCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
                             myFeedReview=localFeeds.getLocalFeedReviewRealmList().size();
-                            homeMyFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
+                            homeMyFeedsAdapter = new HomeMyFeedsAdapter(localFeeds,getActivity());
                             myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
                             realm.commitTransaction();
                             realm.close();
@@ -1367,7 +1593,10 @@ public class HomeFragment2 extends Fragment {
 
     //
 
-    void FetchPeoplesAroundYou(){
+    void FetchPeoplesAroundYou(View view){
+        final ProgressBar progressBar;
+        progressBar=(ProgressBar)view.findViewById(R.id.people_native_progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -1420,11 +1649,17 @@ public class HomeFragment2 extends Fragment {
                                     myFeeds.setFollowing(c.getBoolean("follows"));
                                     myFeeds.setFollowers(c.getInt("followers"));
 
-                                    peopleAroundYouList.add(myFeeds);
+                                    peopleAroundYouListServerData.add(myFeeds);
                                 }
 
-                                homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouList,getActivity());
-                                peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
+                            for(int i=0;i<15;i++){
+                                peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(i));
+                            }
+
+                            progressBar.setVisibility(View.GONE);
+                            homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouListLoadedData,getActivity());
+                            peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1495,12 +1730,17 @@ public class HomeFragment2 extends Fragment {
                                     notification.setBody(c.getString("body"));
 
                                     if (!c.isNull("notifier")) {
-
                                         JSONObject notifier = c.getJSONObject("notifier");
                                         notification.setUserID(notifier.getInt("id"));
                                         notification.setUsername(notifier.getString("username"));
                                         notification.setAvatarPic(notifier.getString("avatar"));
                                     }
+                                    if (!c.isNull("redirect_to")) {
+                                        JSONObject redirect = c.getJSONObject("redirect_to");
+                                        notification.setRedirectID(redirect.getInt("id"));
+                                        notification.setRedirectType(redirect.getString("typee"));
+                                    }
+
 
                                     notificationsArrayList.add(notification);
                                     realm.commitTransaction();
@@ -1540,5 +1780,9 @@ public class HomeFragment2 extends Fragment {
         homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeedsRealmResults.last(),getActivity());
         localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
         realm.commitTransaction();
+    }
+
+    public static void ShowNotifications(){
+        badge.show();
     }
 }

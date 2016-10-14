@@ -151,7 +151,7 @@ public class HomeFragment extends Fragment {
         localFeedsLayoutManager = new LinearLayoutManager(activity);
         localFeedsRecyclerView.setLayoutManager(localFeedsLayoutManager);
 
-//        localFeedsRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(localFeedsLayoutManager) {
+//        localFeedsRecyclerView.setOnScrollListener(new LocalFeedsRecyclerOnScrollListener(localFeedsLayoutManager) {
 //            @Override
 //            public void onLoadMore(int current_page) {
 //                // do something...

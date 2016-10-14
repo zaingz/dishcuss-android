@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
+import com.holygon.dishcuss.Model.Reply;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
@@ -70,6 +71,11 @@ public class PostDetailActivity extends AppCompatActivity {
     LinearLayout post_add_comment_edit_text_parent;
     Realm realm;
     LayoutInflater inflater;
+
+    LinearLayout reply_row;
+    LayoutInflater rplyInflater;
+    RealmList<Reply> replyRealmList;
+
     ProgressBar image_spinner;
 
 
@@ -86,9 +92,11 @@ public class PostDetailActivity extends AppCompatActivity {
 
         GetUI();
         inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        rplyInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+//            if()
             String type=bundle.getString("Type");
             if(type.equals("CheckIn")){
                 isCheckIn=true;
@@ -180,8 +188,52 @@ public class PostDetailActivity extends AppCompatActivity {
                     SimpleDateFormat localDateFormatForDate = new SimpleDateFormat("MMM d");
                     String dates = localDateFormatForDate.format(date);
 
+
                     commentTime.setText(dates + " " + time);
                     commentLikesCount.setText(""+ commentRealmList.get(i).getCommentLikesCount());
+
+                    reply_row=(LinearLayout)child.findViewById(R.id.comment_reply_);
+                    replyRealmList=commentRealmList.get(i).getReplyRealmList();
+                    for (int rp=replyRealmList.size()-1;rp>=0;rp--){
+
+                        View rplyChild = rplyInflater.inflate(R.layout.reply_row, null);
+
+                        TextView replyCommentatorName = (TextView) rplyChild.findViewById(R.id.commentator_name);
+                        TextView replyCommentatorComment = (TextView) rplyChild.findViewById(R.id.commentator_comment);
+                        TextView replyCommentTime = (TextView) rplyChild.findViewById(R.id.comment_time);
+                        TextView replyCommentLikesCount = (TextView) rplyChild.findViewById(R.id.comment_likes_count);
+                        de.hdodenhof.circleimageview.CircleImageView reply_commentator_profile_image = (de.hdodenhof.circleimageview.CircleImageView)
+                                rplyChild.findViewById(R.id.commentator_profile_image);
+
+                        if (!replyRealmList.get(rp).getCommentatorImage().equals("")) {
+                            Constants.PicassoImageSrc(replyRealmList.get(rp).getCommentatorImage(), reply_commentator_profile_image, this);
+                        }
+
+                        TextView replyCommentLikes = (TextView) rplyChild.findViewById(R.id.comment_Like);
+//                        commentLikes.setOnClickListener(LikeClick);
+//                        commentLikes.setTag(commentRealmList.get(rp).getCommentID());
+
+                        reply_commentator_profile_image.setOnClickListener(RedirectUser);
+                        reply_commentator_profile_image.setTag(replyRealmList.get(rp).getCommentatorID());
+                        replyCommentatorName.setOnClickListener(RedirectUser);
+                        replyCommentatorName.setTag(replyRealmList.get(rp).getCommentatorID());
+
+                        replyCommentatorName.setText(replyRealmList.get(rp).getCommentatorName());
+                        replyCommentatorComment.setText(replyRealmList.get(rp).getCommentSummary());
+                        Date replyDate = GetDate(replyRealmList.get(rp).getCommentUpdated_at());
+
+                        SimpleDateFormat rplylocalDateFormatForTime = new SimpleDateFormat("h:mm a");
+                        String replytime = rplylocalDateFormatForTime.format(replyDate);
+                        SimpleDateFormat replylocalDateFormatForDay = new SimpleDateFormat("EEE");
+                        String replyday = replylocalDateFormatForDay.format(replyDate);
+                        SimpleDateFormat replylocalDateFormatForDate = new SimpleDateFormat("MMM d");
+                        String replydates = replylocalDateFormatForDate.format(replyDate);
+
+                        replyCommentTime.setText(replydates + " " + replytime);
+                        replyCommentLikesCount.setText(""+ replyRealmList.get(rp).getCommentLikesCount());
+                        reply_row.addView(rplyChild);
+                    }
+
                     comments_row.addView(child);
                 }
 
@@ -269,6 +321,49 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     commentTime.setText(dates + " " + time);
                     commentLikesCount.setText(""+ commentRealmList.get(i).getCommentLikesCount());
+
+
+                    reply_row=(LinearLayout)child.findViewById(R.id.comment_reply_);
+                    replyRealmList=commentRealmList.get(i).getReplyRealmList();
+                    for (int rp=replyRealmList.size()-1;rp>=0;rp--){
+
+                        View rplyChild = rplyInflater.inflate(R.layout.reply_row, null);
+
+                        TextView replyCommentatorName = (TextView) rplyChild.findViewById(R.id.commentator_name);
+                        TextView replyCommentatorComment = (TextView) rplyChild.findViewById(R.id.commentator_comment);
+                        TextView replyCommentTime = (TextView) rplyChild.findViewById(R.id.comment_time);
+                        TextView replyCommentLikesCount = (TextView) rplyChild.findViewById(R.id.comment_likes_count);
+                        de.hdodenhof.circleimageview.CircleImageView reply_commentator_profile_image = (de.hdodenhof.circleimageview.CircleImageView)
+                                rplyChild.findViewById(R.id.commentator_profile_image);
+
+                        if (!replyRealmList.get(rp).getCommentatorImage().equals("")) {
+                            Constants.PicassoImageSrc(replyRealmList.get(rp).getCommentatorImage(), reply_commentator_profile_image, this);
+                        }
+
+                        TextView replyCommentLikes = (TextView) rplyChild.findViewById(R.id.comment_Like);
+//                        commentLikes.setOnClickListener(LikeClick);
+//                        commentLikes.setTag(commentRealmList.get(rp).getCommentID());
+
+                        reply_commentator_profile_image.setOnClickListener(RedirectUser);
+                        reply_commentator_profile_image.setTag(replyRealmList.get(rp).getCommentatorID());
+                        replyCommentatorName.setOnClickListener(RedirectUser);
+                        replyCommentatorName.setTag(replyRealmList.get(rp).getCommentatorID());
+
+                        replyCommentatorName.setText(replyRealmList.get(rp).getCommentatorName());
+                        replyCommentatorComment.setText(replyRealmList.get(rp).getCommentSummary());
+                        Date replyDate = GetDate(replyRealmList.get(rp).getCommentUpdated_at());
+
+                        SimpleDateFormat rplylocalDateFormatForTime = new SimpleDateFormat("h:mm a");
+                        String replytime = rplylocalDateFormatForTime.format(replyDate);
+                        SimpleDateFormat replylocalDateFormatForDay = new SimpleDateFormat("EEE");
+                        String replyday = replylocalDateFormatForDay.format(replyDate);
+                        SimpleDateFormat replylocalDateFormatForDate = new SimpleDateFormat("MMM d");
+                        String replydates = replylocalDateFormatForDate.format(replyDate);
+
+                        replyCommentTime.setText(replydates + " " + replytime);
+                        replyCommentLikesCount.setText(""+ replyRealmList.get(rp).getCommentLikesCount());
+                        reply_row.addView(rplyChild);
+                    }
                     comments_row.addView(child);
                 }
 
@@ -369,6 +464,49 @@ public class PostDetailActivity extends AppCompatActivity {
 
                 commentTime.setText(dates+" "+time);
                 commentLikesCount.setText(""+commentRealmList.get(i).getCommentLikesCount());
+
+                reply_row=(LinearLayout)child.findViewById(R.id.comment_reply_);
+                replyRealmList=commentRealmList.get(i).getReplyRealmList();
+                for (int rp=replyRealmList.size()-1;rp>=0;rp--){
+
+                    View rplyChild = rplyInflater.inflate(R.layout.reply_row, null);
+
+                    TextView replyCommentatorName = (TextView) rplyChild.findViewById(R.id.commentator_name);
+                    TextView replyCommentatorComment = (TextView) rplyChild.findViewById(R.id.commentator_comment);
+                    TextView replyCommentTime = (TextView) rplyChild.findViewById(R.id.comment_time);
+                    TextView replyCommentLikesCount = (TextView) rplyChild.findViewById(R.id.comment_likes_count);
+                    de.hdodenhof.circleimageview.CircleImageView reply_commentator_profile_image = (de.hdodenhof.circleimageview.CircleImageView)
+                            rplyChild.findViewById(R.id.commentator_profile_image);
+
+                    if (!replyRealmList.get(rp).getCommentatorImage().equals("")) {
+                        Constants.PicassoImageSrc(replyRealmList.get(rp).getCommentatorImage(), reply_commentator_profile_image, this);
+                    }
+
+                    TextView replyCommentLikes = (TextView) rplyChild.findViewById(R.id.comment_Like);
+//                        commentLikes.setOnClickListener(LikeClick);
+//                        commentLikes.setTag(commentRealmList.get(rp).getCommentID());
+
+                    reply_commentator_profile_image.setOnClickListener(RedirectUser);
+                    reply_commentator_profile_image.setTag(replyRealmList.get(rp).getCommentatorID());
+                    replyCommentatorName.setOnClickListener(RedirectUser);
+                    replyCommentatorName.setTag(replyRealmList.get(rp).getCommentatorID());
+
+                    replyCommentatorName.setText(replyRealmList.get(rp).getCommentatorName());
+                    replyCommentatorComment.setText(replyRealmList.get(rp).getCommentSummary());
+                    Date replyDate = GetDate(replyRealmList.get(rp).getCommentUpdated_at());
+
+                    SimpleDateFormat rplylocalDateFormatForTime = new SimpleDateFormat("h:mm a");
+                    String replytime = rplylocalDateFormatForTime.format(replyDate);
+                    SimpleDateFormat replylocalDateFormatForDay = new SimpleDateFormat("EEE");
+                    String replyday = replylocalDateFormatForDay.format(replyDate);
+                    SimpleDateFormat replylocalDateFormatForDate = new SimpleDateFormat("MMM d");
+                    String replydates = replylocalDateFormatForDate.format(replyDate);
+
+                    replyCommentTime.setText(replydates + " " + replytime);
+                    replyCommentLikesCount.setText(""+ replyRealmList.get(rp).getCommentLikesCount());
+                    reply_row.addView(rplyChild);
+                }
+
                 comments_row.addView(child);
             }
 
@@ -396,7 +534,7 @@ public class PostDetailActivity extends AppCompatActivity {
         public void onClick(View v) {
             int idxStr = (int) v.getTag();
             Like(idxStr,"comment");
-            Toast.makeText(PostDetailActivity.this,"Liked "+idxStr,Toast.LENGTH_SHORT).show();
+//            Toast.makeText(PostDetailActivity.this,"Liked "+idxStr,Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -411,11 +549,7 @@ public class PostDetailActivity extends AppCompatActivity {
 
 
     Date GetDate(String date){
-          Log.e("Post Detail Date",""+date);
-//        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-//        String segments[] = date.split("\\+");
-//        String d = segments[0];
-//        String d2 = segments[1];
+
         String pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         Date convertedDate = new Date();

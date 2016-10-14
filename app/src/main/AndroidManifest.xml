@@ -73,6 +73,15 @@
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/MyMaterialTheme"/>
 
+        <activity
+            android:name=".Activities.NotificationClickPostDetail"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:theme="@style/MyMaterialTheme"/>
+
+        <activity
+            android:name=".Activities.ReplyActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:theme="@style/MyMaterialTheme"/>
 
         <activity
             android:name=".Activities.BookmarkActivity"

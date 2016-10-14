@@ -42,6 +42,7 @@ public class URLs {
 
 
     public static String Like_="http://dishcuss-api.herokuapp.com/user/like/";
+    public static String RC_UN_Like_="http://dishcuss-api.herokuapp.com/user/unlike/";
     public static String UnLike_ ="http://dishcuss-api.herokuapp.com/restaurant/unlike/";
 //    public static String UnLike_="http://dishcuss-api.herokuapp.com/user/dislike/";
 
@@ -83,5 +84,13 @@ public class URLs {
 
     //GCM TOKEN REGISTRATION
     public static String userToken="http://dishcuss-api.herokuapp.com/user/gcm";
+
+
+    //Specific Post
+    public static String specificPost="http://dishcuss-api.herokuapp.com/user/post/";
+    //Specific Review
+    public static String specificReview="http://dishcuss-api.herokuapp.com/review/";
+    //Comment Reply
+    public static String commentReply="http://dishcuss-api.herokuapp.com/comment/reply/";
 
 }

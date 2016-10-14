@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/app_toolbar"
+        android:id="@+id/toolbar"/>
+
+
+    <LinearLayout
+        android:gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_marginBottom="5dp"
+            android:id="@+id/post_add_comment_edit_text_parent"
+            android:background="@drawable/comment_layout_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:hint="Write a reply..."
+                android:id="@+id/post_add_rply_edit_text"
+                android:layout_width="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

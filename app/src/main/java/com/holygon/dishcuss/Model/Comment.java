@@ -4,6 +4,7 @@ package com.holygon.dishcuss.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
@@ -22,9 +23,20 @@ public class Comment extends RealmObject implements Parcelable {
 
     int commentLikesCount;
 
+
+    RealmList<Reply> replyRealmList;
+
     public Comment() {
     }
 
+
+    public RealmList<Reply> getReplyRealmList() {
+        return replyRealmList;
+    }
+
+    public void setReplyRealmList(RealmList<Reply> replyRealmList) {
+        this.replyRealmList = replyRealmList;
+    }
 
     public int getCommentID() {
         return commentID;
@@ -99,6 +111,8 @@ public class Comment extends RealmObject implements Parcelable {
         this.commentatorName = in.readString();
         this.commentatorImage = in.readString();
         this.commentLikesCount = in.readInt();
+        this.replyRealmList=new RealmList<Reply>();
+        in.readTypedList(this.replyRealmList,Reply.CREATOR);
     }
 
     @Override
@@ -116,6 +130,7 @@ public class Comment extends RealmObject implements Parcelable {
         dest.writeString(commentatorName);
         dest.writeString(commentatorImage);
         dest.writeInt(commentLikesCount);
+        dest.writeTypedList(replyRealmList);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

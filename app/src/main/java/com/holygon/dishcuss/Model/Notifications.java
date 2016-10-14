@@ -13,7 +13,27 @@ public class Notifications extends RealmObject {
     String username;
     String avatarPic;
 
+    int redirectID;
+    String redirectType;
+
     public Notifications() {
+    }
+
+
+    public int getRedirectID() {
+        return redirectID;
+    }
+
+    public void setRedirectID(int redirectID) {
+        this.redirectID = redirectID;
+    }
+
+    public String getRedirectType() {
+        return redirectType;
+    }
+
+    public void setRedirectType(String redirectType) {
+        this.redirectType = redirectType;
     }
 
     public int getId() {

@@ -289,11 +289,7 @@ public class SelectImage  extends AppCompatActivity {
     private boolean isPossibleCrop(int widthRatio, int heightRatio){
         int bitmapWidth = imageCropView.getViewBitmap().getWidth();
         int bitmapHeight = imageCropView.getViewBitmap().getHeight();
-        if(bitmapWidth < widthRatio && bitmapHeight < heightRatio){
-            return false;
-        } else {
-            return true;
-        }
+        return !(bitmapWidth < widthRatio && bitmapHeight < heightRatio);
     }
 
     public File bitmapConvertToFile(Bitmap bitmap) {

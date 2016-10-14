@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.holygon.dishcuss.Activities.MyWalletActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
+import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;
@@ -85,9 +90,44 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
 
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+//                Toast.makeText(context,notificationsArrayList.get(position).getRedirectType()+" "+notificationsArrayList.get(position).getRedirectID(),Toast.LENGTH_SHORT).show();
+
+                if(notificationsArrayList.get(position).getRedirectType().toString().equals("Credit")){
+                    Intent intent=new Intent(context, MyWalletActivity.class);
+                    context.startActivity(intent);
+                    //((Activity)(context)).finish();
+                }
+
+
+                if(notificationsArrayList.get(position).getRedirectType().toString().equals("User")){
+                    if(notificationsArrayList.get(position).getRedirectID()!=0) {
+                        Intent intent = new Intent(context, ProfilesDetailActivity.class);
+                        intent.putExtra("UserID", notificationsArrayList.get(position).getRedirectID());
+                        context.startActivity(intent);
+                      //  ((Activity) (context)).finish();
+                    }
+                }
+
+                if(notificationsArrayList.get(position).getRedirectType().toString().equals("Post")){
+                    Intent intent = new Intent(context, NotificationClickPostDetail.class);
+                    intent.putExtra("TypeID", notificationsArrayList.get(position).getRedirectID());
+                    intent.putExtra("Type", "Post");
+                    context.startActivity(intent);
+                    //((Activity) (context)).finish();
+                }
+                if(notificationsArrayList.get(position).getRedirectType().toString().equals("Review")){
+                    Intent intent = new Intent(context, NotificationClickPostDetail.class);
+                    intent.putExtra("TypeID", notificationsArrayList.get(position).getRedirectID());
+                    intent.putExtra("Type", "Review");
+                    context.startActivity(intent);
+                   // ((Activity) (context)).finish();
+                }
             }
         });
 

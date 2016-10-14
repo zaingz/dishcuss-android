@@ -89,6 +89,7 @@ public class NotificationActivity extends AppCompatActivity {
         notificationRecyclerView.setAdapter(notificationAdapter);
         newNotifications=0;
         Read();
+
     }
 
     @Override

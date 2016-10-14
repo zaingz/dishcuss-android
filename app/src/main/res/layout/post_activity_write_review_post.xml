@@ -67,6 +67,15 @@
 
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/restaurant_ratting"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_ratting"/>
+
             </RelativeLayout>
 
             <View

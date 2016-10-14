@@ -173,13 +173,13 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
-                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
-                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
+//                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
+//                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
+//                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
                                 realmRestaurant.setBookmark_count(jsonDataLikesArray.length());
-                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
+//                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
 
                                 if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
@@ -211,38 +211,38 @@ public class ExploreSelectedCategoryActivity extends AppCompatActivity {
                                     realmRestaurant.setNumbers(callObj.getString("number"));
                                 }
 
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
-                                    ReviewModel reviewModel=new ReviewModel();
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-
-                                    realmRestaurant.getReviewModels().add(managedReviewModel);
-
-                                }
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//
+//                                    ReviewModel reviewModel=new ReviewModel();
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//
+//                                    realmRestaurant.getReviewModels().add(managedReviewModel);
+//
+//                                }
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");

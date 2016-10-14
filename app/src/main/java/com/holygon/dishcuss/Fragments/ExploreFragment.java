@@ -2,6 +2,7 @@ package com.holygon.dishcuss.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,11 +23,11 @@ import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Adapters.ExploreAdapter;
+import com.holygon.dishcuss.Helper.EndlessRecyclerOnScrollListener;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.Constants;
@@ -53,11 +54,12 @@ public class ExploreFragment extends Fragment{
 
     AppCompatActivity activity;
     RecyclerView exploreRecyclerView;
-    private RecyclerView.LayoutManager exploreLayoutManager;
+    private LinearLayoutManager exploreLayoutManager;
     Realm realm;
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;
 
-    ArrayList<Restaurant> restaurantRealmList=new ArrayList<>();
+    ArrayList<Restaurant> restaurantRealmListServerData =new ArrayList<>();
+    ArrayList<Restaurant> restaurantRealmListVisibleData =new ArrayList<>();
     ProgressBar progressBar;
 
 
@@ -67,6 +69,8 @@ public class ExploreFragment extends Fragment{
     Button category_button_4;
     Button category_button_5;
     Button category_button_6;
+
+    ExploreAdapter adapter;
 
     public ExploreFragment() {
 
@@ -80,7 +84,7 @@ public class ExploreFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.explore_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.explore_fragment, container, false);
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
@@ -103,6 +107,43 @@ public class ExploreFragment extends Fragment{
         exploreRecyclerView.setLayoutManager(exploreLayoutManager);
         exploreRecyclerView.setNestedScrollingEnabled(false);
         RestaurantData();
+
+
+
+        exploreRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(exploreLayoutManager) {
+            @Override
+            public void onLoadMore(int current_page,int current_item) {
+                progressBar.setVisibility(View.VISIBLE);
+
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }, 2*1000);
+                // do something...
+                restaurantRealmListVisibleData=new ArrayList<>();
+                int newLoad=current_item+3;
+
+                if(restaurantRealmListServerData.size()>=newLoad)
+                {
+                    for (int j = current_item; j <newLoad; j++) {
+                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
+                    }
+                }
+
+                else
+                {
+                    for (int j = current_item; j<restaurantRealmListServerData.size() ; j++) {
+                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
+                    }
+                }
+
+                adapter.UpdateList(restaurantRealmListVisibleData);
+            }
+        });
 
 
         category_button_1.setOnClickListener(new View.OnClickListener() {
@@ -288,17 +329,11 @@ public class ExploreFragment extends Fragment{
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
-                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
-                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                reviewsCount=jsonDataReviewsArray.length();
                                 bookmarksCount=jsonDataLikesArray.length();
-                                beenHereCount=jsonDataCheckInsArray.length();
 
-                                realmRestaurant.setReview_count(reviewsCount);
                                 realmRestaurant.setBookmark_count(bookmarksCount);
-                                realmRestaurant.setBeen_here_count(beenHereCount);
 
                                 if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
@@ -309,58 +344,11 @@ public class ExploreFragment extends Fragment{
                                     JSONObject CoverImageThumbnailURL = CoverImageURL.getJSONObject("thumbnail");
                                     realmRestaurant.setCover_image_thumbnail(CoverImageThumbnailURL.getString("url"));
                                 }
-//                                    for (int c = 0; c < jsonDataCheckInsArray.length(); c++) {
-//                                        JSONObject checkInsObj = jsonDataCheckInsArray.getJSONObject(c);
-//                                        realmRestaurant.setCheck_Ins_ID(checkInsObj.getInt("id"));
-//                                        realmRestaurant.setCheck_Ins_Address(checkInsObj.getString("address"));
-//                                        realmRestaurant.setCheck_In_time(checkInsObj.getString("time"));
-//                                        realmRestaurant.setCheck_In_lat(checkInsObj.getDouble("lat"));
-//                                        realmRestaurant.setCheck_In_long(checkInsObj.getDouble("long"));
-//
-//                                        JSONObject checkInsObjUser= checkInsObj.getJSONObject("user");
-//                                        JSONObject checkInsObjRestaurant= checkInsObj.getJSONObject("restaurant");
-//
-//                                        realmRestaurant.setCheck_Ins_user_ID(checkInsObjUser.getInt("id"));
-//                                        realmRestaurant.setCheck_Ins_restaurant_ID(checkInsObjRestaurant.getInt("id"));
-//                                    }
 
                                 for (int c = 0; c < jsonDataCallsArray.length();c++) {
 
                                     JSONObject callObj = jsonDataCallsArray.getJSONObject(c);
                                     realmRestaurant.setNumbers(callObj.getString("number"));
-                                }
-
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
-                                    ReviewModel reviewModel=new ReviewModel();
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-
-                                    realmRestaurant.getReviewModels().add(managedReviewModel);
-
                                 }
 
                                 if(!restaurantObj.isNull("menu")) {
@@ -444,11 +432,16 @@ public class ExploreFragment extends Fragment{
                                     }
                                 }
                                 realm.commitTransaction();
-                                restaurantRealmList.add(realmRestaurant);
+                                restaurantRealmListServerData.add(realmRestaurant);
                             }
 
 
-                            ExploreAdapter adapter = new ExploreAdapter(restaurantRealmList,getActivity());
+                            for(int i=0;i<3;i++){
+                                restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+                            }
+
+
+                           adapter = new ExploreAdapter(restaurantRealmListVisibleData,getActivity());
                             exploreRecyclerView.setAdapter(adapter);
                             progressBar.setVisibility(View.GONE);
                             realm.close();

@@ -65,6 +65,7 @@ public class MyGcmListenerService extends GcmListenerService {
         {
             NotificationActivity.newNotifications++;
             Log.e("Notifications",""+NotificationActivity.newNotifications);
+//            HomeFragment2.ShowNotifications();
         }
     }
 

@@ -126,9 +126,13 @@ public class PhotoDetailActivity extends Activity {
         addComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
-                intent.putExtra("Type","CheckIn");
-                intent.putExtra("MyClass", localFeedCheckIn);
+//                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
+//                intent.putExtra("Type","CheckIn");
+//                intent.putExtra("MyClass", localFeedCheckIn);
+//                startActivity(intent);
+                Intent intent = new Intent(PhotoDetailActivity.this, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                intent.putExtra("Type","Post");
                 startActivity(intent);
 
             }
@@ -136,18 +140,26 @@ public class PhotoDetailActivity extends Activity {
         comment_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
-                intent.putExtra("Type","CheckIn");
-                intent.putExtra("MyClass", localFeedCheckIn);
+//                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
+//                intent.putExtra("Type","CheckIn");
+//                intent.putExtra("MyClass", localFeedCheckIn);
+//                startActivity(intent);
+                Intent intent = new Intent(PhotoDetailActivity.this, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                intent.putExtra("Type","Post");
                 startActivity(intent);
             }
         });
         commentsCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
-                intent.putExtra("Type","CheckIn");
-                intent.putExtra("MyClass", localFeedCheckIn);
+//                Intent intent=new Intent(PhotoDetailActivity.this, PostDetailActivity.class);
+//                intent.putExtra("Type","CheckIn");
+//                intent.putExtra("MyClass", localFeedCheckIn);
+//                startActivity(intent);
+                Intent intent = new Intent(PhotoDetailActivity.this, NotificationClickPostDetail.class);
+                intent.putExtra("TypeID",localFeedCheckIn.getCheckInID());
+                intent.putExtra("Type","Post");
                 startActivity(intent);
             }
         });

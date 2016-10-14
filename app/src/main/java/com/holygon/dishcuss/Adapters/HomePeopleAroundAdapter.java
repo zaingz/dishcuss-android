@@ -214,4 +214,9 @@ public class HomePeopleAroundAdapter extends RecyclerView.Adapter<HomePeopleArou
         realm.commitTransaction();
 //        return message.equals("Successfully unfollowed!");
     }
+
+    public void UpdateList(ArrayList<MyFeeds> peopleAroundYouListServerData) {
+        myFeeds.addAll(peopleAroundYouListServerData);
+        notifyDataSetChanged();
+    }
 }

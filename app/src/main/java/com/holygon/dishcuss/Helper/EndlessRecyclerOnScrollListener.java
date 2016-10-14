@@ -3,16 +3,19 @@ package com.holygon.dishcuss.Helper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.holygon.dishcuss.Fragments.HomeFragment2;
+
 /**
- * Created by Naeem Ibrahim on 10/4/2016.
+ * Created by Naeem Ibrahim on 10/7/2016.
  */
-public abstract class EndlessRecyclerOnScrollListener  extends RecyclerView.OnScrollListener {
-    public static String TAG = EndlessRecyclerOnScrollListener.class.getSimpleName();
+public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
+    public static String TAG = LocalFeedsRecyclerOnScrollListener.class.getSimpleName();
 
     private int previousTotal = 0; // The total number of items in the dataset after the last load
     private boolean loading = true; // True if we are still waiting for the last set of data to load.
-    private int visibleThreshold = 6; // The minimum amount of items to have below your current scroll position before loading more.
+    private int visibleThreshold = 0; // The minimum amount of items to have below your current scroll position before loading more.
     int firstVisibleItem, visibleItemCount, totalItemCount;
+
 
     private int current_page = 1;
 
@@ -43,7 +46,8 @@ public abstract class EndlessRecyclerOnScrollListener  extends RecyclerView.OnSc
             // Do something
             current_page++;
 
-            onLoadMore(current_page,totalItemCount/2);
+
+            onLoadMore(current_page,totalItemCount);
 
             loading = true;
         }

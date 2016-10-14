@@ -98,7 +98,58 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_below="@id/commentator_layout"
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/commentator_profile_image"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/comment_reply_"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="1dp"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:layout_below="@id/comment_reply_"
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/commentator_profile_image"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add_comment_reply_"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="1dp"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:background="@drawable/rply_row_border"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:padding="15dp"
+                            android:background="@android:color/transparent"
+                            android:id="@+id/message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Add new Comment"/>
+
+                        <Button
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
+                            android:id="@+id/btn_send"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/add_comment_button"
+                            android:layout_alignParentRight="true"
+                            />
+
+                    </RelativeLayout>
+
+                    </LinearLayout>
 
             </RelativeLayout>
+
         </LinearLayout>
 </LinearLayout>

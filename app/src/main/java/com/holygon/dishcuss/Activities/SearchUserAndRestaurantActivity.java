@@ -361,13 +361,13 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
-                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
-                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
+//                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
+//                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
+//                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
                                 realmRestaurant.setBookmark_count(jsonDataLikesArray.length());
-                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
+//                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
 
                                 if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
@@ -399,38 +399,38 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
                                     realmRestaurant.setNumbers(callObj.getString("number"));
                                 }
 
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
-                                    ReviewModel reviewModel=new ReviewModel();
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-
-                                    realmRestaurant.getReviewModels().add(managedReviewModel);
-
-                                }
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//
+//                                    ReviewModel reviewModel=new ReviewModel();
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//
+//                                    realmRestaurant.getReviewModels().add(managedReviewModel);
+//
+//                                }
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");
@@ -533,169 +533,169 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 places.add(userObj.getString("name"));
                                 //Arrays
-                                JSONArray jsonDataFollowingArray = userObj.getJSONArray("following");
-                                JSONArray jsonDataFollowersArray = userObj.getJSONArray("followers");
-                                JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
-                                JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
+//                                JSONArray jsonDataFollowingArray = userObj.getJSONArray("following");
+//                                JSONArray jsonDataFollowersArray = userObj.getJSONArray("followers");
+//                                JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
+//                                JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
 
-                                userProfileRealm.setReviewsCount(jsonDataReviewsArray.length());
-                                userProfileRealm.setFollowersCount(jsonDataFollowersArray.length());
-
-
-                                for(int p=0;p<jsonDataPostsArray.length();p++){
-
-                                    JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
-
-                                    JSONObject checkinObj = postObj.getJSONObject("checkin");
-
-                                    if(checkinObj.has("restaurant")) {
-
-                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
-
-                                        UserBeenThere userBeenThere = new UserBeenThere();
-                                        userBeenThere.setId(restaurantObj.getInt("id"));
-                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
-
-                                    }
-
-                                    JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
-                                    for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
-                                        JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
-                                        PhotoModel photoModel = new PhotoModel();
-                                        photoModel.setId(photo.getInt("id"));
-                                        photoModel.setUrl(photo.getString("image_url"));
-                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
-                                        userProfileRealm.getPhotoModelRealmList().add(managedPhotoModel);
-                                    }
-
-                                    JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
-                                    userProfileRealm.setCommentsCount(jsonDataCommentsArray.length());
-                                    for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
-                                        JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
-                                        Comment comment= new Comment();
-                                        comment.setCommentID(commentObj.getInt("id"));
-                                        comment.setCommentTitle(commentObj.getString("title"));
-                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
-                                        comment.setCommentSummary(commentObj.getString("comment"));
-                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
-                                        comment.setCommentatorID(commentatorObj.getInt("id"));
-                                        comment.setCommentatorName(commentatorObj.getString("name"));
-                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
-                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
-                                        comment.setCommentLikesCount(commentLikeArray.length());
-                                        final Comment managedComment = realm.copyToRealm(comment);
-                                        userProfileRealm.getCommentRealmList().add(managedComment);
-                                    }
-                                }
-
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
-                                    ReviewModel reviewModel=realm.createObject(ReviewModel.class);
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//                                userProfileRealm.setReviewsCount(jsonDataReviewsArray.length());
+//                                userProfileRealm.setFollowersCount(jsonDataFollowersArray.length());
 
 
+//                                for(int p=0;p<jsonDataPostsArray.length();p++){
+//
+//                                    JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
+//
+//                                    JSONObject checkinObj = postObj.getJSONObject("checkin");
+//
+//                                    if(checkinObj.has("restaurant")) {
+//
+//                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+//
+//                                        UserBeenThere userBeenThere = new UserBeenThere();
+//                                        userBeenThere.setId(restaurantObj.getInt("id"));
+//                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+//                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+//                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+//                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+//                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+//                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+//
+//                                    }
+//
+//                                    JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
+//                                    for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
+//                                        JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
+//                                        PhotoModel photoModel = new PhotoModel();
+//                                        photoModel.setId(photo.getInt("id"));
+//                                        photoModel.setUrl(photo.getString("image_url"));
+//                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+//                                        userProfileRealm.getPhotoModelRealmList().add(managedPhotoModel);
+//                                    }
+//
+//                                    JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
+//                                    userProfileRealm.setCommentsCount(jsonDataCommentsArray.length());
+//                                    for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
+//                                        JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
+//                                        Comment comment= new Comment();
+//                                        comment.setCommentID(commentObj.getInt("id"));
+//                                        comment.setCommentTitle(commentObj.getString("title"));
+//                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+//                                        comment.setCommentSummary(commentObj.getString("comment"));
+//                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+//                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+//                                        comment.setCommentatorName(commentatorObj.getString("name"));
+//                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+//                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+//                                        comment.setCommentLikesCount(commentLikeArray.length());
+//                                        final Comment managedComment = realm.copyToRealm(comment);
+//                                        userProfileRealm.getCommentRealmList().add(managedComment);
+//                                    }
+//                                }
 
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
-
-                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
-
-                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
-                                        Comment comment=realm.createObject(Comment.class);
-                                        comment.setCommentID(commentObj.getInt("id"));
-                                        comment.setCommentTitle(commentObj.getString("title"));
-                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
-                                        comment.setCommentSummary(commentObj.getString("comment"));
-                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
-                                        comment.setCommentatorID(commentatorObj.getInt("id"));
-                                        comment.setCommentatorName(commentatorObj.getString("name"));
-                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
-                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
-                                        comment.setCommentLikesCount(commentLikeArray.length());
-                                        final Comment managedComment = realm.copyToRealm(comment);
-                                        reviewModel.getCommentRealmList().add(managedComment);
-                                    }
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-                                    userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
-                                }
-
-                                for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
-                                    JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
-                                    UserFollowing userFollowing=new UserFollowing();
-
-                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
-
-                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
-
-                                    userFollowing.setName(jsonFollowingObject.getString("name"));
-                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
-                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
-                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
-                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
-                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
-                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
-
-                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
-                                    userProfileRealm.getUserFollowingRealmList().add(managedUserFollowing);
-                                }
-
-                                for(int fr=0;fr<jsonDataFollowersArray.length();fr++){
-                                    JSONObject jsonFollowingObject = jsonDataFollowersArray.getJSONObject(fr);
-
-                                    UserFollowing userFollowing=new UserFollowing();
-
-                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
-                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
-
-                                    userFollowing.setName(jsonFollowingObject.getString("name"));
-                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
-                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
-                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
-                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
-                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
-                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
-
-                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
-                                    userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
-                                }
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//                                    ReviewModel reviewModel=realm.createObject(ReviewModel.class);
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//
+//
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//
+//                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+//
+//                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+//                                        Comment comment=realm.createObject(Comment.class);
+//                                        comment.setCommentID(commentObj.getInt("id"));
+//                                        comment.setCommentTitle(commentObj.getString("title"));
+//                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+//                                        comment.setCommentSummary(commentObj.getString("comment"));
+//                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+//                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+//                                        comment.setCommentatorName(commentatorObj.getString("name"));
+//                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+//                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+//                                        comment.setCommentLikesCount(commentLikeArray.length());
+//                                        final Comment managedComment = realm.copyToRealm(comment);
+//                                        reviewModel.getCommentRealmList().add(managedComment);
+//                                    }
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//                                    userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
+//                                }
+//
+//                                for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
+//                                    JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
+//                                    UserFollowing userFollowing=new UserFollowing();
+//
+//                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+//
+//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+//
+//                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+//                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+//                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+//                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+//                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+//                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+//
+//                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+//                                    userProfileRealm.getUserFollowingRealmList().add(managedUserFollowing);
+//                                }
+//
+//                                for(int fr=0;fr<jsonDataFollowersArray.length();fr++){
+//                                    JSONObject jsonFollowingObject = jsonDataFollowersArray.getJSONObject(fr);
+//
+//                                    UserFollowing userFollowing=new UserFollowing();
+//
+//                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+//
+//                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+//                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+//                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+//                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+//                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+//                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+//
+//                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+//                                    userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
+//                                }
 
 //                                userProfile=userProfileRealm;
 //                                userProfileArrayList.add(userProfileRealm);
@@ -776,13 +776,13 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
-                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
-                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
+//                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
+//                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
+//                                realmRestaurant.setReview_count(jsonDataReviewsArray.length());
                                 realmRestaurant.setBookmark_count(jsonDataLikesArray.length());
-                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
+//                                realmRestaurant.setBeen_here_count(jsonDataCheckInsArray.length());
 
                                 if(!restaurantObj.isNull("cover_image")) {
                                     JSONObject restaurantCoverImage = restaurantObj.getJSONObject("cover_image");
@@ -814,38 +814,38 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
                                     realmRestaurant.setNumbers(callObj.getString("number"));
                                 }
 
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
-                                    ReviewModel reviewModel=new ReviewModel();
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-
-                                    realmRestaurant.getReviewModels().add(managedReviewModel);
-
-                                }
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//
+//                                    ReviewModel reviewModel=new ReviewModel();
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//
+//                                    realmRestaurant.getReviewModels().add(managedReviewModel);
+//
+//                                }
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");
@@ -947,169 +947,169 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
                                 userProfileRealm.setRole(userObj.getString("role"));
 
                                 //Arrays
-                                JSONArray jsonDataFollowingArray = userObj.getJSONArray("following");
-                                JSONArray jsonDataFollowersArray = userObj.getJSONArray("followers");
-                                JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
-                                JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
+//                                JSONArray jsonDataFollowingArray = userObj.getJSONArray("following");
+//                                JSONArray jsonDataFollowersArray = userObj.getJSONArray("followers");
+//                                JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
+//                                JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
 
-                                userProfileRealm.setReviewsCount(jsonDataReviewsArray.length());
-                                userProfileRealm.setFollowersCount(jsonDataFollowersArray.length());
-
-
-                                for(int p=0;p<jsonDataPostsArray.length();p++){
-
-                                    JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
-
-                                    JSONObject checkinObj = postObj.getJSONObject("checkin");
-
-                                    if(checkinObj.has("restaurant")) {
-
-                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
-
-                                        UserBeenThere userBeenThere = new UserBeenThere();
-                                        userBeenThere.setId(restaurantObj.getInt("id"));
-                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
-                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
-                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
-                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
-                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
-                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
-
-                                    }
-
-                                    JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
-                                    for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
-                                        JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
-                                        PhotoModel photoModel = new PhotoModel();
-                                        photoModel.setId(photo.getInt("id"));
-                                        photoModel.setUrl(photo.getString("image_url"));
-                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
-                                        userProfileRealm.getPhotoModelRealmList().add(managedPhotoModel);
-                                    }
-
-                                    JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
-                                    userProfileRealm.setCommentsCount(jsonDataCommentsArray.length());
-                                    for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
-                                        JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
-                                        Comment comment= new Comment();
-                                        comment.setCommentID(commentObj.getInt("id"));
-                                        comment.setCommentTitle(commentObj.getString("title"));
-                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
-                                        comment.setCommentSummary(commentObj.getString("comment"));
-                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
-                                        comment.setCommentatorID(commentatorObj.getInt("id"));
-                                        comment.setCommentatorName(commentatorObj.getString("name"));
-                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
-                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
-                                        comment.setCommentLikesCount(commentLikeArray.length());
-                                        final Comment managedComment = realm.copyToRealm(comment);
-                                        userProfileRealm.getCommentRealmList().add(managedComment);
-                                    }
-                                }
-
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
-                                    ReviewModel reviewModel=realm.createObject(ReviewModel.class);
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//                                userProfileRealm.setReviewsCount(jsonDataReviewsArray.length());
+//                                userProfileRealm.setFollowersCount(jsonDataFollowersArray.length());
 
 
+//                                for(int p=0;p<jsonDataPostsArray.length();p++){
+//
+//                                    JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
+//
+//                                    JSONObject checkinObj = postObj.getJSONObject("checkin");
+//
+//                                    if(checkinObj.has("restaurant") && !checkinObj.isNull("restaurant")) {
+//
+//                                        JSONObject restaurantObj = checkinObj.getJSONObject("restaurant");
+//
+//                                        UserBeenThere userBeenThere = new UserBeenThere();
+//                                        userBeenThere.setId(restaurantObj.getInt("id"));
+//                                        userBeenThere.setRestaurantName(restaurantObj.getString("name"));
+//                                        userBeenThere.setRestaurantLocation(restaurantObj.getString("location"));
+//                                        userBeenThere.setCover_image_url(checkinObj.getString("restaurant_image"));
+//                                        userBeenThere.setBeenThereTime(checkinObj.getString("time"));
+//                                        final UserBeenThere beenThere = realm.copyToRealm(userBeenThere);
+//                                        userProfileRealm.getUserBeenThereRealmList().add(beenThere);
+//
+//                                    }
+//
+//                                    JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
+//                                    for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
+//                                        JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
+//                                        PhotoModel photoModel = new PhotoModel();
+//                                        photoModel.setId(photo.getInt("id"));
+//                                        photoModel.setUrl(photo.getString("image_url"));
+//                                        final PhotoModel managedPhotoModel = realm.copyToRealm(photoModel);
+//                                        userProfileRealm.getPhotoModelRealmList().add(managedPhotoModel);
+//                                    }
+//
+//                                    JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
+//                                    userProfileRealm.setCommentsCount(jsonDataCommentsArray.length());
+//                                    for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
+//                                        JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
+//                                        Comment comment= new Comment();
+//                                        comment.setCommentID(commentObj.getInt("id"));
+//                                        comment.setCommentTitle(commentObj.getString("title"));
+//                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+//                                        comment.setCommentSummary(commentObj.getString("comment"));
+//                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+//                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+//                                        comment.setCommentatorName(commentatorObj.getString("name"));
+//                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+//                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+//                                        comment.setCommentLikesCount(commentLikeArray.length());
+//                                        final Comment managedComment = realm.copyToRealm(comment);
+//                                        userProfileRealm.getCommentRealmList().add(managedComment);
+//                                    }
+//                                }
 
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//                                    ReviewModel reviewModel=realm.createObject(ReviewModel.class);
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setUpdated_at(reviewObj.getString("updated_at"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//
+//
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//
+//                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+//
+//                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
+//                                        Comment comment=realm.createObject(Comment.class);
+//                                        comment.setCommentID(commentObj.getInt("id"));
+//                                        comment.setCommentTitle(commentObj.getString("title"));
+//                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
+//                                        comment.setCommentSummary(commentObj.getString("comment"));
+//                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
+//                                        comment.setCommentatorID(commentatorObj.getInt("id"));
+//                                        comment.setCommentatorName(commentatorObj.getString("name"));
+//                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
+//                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
+//                                        comment.setCommentLikesCount(commentLikeArray.length());
+//                                        final Comment managedComment = realm.copyToRealm(comment);
+//                                        reviewModel.getCommentRealmList().add(managedComment);
+//                                    }
+//                                    realm.commitTransaction();
+//                                    realm.beginTransaction();
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//                                    userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
+//                                }
 
-                                    for (int c = 0; c < reviewCommentsArray.length(); c++) {
+//                                for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
+//                                    JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
+//                                    UserFollowing userFollowing=new UserFollowing();
+//
+//                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+//
+//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+//
+//                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+//                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+//                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+//                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+//                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+//                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+//
+//                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+//                                    userProfileRealm.getUserFollowingRealmList().add(managedUserFollowing);
+//                                }
 
-                                        JSONObject commentObj = reviewCommentsArray.getJSONObject(c);
-                                        Comment comment=realm.createObject(Comment.class);
-                                        comment.setCommentID(commentObj.getInt("id"));
-                                        comment.setCommentTitle(commentObj.getString("title"));
-                                        comment.setCommentUpdated_at(commentObj.getString("created_at"));
-                                        comment.setCommentSummary(commentObj.getString("comment"));
-                                        JSONObject commentatorObj = commentObj.getJSONObject("commentor");
-                                        comment.setCommentatorID(commentatorObj.getInt("id"));
-                                        comment.setCommentatorName(commentatorObj.getString("name"));
-                                        comment.setCommentatorImage(commentatorObj.getString("avatar"));
-                                        JSONArray commentLikeArray=commentObj.getJSONArray("likes");
-                                        comment.setCommentLikesCount(commentLikeArray.length());
-                                        final Comment managedComment = realm.copyToRealm(comment);
-                                        reviewModel.getCommentRealmList().add(managedComment);
-                                    }
-                                    realm.commitTransaction();
-                                    realm.beginTransaction();
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-                                    userProfileRealm.getReviewModelRealmList().add(managedReviewModel);
-                                }
-
-                                for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
-                                    JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
-                                    UserFollowing userFollowing=new UserFollowing();
-
-                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
-
-                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
-
-                                    userFollowing.setName(jsonFollowingObject.getString("name"));
-                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
-                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
-                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
-                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
-                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
-                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
-
-                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
-                                    userProfileRealm.getUserFollowingRealmList().add(managedUserFollowing);
-                                }
-
-                                for(int fr=0;fr<jsonDataFollowersArray.length();fr++){
-                                    JSONObject jsonFollowingObject = jsonDataFollowersArray.getJSONObject(fr);
-
-                                    UserFollowing userFollowing=new UserFollowing();
-
-                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
-                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
-                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
-                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
-
-                                    userFollowing.setName(jsonFollowingObject.getString("name"));
-                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
-                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
-                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
-                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
-                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
-                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
-
-                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
-                                    userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
-                                }
+//                                for(int fr=0;fr<jsonDataFollowersArray.length();fr++){
+//                                    JSONObject jsonFollowingObject = jsonDataFollowersArray.getJSONObject(fr);
+//
+//                                    UserFollowing userFollowing=new UserFollowing();
+//
+//                                    userFollowing.setId(jsonFollowingObject.getInt("id"));
+//                                    userFollowing.setLikesCount(jsonFollowingObject.getInt("likees_count"));
+//                                    userFollowing.setFollowerCount(jsonFollowingObject.getInt("followers_count"));
+//                                    userFollowing.setFollowingCount(jsonFollowingObject.getInt("followees_count"));
+//
+//                                    userFollowing.setName(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setUsername(jsonFollowingObject.getString("username"));
+//                                    userFollowing.setAvatar(jsonFollowingObject.getString("avatar"));
+//                                    userFollowing.setLocation(jsonFollowingObject.getString("location"));
+//                                    userFollowing.setEmail(jsonFollowingObject.getString("email"));
+//                                    userFollowing.setGender(jsonFollowingObject.getString("gender"));
+//                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
+//                                    userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
+//
+//                                    final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
+//                                    userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
+//                                }
 
 //                                userProfile=userProfileRealm;
                                 userProfileArrayList.add(userProfileRealm);
@@ -1207,13 +1207,13 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
 
                                 //Arrays
                                 JSONArray jsonDataLikesArray = restaurantObj.getJSONArray("like");
-                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
-                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
+//                                JSONArray jsonDataCheckInsArray = restaurantObj.getJSONArray("checkins");
+//                                JSONArray jsonDataReviewsArray = restaurantObj.getJSONArray("reviews");
                                 JSONArray jsonDataCallsArray = restaurantObj.getJSONArray("call_nows");
 
-                                reviewsCount=jsonDataReviewsArray.length();
+//                                reviewsCount=jsonDataReviewsArray.length();
                                 bookmarksCount=jsonDataLikesArray.length();
-                                beenHereCount=jsonDataCheckInsArray.length();
+//                                beenHereCount=jsonDataCheckInsArray.length();
 
                                 realmRestaurant.setReview_count(reviewsCount);
                                 realmRestaurant.setBookmark_count(bookmarksCount);
@@ -1249,38 +1249,38 @@ public class SearchUserAndRestaurantActivity extends AppCompatActivity implement
                                     realmRestaurant.setNumbers(callObj.getString("number"));
                                 }
 
-                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
-
-                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
-
-                                    ReviewModel reviewModel=new ReviewModel();
-
-                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
-                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
-                                    reviewModel.setReview_title(reviewObj.getString("title"));
-                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
-                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
-
-                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
-
-                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
-                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
-                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
-                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
-
-                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
-                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
-                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
-
-                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
-                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
-
-                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
-
-                                    realmRestaurant.getReviewModels().add(managedReviewModel);
-
-                                }
+//                                for (int r = 0; r < jsonDataReviewsArray.length();r++) {
+//
+//                                    JSONObject reviewObj = jsonDataReviewsArray.getJSONObject(r);
+//
+//                                    ReviewModel reviewModel=new ReviewModel();
+//
+//                                    reviewModel.setReview_ID(reviewObj.getInt("id"));
+//                                    reviewModel.setReviewable_id(reviewObj.getInt("reviewable_id"));
+//                                    reviewModel.setReview_title(reviewObj.getString("title"));
+//                                    reviewModel.setReview_summary(reviewObj.getString("summary"));
+//                                    reviewModel.setReviewable_type(reviewObj.getString("reviewable_type"));
+//
+//                                    JSONObject reviewObjReviewer= reviewObj.getJSONObject("reviewer");
+//
+//                                    reviewModel.setReview_reviewer_ID(reviewObjReviewer.getInt("id"));
+//                                    reviewModel.setReview_reviewer_Name(reviewObjReviewer.getString("name"));
+//                                    reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
+//                                    reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
+//
+//                                    JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
+//                                    JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
+//                                    JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
+//
+//                                    reviewModel.setReview_Likes_count(reviewLikesArray.length());
+//                                    reviewModel.setReview_comments_count(reviewCommentsArray.length());
+//                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+//
+//                                    final ReviewModel managedReviewModel= realm.copyToRealm(reviewModel);
+//
+//                                    realmRestaurant.getReviewModels().add(managedReviewModel);
+//
+//                                }
 
                                 if(!restaurantObj.isNull("menu")) {
                                     JSONObject restaurantMenu = restaurantObj.getJSONObject("menu");
