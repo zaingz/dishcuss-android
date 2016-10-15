@@ -311,67 +311,66 @@ public class SignupActivity extends AppCompatActivity implements
 
     void SendDataOnServer(){
 
-        if(!Str_Referral_Code.equals("")){
-            Constants.SetReferral(SignupActivity.this,true);
-        }
+                                       if(!Str_Referral_Code.equals("")){
+                                    Constants.SetReferral(SignupActivity.this,true);
+                                }
 
-        FormBody body = new FormBody.Builder()
-                .add("user[name]",strUserFullName)
-                .add("user[email]", strUserEmail)
-                .add("user[username]", strUserName)
-                .add("user[avatar]", "")
-                .add("user[location]", strUserLocation)
-                .add("user[gender]", strUserGender)
-                .add("user[password]", strUserPassword)
-                .add("user[referal_code]", Str_Referral_Code)
-                .build();
+                                FormBody body = new FormBody.Builder()
+                                        .add("user[name]",strUserFullName)
+                                        .add("user[email]", strUserEmail)
+                                        .add("user[username]", strUserName)
+                                        .add("user[avatar]", "")
+                                        .add("user[location]", strUserLocation)
+                                        .add("user[gender]", strUserGender)
+                                        .add("user[password]", strUserPassword)
+                                        .add("user[referal_code]", Str_Referral_Code)
+                                        .build();
 
-        Request request = new Request.Builder()
-                .url(URLs.Native_SignUp_URL)
-                .post(body)
-                .build();
+                                Request request = new Request.Builder()
+                                        .url(URLs.Native_SignUp_URL)
+                                        .post(body)
+                                        .build();
 
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-            }
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
 
-                final String obj=response.body().string();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try{
+                                        final String obj=response.body().string();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try{
 
-                            Log.e("Obj",obj.toString());
-                            JSONObject jsonObject=new JSONObject(obj);
-                            if(jsonObject.has("user")){
-                                JSONObject usersJsonObject = jsonObject.getJSONObject("user");
-        //                   // Get a Realm instance for this thread
-                                realm = Realm.getDefaultInstance();
-                                // Persist your data in a transaction
-                                realm.beginTransaction();
-                                User user = realm.createObject(User.class); // Create managed objects directly
-                                user.setId(usersJsonObject.getInt("id"));
-                                user.setName(usersJsonObject.getString("name"));
-                                user.setDob(usersJsonObject.getString("date_of_birth"));
-                                user.setLocation(usersJsonObject.getString("location"));
-                                user.setUsername(usersJsonObject.getString("username"));
-                                user.setAvatar(usersJsonObject.getString("avatar"));
-                                user.setEmail(usersJsonObject.getString("email"));
-                                user.setGender(usersJsonObject.getString("gender"));
-                                user.setProvider(usersJsonObject.getString("provider"));
-                                user.setToken(usersJsonObject.getString("token"));
-                                user.setReferral_code(usersJsonObject.getString("referral_code"));
-                                realm.commitTransaction();
-                                realm.close();
+                                                    Log.e("Obj",obj.toString());
+                                                    JSONObject jsonObject=new JSONObject(obj);
+                                                    if(jsonObject.has("user")){
+                                                        JSONObject usersJsonObject = jsonObject.getJSONObject("user");
+                                                        //                   // Get a Realm instance for this thread
+                                                        realm = Realm.getDefaultInstance();
+                                                        // Persist your data in a transaction
+                                                        realm.beginTransaction();
+                                                        User user = realm.createObject(User.class); // Create managed objects directly
+                                                        user.setId(usersJsonObject.getInt("id"));
+                                                        user.setName(usersJsonObject.getString("name"));
+                                                        user.setDob(usersJsonObject.getString("date_of_birth"));
+                                                        user.setLocation(usersJsonObject.getString("location"));
+                                                        user.setUsername(usersJsonObject.getString("username"));
+                                                        user.setAvatar(usersJsonObject.getString("avatar"));
+                                                        user.setEmail(usersJsonObject.getString("email"));
+                                                        user.setGender(usersJsonObject.getString("gender"));
+                                                        user.setProvider(usersJsonObject.getString("provider"));
+                                                        user.setToken(usersJsonObject.getString("token"));
+                                                        user.setReferral_code(usersJsonObject.getString("referral_code"));
+                                                        realm.commitTransaction();
+                                                        realm.close();
 
-                                Intent intent=new Intent(SignupActivity.this,HomeActivity.class);
+                                Intent intent=new Intent(SignupActivity.this,EmailConfirmationActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
-                                Constants.SetUserLoginStatus(SignupActivity.this,true);
                                 finish();
                             }
                             else  if(jsonObject.has("message")){
@@ -389,9 +388,9 @@ public class SignupActivity extends AppCompatActivity implements
             }
         });
 
-        if(!message.isEmpty() && !message.equals("")){
-            Crouton.makeText(SignupActivity.this,message, Style.ALERT).show();
-        }
+//        if(!message.isEmpty() && !message.equals("")){
+//            Crouton.makeText(SignupActivity.this,message, Style.ALERT).show();
+//        }
     }
 
 

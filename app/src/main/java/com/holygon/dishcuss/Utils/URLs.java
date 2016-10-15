@@ -7,6 +7,7 @@ public class URLs {
 
     public static String Native_SignUp_URL="http://dishcuss-api.herokuapp.com/user/signup";
     public static String Native_SignIn_URL="http://dishcuss-api.herokuapp.com/user/signin";
+    public static String Native_Email_verify="http://dishcuss-api.herokuapp.com/user/email/verify/";
 
     public static String UPDATE_PROFILE="http://dishcuss-api.herokuapp.com/user";
 

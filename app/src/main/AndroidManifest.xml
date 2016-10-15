@@ -64,6 +64,10 @@
             android:name=".Activities.SignupActivity"
             android:theme="@style/MyMaterialTheme"/>
 
+         <activity
+            android:name=".Activities.EmailConfirmationActivity"
+            android:theme="@style/MyMaterialTheme"/>
+
         <activity
             android:name=".Activities.SelectRestaurantActivity"
             android:theme="@style/MyMaterialTheme" />

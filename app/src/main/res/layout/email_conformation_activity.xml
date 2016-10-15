@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/app_toolbar"
+        android:id="@+id/toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome to"
+                android:textSize="17dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Dishcuss"
+                android:textColor="@color/colorAccent"
+                android:textSize="17dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:src="@drawable/dishcuss_icon"
+            android:layout_marginBottom="20dp"/>
+
+        <TextView
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check your email and enter verification code to get started"
+            android:textSize="17dp"/>
+
+
+        <EditText
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:id="@+id/edt_code"
+            android:layout_width="match_parent"
+            android:textColorHint="@color/hint_color"
+            android:hint="Verification Code"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorAccent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:id="@+id/confirmation_code_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:background="@drawable/bg_bubble_orange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confirm"
+                android:textColor="@color/tw__solid_white"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

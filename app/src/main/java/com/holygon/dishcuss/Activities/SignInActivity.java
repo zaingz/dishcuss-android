@@ -159,12 +159,19 @@ public class SignInActivity extends AppCompatActivity {
                         realm.commitTransaction();
                         realm.close();
 
-                        Intent intent=new Intent(SignInActivity.this,HomeActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        DismissSpinner();
-                        Constants.SetUserLoginStatus(SignInActivity.this,true);
-                        finish();
+                        if(usersJsonObject.getBoolean("email_verified")){
+                            Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            DismissSpinner();
+                            Constants.SetUserLoginStatus(SignInActivity.this, true);
+                            finish();
+                        }else {
+                            Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                     else  if(jsonObject.has("message")){
                         message= jsonObject.getString("message");
