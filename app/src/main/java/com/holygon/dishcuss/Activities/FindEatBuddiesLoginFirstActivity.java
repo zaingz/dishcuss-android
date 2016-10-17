@@ -372,6 +372,8 @@ public class FindEatBuddiesLoginFirstActivity extends AppCompatActivity {
                         realm.commitTransaction();
                         realm.close();
 
+                        Notifications(usersJsonObject.getString("token"));
+
                         rawName= Constants.GetUserFacebookFriends(FindEatBuddiesLoginFirstActivity.this);
                         Intent intent = new Intent(FindEatBuddiesLoginFirstActivity.this,FindYourEatBuddiesActivity.class);
                         Constants.SetUserLoginStatus(FindEatBuddiesLoginFirstActivity.this,true);
@@ -456,5 +458,73 @@ public class FindEatBuddiesLoginFirstActivity extends AppCompatActivity {
         userProfileRealmResults.deleteAllFromRealm();
 
         realm.commitTransaction();
+    }
+
+    void Notifications(String token){
+
+        Realm realm = Realm.getDefaultInstance();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Old_Notifications)
+                .addHeader("Authorization", "Token token="+token)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("users");
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                boolean isDataExist=false;
+
+                                if(!isDataExist) {
+                                    Realm realm=Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    Notifications notification = realm.createObject(Notifications.class);
+
+                                    notification.setId(c.getInt("id"));
+                                    notification.setBody(c.getString("body"));
+
+                                    if (!c.isNull("notifier")) {
+                                        JSONObject notifier = c.getJSONObject("notifier");
+                                        notification.setUserID(notifier.getInt("id"));
+                                        notification.setUsername(notifier.getString("username"));
+                                        notification.setAvatarPic(notifier.getString("avatar"));
+                                    }
+                                    if (!c.isNull("redirect_to")) {
+                                        JSONObject redirect = c.getJSONObject("redirect_to");
+                                        notification.setRedirectID(redirect.getInt("id"));
+                                        notification.setRedirectType(redirect.getString("typee"));
+                                    }
+
+                                    realm.commitTransaction();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 }

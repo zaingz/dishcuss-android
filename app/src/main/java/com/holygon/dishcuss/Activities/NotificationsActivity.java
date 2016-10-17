@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.holygon.dishcuss.Adapters.NotificationAdapter;
 import com.holygon.dishcuss.Listners.OnLoadMoreListener;
 import com.holygon.dishcuss.Model.Notifications;
@@ -29,10 +31,13 @@ import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Call;
@@ -42,9 +47,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 8/18/2016.
+ * Created by Naeem Ibrahim on 10/17/2016.
  */
-public class NotificationActivity extends AppCompatActivity {
+public class NotificationsActivity extends AppCompatActivity {
 
     RecyclerView notificationRecyclerView;
     private RecyclerView.LayoutManager notificationLayoutManager;
@@ -87,36 +92,25 @@ public class NotificationActivity extends AppCompatActivity {
             @Override
             public void onLoadMore() {
 
-
-                notificationsShowing.add(null);
-                notificationAdapter.notifyItemInserted(notificationsShowing.size() - 1);
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
-                        //Remove loading item
-                        notificationsShowing.remove(notificationsShowing.size() - 1);
-                        notificationAdapter.notifyItemRemoved(notificationsShowing.size());
-                        //Load data
+//                        //Load data
                         int index = notificationsShowing.size();
                         int end = index + 20;
-
-                        if(notificationsArrayList.size()>end)
+                        if(end>notificationsArrayList.size())
                         {
                             for (int i = index; i < end; i++)
                             {
                                 notificationsShowing.add(notificationsArrayList.get(i));
                             }
                         }
-
                         else
                         {
                             for (int i = index; i < notificationsArrayList.size(); i++) {
                                 notificationsShowing.add(notificationsArrayList.get(i));
                             }
                         }
-
                         notificationAdapter.notifyDataSetChanged();
                         notificationAdapter.setLoaded();
                     }
@@ -157,7 +151,7 @@ public class NotificationActivity extends AppCompatActivity {
                 int position = viewHolder.getAdapterPosition();
                 if (direction == ItemTouchHelper.RIGHT)
                 {
-                    //  notificationAdapter.remove(position);
+                  //  notificationAdapter.remove(position);
                 }
 //                else if (direction == ItemTouchHelper.LEFT)
 //                {
@@ -248,20 +242,11 @@ public class NotificationActivity extends AppCompatActivity {
             notificationsArrayList.add(notificationsRealmResults.get(i));
         }
 
-
-        if(notificationsArrayList.size()>20)
-        {
-            for(int i=0;i<20;i++){
-                notificationsShowing.add(notificationsArrayList.get(i));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < notificationsArrayList.size(); i++) {
-                notificationsShowing.add(notificationsArrayList.get(i));
-            }
+        for(int i=0;i<20;i++){
+            notificationsShowing.add(notificationsArrayList.get(i));
         }
         realm.commitTransaction();
+//        progressBar.setVisibility(View.GONE);
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
@@ -330,10 +315,10 @@ public class NotificationActivity extends AppCompatActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == VIEW_TYPE_ITEM) {
-                View view = LayoutInflater.from(NotificationActivity.this).inflate(R.layout.select_a_restaurant_row, parent, false);
+                View view = LayoutInflater.from(NotificationsActivity.this).inflate(R.layout.select_a_restaurant_row, parent, false);
                 return new UserViewHolder(view);
             } else if (viewType == VIEW_TYPE_LOADING) {
-                View view = LayoutInflater.from(NotificationActivity.this).inflate(R.layout.loading_progress_bar, parent, false);
+                View view = LayoutInflater.from(NotificationsActivity.this).inflate(R.layout.loading_progress_bar, parent, false);
                 return new LoadingViewHolder(view);
             }
             return null;
@@ -342,12 +327,16 @@ public class NotificationActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             if (holder instanceof UserViewHolder) {
-//                Notifications notifications = notificationsShowing.get(position);
+                Notifications notifications = notificationsShowing.get(position);
                 UserViewHolder userViewHolder = (UserViewHolder) holder;
-                userViewHolder.notifierName.setText(notificationsShowing.get(position).getUsername());
-                userViewHolder.body.setText(notificationsShowing.get(position).getBody());
+                userViewHolder.notifierName.setText(notificationsArrayList.get(position).getUsername());
 
-                Constants.PicassoImageBackground(notificationsShowing.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationActivity.this);
+//        if(notificationsArrayList.get(position).getUsername().isEmpty()) {
+//            holder.notifierName.setVisibility(View.GONE);
+//        }
+                userViewHolder.body.setText(notificationsArrayList.get(position).getBody());
+
+                Constants.PicassoImageBackground(notificationsArrayList.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationsActivity.this);
 
 
 
@@ -356,42 +345,47 @@ public class NotificationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        if(notificationsShowing.get(position).getRedirectType().toString().equals("Credit")){
-                            Intent intent=new Intent(NotificationActivity.this, MyWalletActivity.class);
+
+//                Toast.makeText(context,notificationsArrayList.get(position).getRedirectType()+" "+notificationsArrayList.get(position).getRedirectID(),Toast.LENGTH_SHORT).show();
+
+                        if(notificationsArrayList.get(position).getRedirectType().toString().equals("Credit")){
+                            Intent intent=new Intent(NotificationsActivity.this, MyWalletActivity.class);
                             startActivity(intent);
                         }
 
 
-                        if(notificationsShowing.get(position).getRedirectType().toString().equals("User")){
-                            if(notificationsShowing.get(position).getRedirectID()!=0) {
-                                Intent intent = new Intent(NotificationActivity.this, ProfilesDetailActivity.class);
-                                intent.putExtra("UserID", notificationsShowing.get(position).getRedirectID());
+                        if(notificationsArrayList.get(position).getRedirectType().toString().equals("User")){
+                            if(notificationsArrayList.get(position).getRedirectID()!=0) {
+                                Intent intent = new Intent(NotificationsActivity.this, ProfilesDetailActivity.class);
+                                intent.putExtra("UserID", notificationsArrayList.get(position).getRedirectID());
                                 startActivity(intent);
                             }
                         }
 
-                        if(notificationsShowing.get(position).getRedirectType().toString().equals("Post")){
-                            Intent intent = new Intent(NotificationActivity.this, NotificationClickPostDetail.class);
-                            intent.putExtra("TypeID", notificationsShowing.get(position).getRedirectID());
+                        if(notificationsArrayList.get(position).getRedirectType().toString().equals("Post")){
+                            Intent intent = new Intent(NotificationsActivity.this, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID", notificationsArrayList.get(position).getRedirectID());
                             intent.putExtra("Type", "Post");
                             startActivity(intent);
                         }
-                        if(notificationsShowing.get(position).getRedirectType().toString().equals("Review"))
-                        {
-                            Intent intent = new Intent(NotificationActivity.this, NotificationClickPostDetail.class);
-                            intent.putExtra("TypeID", notificationsShowing.get(position).getRedirectID());
+                        if(notificationsArrayList.get(position).getRedirectType().toString().equals("Review")){
+                            Intent intent = new Intent(NotificationsActivity.this, NotificationClickPostDetail.class);
+                            intent.putExtra("TypeID", notificationsArrayList.get(position).getRedirectID());
                             intent.putExtra("Type", "Review");
                             startActivity(intent);
                         }
                     }
                 });
 
+                holder.setIsRecyclable(false);
+
+
             } else if (holder instanceof LoadingViewHolder) {
                 LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
                 loadingViewHolder.progressBar.setIndeterminate(true);
             }
 
-            holder.setIsRecyclable(false);
+
         }
 
         @Override

@@ -79,8 +79,7 @@ public class HomeFragment2 extends Fragment {
     private ViewPager viewPager;
     AppCompatActivity activity;
     RecyclerView localFeedsRecyclerView,myFeedsRecyclerView,peopleAroundYouRecyclerView;
-    private RecyclerView.LayoutManager myFeedsLayoutManager;
-    private LinearLayoutManager localFeedsLayoutManager,peopleAroundYouLayoutManager;
+    private LinearLayoutManager localFeedsLayoutManager,peopleAroundYouLayoutManager,myFeedsLayoutManager;
     RelativeLayout local_feeds_layout,my_feeds_layout,people_around_you_layout;
     TextView local_feeds_text,my_feeds_text,peopleAroundYouTextView;
     ArrayList<Notifications> notificationsArrayList=new ArrayList<>();

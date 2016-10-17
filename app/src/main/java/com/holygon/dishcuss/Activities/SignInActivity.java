@@ -12,11 +12,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -157,9 +160,9 @@ public class SignInActivity extends AppCompatActivity {
                         user.setToken(usersJsonObject.getString("token"));
                         user.setReferral_code(usersJsonObject.getString("referral_code"));
                         realm.commitTransaction();
-                        realm.close();
 
                         if(usersJsonObject.getBoolean("email_verified")){
+                            Notifications(usersJsonObject.getString("token"));
                             Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -167,6 +170,7 @@ public class SignInActivity extends AppCompatActivity {
                             Constants.SetUserLoginStatus(SignInActivity.this, true);
                             finish();
                         }else {
+                            Notifications(usersJsonObject.getString("token"));
                             Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -202,5 +206,73 @@ public class SignInActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    void Notifications(String token){
+
+        realm = Realm.getDefaultInstance();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Old_Notifications)
+                .addHeader("Authorization", "Token token="+token)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("users");
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                boolean isDataExist=false;
+
+                                if(!isDataExist) {
+                                    Realm realm=Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    Notifications notification = realm.createObject(Notifications.class);
+
+                                    notification.setId(c.getInt("id"));
+                                    notification.setBody(c.getString("body"));
+
+                                    if (!c.isNull("notifier")) {
+                                        JSONObject notifier = c.getJSONObject("notifier");
+                                        notification.setUserID(notifier.getInt("id"));
+                                        notification.setUsername(notifier.getString("username"));
+                                        notification.setAvatarPic(notifier.getString("avatar"));
+                                    }
+                                    if (!c.isNull("redirect_to")) {
+                                        JSONObject redirect = c.getJSONObject("redirect_to");
+                                        notification.setRedirectID(redirect.getInt("id"));
+                                        notification.setRedirectType(redirect.getString("typee"));
+                                    }
+
+                                    realm.commitTransaction();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 }

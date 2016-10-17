@@ -52,11 +52,13 @@ public class URLs {
     public static String Add_Comment_Post="http://dishcuss-api.herokuapp.com/user/posts/comment/new";
 
     //Get User Data
-
     public static String Get_User_data="http://dishcuss-api.herokuapp.com/user/social/";
 
     //Notification
     public static String Get_Notification="http://dishcuss-api.herokuapp.com/user/notifications";
+
+    //Old Notifications
+    public static String Get_Old_Notifications="http://dishcuss-api.herokuapp.com/user/all_notifications";
 
     //QR
     public static String QR="http://dishcuss-api.herokuapp.com/user/claim_credit";
