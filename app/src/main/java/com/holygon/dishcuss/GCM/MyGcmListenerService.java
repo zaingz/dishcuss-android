@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -31,6 +33,7 @@ import com.holygon.dishcuss.Activities.HomeActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.SignInActivity;
 import com.holygon.dishcuss.Fragments.HomeFragment2;
+import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.DishCussApplication;
@@ -38,6 +41,7 @@ import com.holygon.dishcuss.Utils.DishCussApplication;
 public class MyGcmListenerService extends GcmListenerService {
 
     private static final String TAG = "MyGcmListenerService";
+    Handler handler;
 
     /**
      * Called when message is received.
@@ -57,15 +61,21 @@ public class MyGcmListenerService extends GcmListenerService {
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
         Log.d(TAG, "App: " + title);
-
+        handler = new Handler(Looper.getMainLooper());
 
         sendNotification(message,title);
         DishCussApplication app = (DishCussApplication) this.getApplication();
         if (!app.isAppIsInBackground(getApplicationContext()))
         {
-            NotificationActivity.newNotifications++;
-            Log.e("Notifications",""+NotificationActivity.newNotifications);
-//            HomeFragment2.ShowNotifications();
+//            NotificationActivity.newNotifications++;
+//            Log.e("Notifications",""+NotificationActivity.newNotifications);
+////            HomeFragment2.ShowNotifications();
+           handler.post(new Runnable() {
+               @Override
+               public void run() {
+                   BusProvider.getInstance().post("Notification");
+               }
+           });
         }
     }
 

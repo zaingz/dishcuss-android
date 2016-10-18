@@ -390,8 +390,12 @@ public class LoginActivity extends AppCompatActivity implements
 //                            Log.e("object: ", object.toString());
 
                             try {
+
+                                String newUrlString = object.getString("name").toString().replaceAll(" ", "_");
                                 if(object.has("email")){
                                     email=object.getString("email").toString();
+                                }else {
+                                    email=newUrlString+"@facebook.com";
                                 }
                                 name= object.getString("name").toString();
                                 uid=object.getString("id").toString();
@@ -411,11 +415,7 @@ public class LoginActivity extends AppCompatActivity implements
                                 expires_at="";
 
                                 if(!isFacebookCalled){
-                                    if(!Constants.GetReferral(LoginActivity.this)) {
-                                        AlertDialog();
-                                    }else {
-                                        SocialLoginSendDataOnServer();
-                                    }
+                                    SocialLoginSendDataOnServer();
                                     isFacebookCalled=true;
                                 }
 
@@ -529,11 +529,9 @@ public class LoginActivity extends AppCompatActivity implements
                 expires_at="";
 
                 Log.e("G token",""+token);
-                if(!Constants.GetReferral(LoginActivity.this)) {
-                    AlertDialog();
-                }else {
-                    SocialLoginSendDataOnServer();
-                }
+
+                SocialLoginSendDataOnServer();
+
 
 
             } else {
@@ -646,6 +644,8 @@ public class LoginActivity extends AppCompatActivity implements
 //                        Log.e("Twitter",username+" "+profileImage);
                         if(tUser.email!=null){
                             email=tUser.email;
+                        }else {
+                            email=username+"@twitter.com";
                         }
 
                         name=tUser.name;
@@ -658,12 +658,7 @@ public class LoginActivity extends AppCompatActivity implements
                         token="twsaiswahtter"+tUser.idStr+rand;
                         profilePicURL=tUser.profileImageUrl;
                         profileURL=tUser.profileImageUrl;
-
-                        if(!Constants.GetReferral(LoginActivity.this)) {
-                            AlertDialog();
-                        }else {
-                            SocialLoginSendDataOnServer();
-                        }
+                        SocialLoginSendDataOnServer();
                     }
                 });
     }
@@ -736,13 +731,27 @@ public class LoginActivity extends AppCompatActivity implements
                         user.setToken(usersJsonObject.getString("token"));
                         user.setReferral_code(usersJsonObject.getString("referral_code"));
 
+                        final String token=usersJsonObject.getString("token");
+
                         realm.commitTransaction();
 
-                        Notifications(usersJsonObject.getString("token"));
-                        Intent intent=new Intent(LoginActivity.this,HomeActivity.class);
-                        startActivity(intent);
-                        Constants.SetUserLoginStatus(LoginActivity.this,true);
-                        finish();
+                        if(!usersJsonObject.getBoolean("referal_code_used")) {
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog(token);
+                                }
+                            });
+
+
+                        }else {
+                            Notifications(usersJsonObject.getString("token"));
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            Constants.SetUserLoginStatus(LoginActivity.this, true);
+                            finish();
+                        }
                     }
                     else  if(jsonObject.has("message")){
                         message= jsonObject.getString("message");
@@ -795,7 +804,7 @@ public class LoginActivity extends AppCompatActivity implements
         realm.commitTransaction();
     }
 
-    void AlertDialog(){
+    void AlertDialog(final String token){
         final EditText edittext = new EditText(LoginActivity.this);
         alert.setTitle("Enter Referral Code if any ");
 
@@ -805,15 +814,29 @@ public class LoginActivity extends AppCompatActivity implements
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 Str_Referral_Code = edittext.getText().toString();
-                SocialLoginSendDataOnServer();
-                Constants.SetReferral(LoginActivity.this,true);
-                dialog.cancel();
+                if(!Str_Referral_Code.equals("") && Str_Referral_Code!=null) {
+
+//                SocialLoginSendDataOnServer();
+//                Constants.SetReferral(LoginActivity.this,true);
+                    SendReferralOnServer(Str_Referral_Code, token);
+                    Notifications(token);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    Constants.SetUserLoginStatus(LoginActivity.this, true);
+                    finish();
+                    dialog.cancel();
+                }
             }
         });
 
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                SocialLoginSendDataOnServer();
+//                SocialLoginSendDataOnServer();
+                Notifications(token);
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                Constants.SetUserLoginStatus(LoginActivity.this, true);
+                finish();
                 dialog.cancel();
             }
         });
@@ -883,6 +906,42 @@ public class LoginActivity extends AppCompatActivity implements
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                });
+            }
+        });
+    }
+
+
+    void SendReferralOnServer(String cc, String token){
+
+        Request request = new Request.Builder()
+                .url(URLs.Send_Referral_Code+cc)
+                .addHeader("Authorization", "Token token="+token)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String obj=response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+
+                            Log.e("Obj",obj.toString());
+                            JSONObject jsonObject=new JSONObject(obj);
+
+
+                        }catch (Exception e){
+                            Log.i("Exception ::",""+ e.getMessage());
+                        }
+
                     }
                 });
             }

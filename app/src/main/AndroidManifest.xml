@@ -56,7 +56,8 @@
             android:theme="@style/MyMaterialTheme" />
 
         <activity
-            android:name=".Activities.LoginActivity"/>
+            android:name=".Activities.LoginActivity"
+            android:theme="@style/MySplashTheme"/>
         <activity
             android:name=".Activities.SignInActivity"
             android:theme="@style/MyMaterialTheme"/>
@@ -125,6 +126,10 @@
 
         <activity
             android:name=".Activities.UpdateProfileActivity"
+            android:theme="@style/MyMaterialTheme" />
+
+        <activity
+            android:name=".Activities.UserImagesActivity"
             android:theme="@style/MyMaterialTheme" />
 
         <activity

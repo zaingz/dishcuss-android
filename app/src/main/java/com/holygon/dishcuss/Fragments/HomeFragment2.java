@@ -36,6 +36,7 @@ import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Adapters.HomeLocalFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomeMyFeedsAdapter;
 import com.holygon.dishcuss.Adapters.HomePeopleAroundAdapter;
+import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.Helper.EndlessRecyclerOnScrollListener;
 import com.holygon.dishcuss.Helper.LocalFeedsRecyclerOnScrollListener;
 import com.holygon.dishcuss.Model.Comment;
@@ -52,6 +53,7 @@ import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1250,7 +1252,6 @@ public class HomeFragment2 extends Fragment {
                         }catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 });
             }
@@ -1571,6 +1572,7 @@ public class HomeFragment2 extends Fragment {
 
                                 }
                             }
+
                             progressBar.setVisibility(View.GONE);
                             myFeedCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
                             myFeedReview=localFeeds.getLocalFeedReviewRealmList().size();
@@ -1578,16 +1580,16 @@ public class HomeFragment2 extends Fragment {
                             myFeedsRecyclerView.setAdapter(homeMyFeedsAdapter);
                             realm.commitTransaction();
                             realm.close();
-                        }catch (JSONException e) {
+                        }
+                        catch (JSONException e)
+                        {
                             e.printStackTrace();
                         }
-
                     }
                 });
             }
         });
     }
-
 
 
     //
@@ -1740,7 +1742,6 @@ public class HomeFragment2 extends Fragment {
                                         notification.setRedirectType(redirect.getString("typee"));
                                     }
 
-
                                     notificationsArrayList.add(notification);
                                     realm.commitTransaction();
                                 }
@@ -1781,7 +1782,31 @@ public class HomeFragment2 extends Fragment {
         realm.commitTransaction();
     }
 
-    public static void ShowNotifications(){
-        badge.show();
+    public void ShowNotifications(){
+//        badge.show();
+        Notifications();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        BusProvider.getInstance().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onMessageEvent(String event){
+        notificationsArrayList=new ArrayList<>();
+        Notifications();
+    }
+
+//    @Subscribe
+//    public void onMessageEvent(int event){
+//        Notifications();
+//    }
 }

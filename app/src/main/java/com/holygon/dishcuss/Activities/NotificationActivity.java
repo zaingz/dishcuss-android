@@ -349,9 +349,6 @@ public class NotificationActivity extends AppCompatActivity {
 
                 Constants.PicassoImageBackground(notificationsShowing.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationActivity.this);
 
-
-
-
                 userViewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -360,7 +357,6 @@ public class NotificationActivity extends AppCompatActivity {
                             Intent intent=new Intent(NotificationActivity.this, MyWalletActivity.class);
                             startActivity(intent);
                         }
-
 
                         if(notificationsShowing.get(position).getRedirectType().toString().equals("User")){
                             if(notificationsShowing.get(position).getRedirectID()!=0) {
@@ -376,6 +372,7 @@ public class NotificationActivity extends AppCompatActivity {
                             intent.putExtra("Type", "Post");
                             startActivity(intent);
                         }
+
                         if(notificationsShowing.get(position).getRedirectType().toString().equals("Review"))
                         {
                             Intent intent = new Intent(NotificationActivity.this, NotificationClickPostDetail.class);
@@ -383,6 +380,7 @@ public class NotificationActivity extends AppCompatActivity {
                             intent.putExtra("Type", "Review");
                             startActivity(intent);
                         }
+                        
                     }
                 });
 

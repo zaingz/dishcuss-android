@@ -1,8 +1,10 @@
 package com.holygon.dishcuss.Activities;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -50,6 +52,8 @@ public class SignInActivity extends AppCompatActivity {
     Realm realm;
     String message="";
 
+    AlertDialog.Builder alert;
+    String Str_Referral_Code="";
 
     //*******************PROGRESS******************************
     private ProgressDialog mSpinner;
@@ -77,6 +81,7 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
         final Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        alert = new AlertDialog.Builder(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         client = new OkHttpClient();
         FindViewsByID();
@@ -161,20 +166,44 @@ public class SignInActivity extends AppCompatActivity {
                         user.setReferral_code(usersJsonObject.getString("referral_code"));
                         realm.commitTransaction();
 
+
+                        final String token=usersJsonObject.getString("token");
+                        final boolean isVerified=usersJsonObject.getBoolean("email_verified");
+
                         if(usersJsonObject.getBoolean("email_verified")){
-                            Notifications(usersJsonObject.getString("token"));
-                            Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            DismissSpinner();
-                            Constants.SetUserLoginStatus(SignInActivity.this, true);
-                            finish();
-                        }else {
-                            Notifications(usersJsonObject.getString("token"));
-                            Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
+
+                            if(!usersJsonObject.getBoolean("referal_code_used")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlertDialog(token,isVerified);
+                                    }
+                                });
+                            }else {
+                                Notifications(usersJsonObject.getString("token"));
+                                Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                DismissSpinner();
+                                Constants.SetUserLoginStatus(SignInActivity.this, true);
+                                finish();
+
+                            }
+                        }else{
+                            if(!usersJsonObject.getBoolean("referal_code_used")) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        AlertDialog(token,isVerified);
+                                    }
+                                });
+                            }else {
+                                Notifications(usersJsonObject.getString("token"));
+                                Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
                     }
                     else  if(jsonObject.has("message")){
@@ -270,6 +299,100 @@ public class SignInActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                });
+            }
+        });
+    }
+
+    void AlertDialog(final String token, final boolean emailVerified){
+        DismissSpinner();
+        final EditText edittext = new EditText(SignInActivity.this);
+        alert.setTitle("Enter Referral Code if any ");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+                Str_Referral_Code = edittext.getText().toString();
+                if(!Str_Referral_Code.equals("") && Str_Referral_Code!=null) {
+
+//                SocialLoginSendDataOnServer();
+//                Constants.SetReferral(LoginActivity.this,true);
+                    SendReferralOnServer(Str_Referral_Code, token);
+                    if(emailVerified) {
+                        Notifications(token);
+                        Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        Constants.SetUserLoginStatus(SignInActivity.this, true);
+                        finish();
+                    }else {
+                        Notifications(token);
+                        Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                    dialog.cancel();
+                }
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+//                SocialLoginSendDataOnServer();
+                if(emailVerified) {
+                    Notifications(token);
+                    Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    Constants.SetUserLoginStatus(SignInActivity.this, true);
+                    finish();
+                }else {
+                    Notifications(token);
+                    Intent intent=new Intent(SignInActivity.this,EmailConfirmationActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+                dialog.cancel();
+            }
+        });
+
+        alert.show();
+    }
+
+    void SendReferralOnServer(String cc, String token){
+
+        Request request = new Request.Builder()
+                .url(URLs.Send_Referral_Code+cc)
+                .addHeader("Authorization", "Token token="+token)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String obj=response.body().string();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try{
+
+                            Log.e("Obj",obj.toString());
+                            JSONObject jsonObject=new JSONObject(obj);
+
+
+                        }catch (Exception e){
+                            Log.i("Exception ::",""+ e.getMessage());
+                        }
+
                     }
                 });
             }

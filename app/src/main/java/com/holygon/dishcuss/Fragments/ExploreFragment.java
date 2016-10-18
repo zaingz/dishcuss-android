@@ -113,8 +113,10 @@ public class ExploreFragment extends Fragment{
         exploreRecyclerView.setOnScrollListener(new EndlessRecyclerOnScrollListener(exploreLayoutManager) {
             @Override
             public void onLoadMore(int current_page,int current_item) {
-                progressBar.setVisibility(View.VISIBLE);
 
+                Log.e("Current Item",""+current_item);
+
+              //  progressBar.setVisibility(View.VISIBLE);
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -123,9 +125,11 @@ public class ExploreFragment extends Fragment{
                         progressBar.setVisibility(View.GONE);
                     }
                 }, 2*1000);
+
                 // do something...
+
                 restaurantRealmListVisibleData=new ArrayList<>();
-                int newLoad=current_item+3;
+                int newLoad=current_item+10;
 
                 if(restaurantRealmListServerData.size()>=newLoad)
                 {
@@ -133,7 +137,6 @@ public class ExploreFragment extends Fragment{
                         restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
                     }
                 }
-
                 else
                 {
                     for (int j = current_item; j<restaurantRealmListServerData.size() ; j++) {
@@ -250,7 +253,6 @@ public class ExploreFragment extends Fragment{
         pundit_linear_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getActivity(), PunditSelectionActivity.class);
                 startActivity(intent);
             }
@@ -435,16 +437,22 @@ public class ExploreFragment extends Fragment{
                                 restaurantRealmListServerData.add(realmRestaurant);
                             }
 
+                            Log.e("ExpSize",""+restaurantRealmListServerData.size());
 
-                            for(int i=0;i<3;i++){
-                                restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+                            if(restaurantRealmListServerData.size()>=10) {
+
+                                for (int i = 0; i < 10; i++) {
+                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+                                }
+                            }else {
+                                for (int i = 0; i < restaurantRealmListServerData.size(); i++) {
+                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+                                }
                             }
-
-
+                           progressBar.setVisibility(View.GONE);
                            adapter = new ExploreAdapter(restaurantRealmListVisibleData,getActivity());
-                            exploreRecyclerView.setAdapter(adapter);
-                            progressBar.setVisibility(View.GONE);
-                            realm.close();
+                           exploreRecyclerView.setAdapter(adapter);
+                           realm.close();
 
                         } catch (JSONException e) {
                             e.printStackTrace();

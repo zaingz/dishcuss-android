@@ -46,7 +46,6 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             // Do something
             current_page++;
 
-
             onLoadMore(current_page,totalItemCount);
 
             loading = true;

@@ -6,20 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.holygon.dishcuss.Adapters.BookmarkedRestaurantAdapter;
-import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.BookmarkData;
-import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.FoodsCategory;
-import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.URLs;
@@ -51,7 +43,6 @@ public class BookmarkActivity  extends AppCompatActivity {
 
 
     ProgressBar progressBar;
-
 
     //*******************PROGRESS******************************
     private ProgressDialog mSpinner;

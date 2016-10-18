@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.holygon.dishcuss.Activities.PhotoDetailActivity;
+import com.holygon.dishcuss.Activities.UserImagesActivity;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 
@@ -73,14 +74,15 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
             @Override
             public void onClick(View v) {
 
-                holder.imageView.setDrawingCacheEnabled(true);
-                Bitmap b=holder.imageView.getDrawingCache();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                b.compress(Bitmap.CompressFormat.PNG, 75, stream);
-                byte[] bytes = stream.toByteArray();
-                Intent i = new Intent(mContext, PhotoDetailActivity.class);
-                i.putExtra("Bitmap", bytes);
-                i.putExtra("Type","Photo");
+//                holder.imageView.setDrawingCacheEnabled(true);
+//                Bitmap b=holder.imageView.getDrawingCache();
+//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                b.compress(Bitmap.CompressFormat.PNG, 75, stream);
+//                byte[] bytes = stream.toByteArray();
+                Intent i = new Intent(mContext, UserImagesActivity.class);
+//                i.putExtra("Bitmap", bytes);
+//                i.putExtra("Type","Photo");
+                i.putStringArrayListExtra("images",imageViewArrayList);
                 mContext.startActivity(i);
 
             }
