@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.Activities.UserImagesActivity;
+import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 
@@ -93,5 +94,10 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return imageViewArrayList.size();
+    }
+
+    public void UpdateList(ArrayList<String> imageViewArrayList) {
+        this.imageViewArrayList.addAll(imageViewArrayList);
+        notifyDataSetChanged();
     }
 }

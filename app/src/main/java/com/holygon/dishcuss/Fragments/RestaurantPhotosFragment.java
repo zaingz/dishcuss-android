@@ -70,39 +70,37 @@ public class RestaurantPhotosFragment extends Fragment {
         RealmResults<Restaurant> restaurants = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
         realm.beginTransaction();
         RealmList<FoodItems> foodItems =restaurants.get(restaurants.size()-1).getFoodItemsArrayList();
-//        Log.e("FoodItems : ",""+foodItems.size());
+
         for(int i=0;i<foodItems.size();i++){
 
             RealmList<PhotoModel> photoModels=foodItems.get(i).getPhotoModels();
 
 //            Log.e("photoModels : ",""+photoModels.size());
 
-            if(photoModels.size()>7){
-                for (int j = 0; j <7; j++) {
-                    if (!photoModels.get(j).getUrl().equals("")) {
-                        itemsData.add(photoModels.get(j).getUrl());
-                    }
-                }
-            }
-            else
-            {
-                for (int j = 0; j < photoModels.size(); j++) {
-                    if (!photoModels.get(j).getUrl().equals("")) {
-                        itemsData.add(photoModels.get(j).getUrl());
-                    }
-                }
-            }
-//            for (int j=0;j<photoModels.size();j++){
-////                Log.e("Photo ID : ",""+photoModels.get(j).getId());
-////                Log.e("Photo URL : ",""+photoModels.get(j).getUrl());
-//                if(!photoModels.get(j).getUrl().equals("")) {
-//                    itemsData.add(photoModels.get(j).getUrl());
+//            if(photoModels.size()>7){
+//                for (int j = 0; j <7; j++) {
+//                    if (!photoModels.get(j).getUrl().equals("")) {
+//                        itemsData.add(photoModels.get(j).getUrl());
+//                    }
 //                }
 //            }
+//            else
+//            {
+//                for (int j = 0; j < photoModels.size(); j++) {
+//                    if (!photoModels.get(j).getUrl().equals("")) {
+//                        itemsData.add(photoModels.get(j).getUrl());
+//                    }
+//                }
+//            }
+
+            for (int j=0;j<photoModels.size();j++){
+                if(!photoModels.get(j).getUrl().equals("")) {
+                    itemsData.add(photoModels.get(j).getUrl());
+                }
+            }
         }
 
         realm.commitTransaction();
         realm.close();
-
     }
 }

@@ -88,6 +88,7 @@ public class UserOffersActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(UserOffersActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Constants.skipLogin=false;
                 startActivity(intent);
                 finish();
             }

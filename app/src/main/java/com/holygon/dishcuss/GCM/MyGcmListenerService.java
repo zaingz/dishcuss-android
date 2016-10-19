@@ -69,7 +69,7 @@ public class MyGcmListenerService extends GcmListenerService {
         {
 //            NotificationActivity.newNotifications++;
 //            Log.e("Notifications",""+NotificationActivity.newNotifications);
-////            HomeFragment2.ShowNotifications();
+//            HomeFragment2.ShowNotifications();
            handler.post(new Runnable() {
                @Override
                public void run() {

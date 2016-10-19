@@ -389,6 +389,7 @@ public class HomeFragment2 extends Fragment {
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(), LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Constants.skipLogin=false;
                 startActivity(intent);
                 getActivity().finish();
             }
@@ -1805,8 +1806,9 @@ public class HomeFragment2 extends Fragment {
         Notifications();
     }
 
-//    @Subscribe
-//    public void onMessageEvent(int event){
-//        Notifications();
-//    }
+    @Subscribe
+    public void onMessageEvent(int event){
+//        notificationsArrayList=new ArrayList<>();
+     //   Notifications();
+    }
 }

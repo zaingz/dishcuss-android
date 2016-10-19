@@ -20,6 +20,7 @@ import com.holygon.dishcuss.Fragments.AccountFollowersFragment;
 import com.holygon.dishcuss.Fragments.AccountFollowingFragment;
 import com.holygon.dishcuss.Fragments.AccountPhotosFragment;
 import com.holygon.dishcuss.Fragments.AccountReviewsFragment;
+import com.holygon.dishcuss.Fragments.TestFragment;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Reply;
@@ -202,7 +203,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         viewPager.setAdapter(null);
         adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new AccountReviewsFragment(userID), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(userID), "Photo");
+        adapter.addFragment(new TestFragment(userID), "Photo");
         adapter.addFragment(new AccountFollowersFragment(userID), "Followers");
         adapter.addFragment(new AccountFollowingFragment(userID), "Following");
         adapter.addFragment(new AccountBeenThereFragment(userID), "Been There");

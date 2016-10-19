@@ -51,6 +51,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
     ProgressBar progressBar;
     LinearLayout userDataLayout,sign_up_first;
     Button Sign_Up_Click;
+    TextView More_Food;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,6 +70,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
         offerList = (RecyclerView)findViewById(R.id.khaba_history_recycler_view);
         sign_up_first = (LinearLayout) findViewById(R.id.sign_up_first);
         userDataLayout = (LinearLayout) findViewById(R.id.user_data_layout);
+        More_Food=(TextView)findViewById(R.id.More_Food);
 
 
 
@@ -94,6 +96,8 @@ public class KhabaHistoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(KhabaHistoryActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Constants.skipLogin=false;
+                startActivity(intent);
                 startActivity(intent);
                 finish();
             }
@@ -104,6 +108,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
 
     void FetchMyFeedsData(){
         progressBar.setVisibility(View.VISIBLE);
+        More_Food.setVisibility(View.GONE);
         // Get a Realm instance for this thread
         realm = Realm.getDefaultInstance();
         // Persist your data in a transaction
@@ -170,6 +175,7 @@ public class KhabaHistoryActivity extends AppCompatActivity {
                             KhabaHistoryAdapter adapter = new KhabaHistoryAdapter(itemsData,KhabaHistoryActivity.this);
                             offerList.setAdapter(adapter);
                             progressBar.setVisibility(View.GONE);
+                            More_Food.setVisibility(View.VISIBLE);
                         }
                     });
 

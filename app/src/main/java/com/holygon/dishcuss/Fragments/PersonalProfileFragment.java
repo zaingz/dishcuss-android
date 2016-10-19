@@ -75,8 +75,8 @@ public class PersonalProfileFragment extends Fragment{
         mSpinner = new ProgressDialog(getActivity());
         mSpinner.setTitle(title);
         mSpinner.show();
-        mSpinner.setCancelable(false);
-        mSpinner.setCanceledOnTouchOutside(false);
+//        mSpinner.setCancelable(false);
+//        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){
@@ -160,6 +160,7 @@ public class PersonalProfileFragment extends Fragment{
 
     void SetValues(){
 
+        DismissSpinner();
         userName.setText(userProfile.getName());
         userLocation.setText(userProfile.getLocation());
 
@@ -173,16 +174,18 @@ public class PersonalProfileFragment extends Fragment{
 
         tabLayout.setupWithViewPager(viewPager);
         progressBar.setVisibility(View.GONE);
+        DismissSpinner();
     }
 
 
     private void setupViewPager(ViewPager viewPager) {
+        DismissSpinner();
         Adapter adapter = new Adapter(activity.getSupportFragmentManager());
         adapter.clearAll();
         viewPager.setAdapter(null);
         adapter = new Adapter(activity.getSupportFragmentManager());
         adapter.addFragment(new AccountReviewsFragment(userID), "Reviews");
-        adapter.addFragment(new AccountPhotosFragment(userID), "Photo");
+        adapter.addFragment(new TestFragment(userID), "Photo");
         adapter.addFragment(new AccountFollowersFragment(userID), "Followers");
         adapter.addFragment(new AccountFollowingFragment(userID), "Following");
         adapter.addFragment(new AccountBeenThereFragment(userID), "Been There");

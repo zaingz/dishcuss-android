@@ -77,21 +77,28 @@ public class AccountPhotosFragment extends Fragment {
         {
             RealmList<PhotoModel> photoModels = userProfiles.get(0).getPhotoModelRealmList();
 
-            if(photoModels.size()>7){
-                for (int j = 0; j <7; j++) {
-                    if (!photoModels.get(j).getUrl().equals("")) {
-                        itemsData.add(photoModels.get(j).getUrl());
-                    }
+//            if(photoModels.size()>7){
+//                for (int j = 0; j <7; j++) {
+//                    if (!photoModels.get(j).getUrl().equals("")) {
+//                        itemsData.add(photoModels.get(j).getUrl());
+//                    }
+//                }
+//            }
+//            else
+//            {
+//                for (int j = 0; j < photoModels.size(); j++) {
+//                    if (!photoModels.get(j).getUrl().equals("")) {
+//                        itemsData.add(photoModels.get(j).getUrl());
+//                    }
+//                }
+//            }
+
+            for (int j = 0; j < photoModels.size(); j++) {
+                if (!photoModels.get(j).getUrl().equals("")) {
+                    itemsData.add(photoModels.get(j).getUrl());
                 }
             }
-            else
-            {
-                for (int j = 0; j < photoModels.size(); j++) {
-                    if (!photoModels.get(j).getUrl().equals("")) {
-                        itemsData.add(photoModels.get(j).getUrl());
-                    }
-                }
-            }
+
             realm.commitTransaction();
             realm.close();
         }

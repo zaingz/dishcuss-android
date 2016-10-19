@@ -21,12 +21,30 @@ import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
+import com.holygon.dishcuss.Helper.BusProvider;
+import com.holygon.dishcuss.Model.Notifications;
+import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.BadgeView;
 import com.holygon.dishcuss.Utils.Constants;
+import com.holygon.dishcuss.Utils.URLs;
+import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Naeem Ibrahim on 7/21/2016.
@@ -36,6 +54,7 @@ public class NearbyFragment extends Fragment {
     private ViewPager viewPager;
     AppCompatActivity activity;
     TabLayout tabLayout;
+    Realm realm;
     public NearbyFragment() {
 
     }
@@ -176,5 +195,119 @@ public class NearbyFragment extends Fragment {
                 fragmentManager.beginTransaction().remove(mFragments.get(i)).commit();
             mFragments.clear();
         }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BusProvider.getInstance().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        BusProvider.getInstance().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onMessageEvent(String event){
+        Notifications();
+    }
+    void Notifications(){
+
+        // Get a Realm instance for this thread
+        realm = Realm.getDefaultInstance();
+        // Persist your data in a transaction
+
+        User user = realm.where(User.class).findFirst();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Notification)
+                .addHeader("Authorization", "Token token="+user.getToken())
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+
+                if(getActivity()==null){
+                    return;
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jsonObj = new JSONObject(objStr);
+                            JSONArray jsonDataArray = jsonObj.getJSONArray("users");
+                            ArrayList<Notifications> notificationsArrayList=new ArrayList<>();
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                boolean isDataExist=false;
+                                realm.beginTransaction();
+                                RealmResults<Notifications> localFeedsRealmResults =realm.where(Notifications.class).equalTo("id",c.getInt("id")).findAll();
+                                if (localFeedsRealmResults.size() > 0) {
+                                    notificationsArrayList.add(localFeedsRealmResults.get(0));
+                                    isDataExist=true;
+                                }
+                                realm.commitTransaction();
+
+                                if(!isDataExist) {
+                                    realm.beginTransaction();
+                                    Notifications notification = realm.createObject(Notifications.class);
+
+                                    notification.setId(c.getInt("id"));
+                                    notification.setBody(c.getString("body"));
+
+                                    if (!c.isNull("notifier")) {
+                                        JSONObject notifier = c.getJSONObject("notifier");
+                                        notification.setUserID(notifier.getInt("id"));
+                                        notification.setUsername(notifier.getString("username"));
+                                        notification.setAvatarPic(notifier.getString("avatar"));
+                                    }
+                                    if (!c.isNull("redirect_to")) {
+                                        JSONObject redirect = c.getJSONObject("redirect_to");
+                                        notification.setRedirectID(redirect.getInt("id"));
+                                        notification.setRedirectType(redirect.getString("typee"));
+                                    }
+
+                                    notificationsArrayList.add(notification);
+                                    realm.commitTransaction();
+                                }
+                            }
+
+                            if (notificationsArrayList.size() > 0) {
+                                NotificationActivity.newNotifications = notificationsArrayList.size();
+                                HomeFragment2.badge.show(true);
+                                HomeFragment2.badge.setText("" + notificationsArrayList.size());
+                            } else {
+                                HomeFragment2.badge.hide(true);
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } finally {
+
+                        }
+                    }
+                });
+            }
+        });
+        realm.close();
     }
 }
