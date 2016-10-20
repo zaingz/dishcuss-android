@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import io.realm.RealmList;
-import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 /**

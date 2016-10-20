@@ -47,6 +47,7 @@ public class TestFragment extends Fragment {
 
     public TestFragment(int userID) {
         this.userID =userID;
+        SetImageURL();
     }
 
     @Override
@@ -61,7 +62,7 @@ public class TestFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.photos_recyclerview, container, false);
         activity = (AppCompatActivity) getActivity();
 
-        SetImageURL();
+
 
         gridLayout = new GridLayoutManager(getActivity(),3);
         nearbySearchRecyclerView = (RecyclerView) rootView.findViewById(R.id.simple_recycler_view_for_all);

@@ -26,16 +26,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.google.android.gms.gcm.GcmListenerService;
 import com.holygon.dishcuss.Activities.HomeActivity;
-import com.holygon.dishcuss.Activities.NotificationActivity;
-import com.holygon.dishcuss.Activities.SignInActivity;
-import com.holygon.dishcuss.Fragments.HomeFragment2;
 import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.R;
-import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.DishCussApplication;
 
 public class MyGcmListenerService extends GcmListenerService {

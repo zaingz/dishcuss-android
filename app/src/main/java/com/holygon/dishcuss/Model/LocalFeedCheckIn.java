@@ -3,8 +3,6 @@ package com.holygon.dishcuss.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 

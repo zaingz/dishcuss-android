@@ -3,8 +3,6 @@ package com.holygon.dishcuss.Helper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.holygon.dishcuss.Fragments.HomeFragment2;
-
 /**
  * Created by Naeem Ibrahim on 10/7/2016.
  */

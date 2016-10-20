@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Adapters.ExploreAdapter;
 import com.holygon.dishcuss.Adapters.SelectRestaurantAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;

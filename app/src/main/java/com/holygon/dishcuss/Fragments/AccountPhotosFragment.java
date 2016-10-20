@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.holygon.dishcuss.Adapters.PhotosAdapter;
-import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 

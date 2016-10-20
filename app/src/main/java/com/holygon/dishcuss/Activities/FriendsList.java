@@ -13,13 +13,10 @@ import com.holygon.dishcuss.Utils.URLs;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 import io.realm.Realm;
 import okhttp3.Call;
 import okhttp3.Callback;

@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.holygon.dishcuss.Adapters.StickyTestAdapter;
-import com.holygon.dishcuss.R;
 
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderDecoration;
 

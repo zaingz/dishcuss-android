@@ -14,12 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Adapters.FindYourEatBuddiesAdapter;
 import com.holygon.dishcuss.Adapters.KhabaHistoryAdapter;
-import com.holygon.dishcuss.Adapters.UserOffersAdapter;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;

@@ -10,13 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.holygon.dishcuss.Adapters.AccountBeenThereAdapter;
-import com.holygon.dishcuss.Adapters.AccountFollowerAdapter;
 import com.holygon.dishcuss.Model.UserBeenThere;
-import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
-
-import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmList;

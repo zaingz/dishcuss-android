@@ -3,25 +3,18 @@ package com.holygon.dishcuss.Chat;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Model.Comment;
-import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Model.UserBeenThere;
-import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

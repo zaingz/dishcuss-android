@@ -1,7 +1,6 @@
 package com.holygon.dishcuss.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +9,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
-import com.holygon.dishcuss.Model.BookmarkData;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
-
-import java.util.ArrayList;
 
 import io.realm.RealmList;
 

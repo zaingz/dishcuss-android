@@ -24,12 +24,11 @@
                 android:layout_height="wrap_content">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/khaba_history_restaurant_image"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:src="@drawable/profile_avatar"
-                    android:layout_marginTop="5dp"/>
+                    android:layout_marginTop="5dp" />
 
                 <LinearLayout
                     android:layout_marginTop="7dp"

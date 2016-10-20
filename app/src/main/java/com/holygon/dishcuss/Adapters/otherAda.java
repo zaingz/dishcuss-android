@@ -1,13 +1,5 @@
 package com.holygon.dishcuss.Adapters;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.holygon.dishcuss.R;
-
 /**
  * Created by Naeem Ibrahim on 7/25/2016.
  */

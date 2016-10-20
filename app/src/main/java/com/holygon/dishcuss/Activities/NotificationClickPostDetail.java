@@ -1,6 +1,5 @@
 package com.holygon.dishcuss.Activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,17 +22,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.holygon.dishcuss.Model.Comment;
-import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.FoodsCategory;
-import com.holygon.dishcuss.Model.LocalFeedCheckIn;
-import com.holygon.dishcuss.Model.LocalFeedReview;
-import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Reply;
-import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.SpecificPostModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;

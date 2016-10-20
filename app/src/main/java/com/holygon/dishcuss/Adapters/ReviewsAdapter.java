@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
-import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.ReviewModel;

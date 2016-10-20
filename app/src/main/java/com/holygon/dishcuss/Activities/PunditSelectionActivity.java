@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 
 import com.holygon.dishcuss.Chat.ChatScreenActivity;
 import com.holygon.dishcuss.R;
-import com.holygon.dishcuss.Utils.Constants;
 
 /**
  * Created by Naeem Ibrahim on 8/18/2016.

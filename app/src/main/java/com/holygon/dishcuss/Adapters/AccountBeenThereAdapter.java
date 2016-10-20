@@ -1,6 +1,5 @@
 package com.holygon.dishcuss.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -12,15 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
-import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.UserBeenThere;
-import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;

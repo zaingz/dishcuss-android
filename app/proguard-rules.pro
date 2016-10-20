@@ -19,4 +19,5 @@
 -dontwarn okio.**
 -dontwarn org.json.*
 -dontwarn android.support.**
--dontnote android.support.**
+#-dontnote android.support.**
+-dontwarn com.github.siyamed.shapeimageview.**

@@ -1,6 +1,5 @@
 package com.holygon.dishcuss.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
-import com.holygon.dishcuss.Model.Comment;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.UserFollowing;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
-
-import java.util.ArrayList;
 
 import io.realm.RealmList;
 

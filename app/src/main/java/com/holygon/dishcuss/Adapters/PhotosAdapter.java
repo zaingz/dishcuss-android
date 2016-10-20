@@ -3,21 +3,16 @@ package com.holygon.dishcuss.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.Activities.UserImagesActivity;
-import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 /**

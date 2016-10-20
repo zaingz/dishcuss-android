@@ -18,7 +18,6 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/commentator_profile_image"
                 android:layout_marginTop="3dp"
                 android:layout_width="40dp"

@@ -10,16 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.holygon.dishcuss.Adapters.RestaurantMenuAdapter;
-import com.holygon.dishcuss.Adapters.ReviewsAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmList;

@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,6 @@ import com.holygon.dishcuss.Model.FeaturedRestaurant;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import java.util.ArrayList;
 
 /**
  * Created by Naeem Ibrahim on 7/21/2016.

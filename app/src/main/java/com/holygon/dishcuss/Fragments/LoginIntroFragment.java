@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.holygon.dishcuss.Activities.HomeActivity;
 import com.holygon.dishcuss.R;
 
-import java.util.List;
-
 /**
  * Created by Naeem Ibrahim on 7/19/2016.
  */

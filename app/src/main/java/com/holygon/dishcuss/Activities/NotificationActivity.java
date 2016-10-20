@@ -22,17 +22,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.holygon.dishcuss.Adapters.NotificationAdapter;
+
 import com.holygon.dishcuss.Listners.OnLoadMoreListener;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Call;

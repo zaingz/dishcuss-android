@@ -1,10 +1,7 @@
 package com.holygon.dishcuss.Model;
 
-import java.util.ArrayList;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Naeem Ibrahim on 8/1/2016.

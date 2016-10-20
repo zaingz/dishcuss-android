@@ -1,7 +1,6 @@
 package com.holygon.dishcuss.Model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by Naeem Ibrahim on 8/1/2016.

@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.holygon.dishcuss.Adapters.NotificationAdapter;
 import com.holygon.dishcuss.Listners.OnLoadMoreListener;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.User;

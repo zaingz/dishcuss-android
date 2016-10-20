@@ -30,11 +30,10 @@
                 android:layout_height="wrap_content">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/your_eat_buddies_profile_image"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
-                    android:src="@drawable/profile_avatar"/>
+                    android:src="@drawable/profile_avatar" />
 
                 <LinearLayout
                     android:layout_marginTop="4dp"

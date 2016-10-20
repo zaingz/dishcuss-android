@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
-import com.holygon.dishcuss.Model.UserOffersModel;
 import com.holygon.dishcuss.R;
 import com.squareup.picasso.Picasso;
 

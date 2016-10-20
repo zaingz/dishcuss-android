@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
 import com.holygon.dishcuss.Activities.PhotoDetailActivity;
-import com.holygon.dishcuss.Activities.PostDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.Comment;

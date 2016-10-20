@@ -36,7 +36,6 @@ import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.GenericRoutes;

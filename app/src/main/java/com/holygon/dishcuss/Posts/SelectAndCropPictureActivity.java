@@ -23,15 +23,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.holygon.dishcuss.R;
 import com.naver.android.helloyako.imagecrop.view.ImageCropView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by Naeem Ibrahim on 9/30/2016.

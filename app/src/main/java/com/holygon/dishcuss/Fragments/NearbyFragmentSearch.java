@@ -33,13 +33,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.holygon.dishcuss.Adapters.ExploreAdapter;
 import com.holygon.dishcuss.Adapters.NearbySearchAdapter;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
-import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.URLs;
 

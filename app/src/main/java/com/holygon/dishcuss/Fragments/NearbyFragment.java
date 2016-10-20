@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
-
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
 import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.Model.Notifications;

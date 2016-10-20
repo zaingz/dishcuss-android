@@ -3,12 +3,14 @@ package com.holygon.dishcuss.Utils;
 
 import android.app.Activity;
 import android.util.Log;
+
 import com.holygon.dishcuss.Model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 import io.realm.Realm;
 import okhttp3.Call;
 import okhttp3.Callback;

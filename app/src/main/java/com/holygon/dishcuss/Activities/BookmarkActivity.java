@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.holygon.dishcuss.Adapters.BookmarkedRestaurantAdapter;
 import com.holygon.dishcuss.Model.BookmarkData;
 import com.holygon.dishcuss.Model.User;

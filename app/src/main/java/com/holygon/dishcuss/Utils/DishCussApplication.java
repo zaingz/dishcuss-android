@@ -4,30 +4,20 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Build;
-import android.util.Base64;
-import android.util.Log;
-import android.widget.Button;
 
 import com.facebook.FacebookSdk;
-import com.facebook.login.widget.LoginButton;
-
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
-import com.holygon.dishcuss.Helper.FontsOverride;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import java.net.URISyntaxException;
+import java.util.List;
+
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-
-import java.net.URISyntaxException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * Created by Naeem Ibrahim on 7/29/2016.

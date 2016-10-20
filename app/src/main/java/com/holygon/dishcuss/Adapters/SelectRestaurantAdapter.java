@@ -1,33 +1,22 @@
 package com.holygon.dishcuss.Adapters;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
-import com.holygon.dishcuss.Model.FoodItems;
-import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 
 import java.util.ArrayList;
-
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
 
 /**
  * Created by Naeem Ibrahim on 8/11/2016.

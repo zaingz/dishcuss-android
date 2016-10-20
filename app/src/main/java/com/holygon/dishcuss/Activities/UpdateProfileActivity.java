@@ -39,7 +39,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.holygon.dishcuss.Adapters.PlaceArrayAdapter;
 import com.holygon.dishcuss.Model.User;
-import com.holygon.dishcuss.Posts.SelectAndCropPictureActivity;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;

@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
-import com.holygon.dishcuss.Activities.LoginActivity;
-import com.holygon.dishcuss.Adapters.NotificationAdapter;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.ReviewModel;
