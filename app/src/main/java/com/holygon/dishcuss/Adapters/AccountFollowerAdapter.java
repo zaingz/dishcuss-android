@@ -71,7 +71,6 @@ public class AccountFollowerAdapter extends RecyclerView.Adapter<AccountFollower
                 Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
                 intent.putExtra("UserID", userFollowings.get(position).getId());
                 mContext.startActivity(intent);
-                ((Activity)mContext).finish();
             }
         });
 

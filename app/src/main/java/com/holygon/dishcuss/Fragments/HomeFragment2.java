@@ -89,6 +89,7 @@ public class HomeFragment2 extends Fragment {
     ArrayList<MyFeeds> peopleAroundYouListLoadedData;
     boolean dataAlreadyExists=false;
     Button Sign_Up_Click;
+    Button follow_people_click;
 
     private int NUM_PAGES =1;
     private List<ImageView> dots;
@@ -103,10 +104,15 @@ public class HomeFragment2 extends Fragment {
 
     ArrayList<FeaturedRestaurant> featuredRestaurantArrayList=new ArrayList<>();
     RealmResults<FeaturedRestaurant> featuredRestaurantRealmResults;
+
     NestedScrollView empty_feed;
+    NestedScrollView follow_people_feed;
+
     LinearLayout local_parent_linearLayout,my_feed_parent_linearLayout,people_parent_linearLayout;
     int myFeedReview=0;
     int myFeedCheckIns=0;
+
+    boolean isFollowingSomeone=true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -136,12 +142,14 @@ public class HomeFragment2 extends Fragment {
         my_feeds_layout=(RelativeLayout)rootView.findViewById(R.id.my_feeds_layout);
         people_around_you_layout=(RelativeLayout)rootView.findViewById(R.id.people_around_you_layout);
         empty_feed=(NestedScrollView)rootView.findViewById(R.id.empty_feed);
+        follow_people_feed=(NestedScrollView)rootView.findViewById(R.id.follow_people_feed);
 
         local_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.local_parent_linearLayout);
         my_feed_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.my_feed_parent_linearLayout);
         people_parent_linearLayout=(LinearLayout)rootView.findViewById(R.id.people_parent_linearLayout);
 
         Sign_Up_Click=(Button)rootView.findViewById(R.id.Sign_Up_Click);
+        follow_people_click=(Button)rootView.findViewById(R.id.Follow_People_Click);
 
         my_feeds_text=(TextView) rootView.findViewById(R.id.my_feeds_text);
         local_feeds_text=(TextView) rootView.findViewById(R.id.local_feeds_text);
@@ -258,6 +266,7 @@ public class HomeFragment2 extends Fragment {
 
                 my_feed_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
+                follow_people_feed.setVisibility(View.GONE);
                 local_parent_linearLayout.setVisibility(View.VISIBLE);
                 people_parent_linearLayout.setVisibility(View.GONE);
 
@@ -280,6 +289,7 @@ public class HomeFragment2 extends Fragment {
 
                 my_feed_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
+                follow_people_feed.setVisibility(View.GONE);
                 local_parent_linearLayout.setVisibility(View.GONE);
                 people_parent_linearLayout.setVisibility(View.VISIBLE);
 
@@ -303,7 +313,15 @@ public class HomeFragment2 extends Fragment {
                 my_feeds_text.setTextColor(Color.WHITE);
                 peopleAroundYouTextView.setTextColor(getResources().getColor(R.color.black_3));
 
-                my_feed_parent_linearLayout.setVisibility(View.VISIBLE);
+
+                if(isFollowingSomeone){
+                    my_feed_parent_linearLayout.setVisibility(View.VISIBLE);
+                    follow_people_feed.setVisibility(View.GONE);
+                }else {
+                    follow_people_feed.setVisibility(View.VISIBLE);
+                    my_feed_parent_linearLayout.setVisibility(View.GONE);
+                }
+
                 local_parent_linearLayout.setVisibility(View.GONE);
                 empty_feed.setVisibility(View.GONE);
                 people_parent_linearLayout.setVisibility(View.GONE);
@@ -392,6 +410,33 @@ public class HomeFragment2 extends Fragment {
                 Constants.skipLogin=false;
                 startActivity(intent);
                 getActivity().finish();
+            }
+        });
+
+
+        follow_people_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                local_feeds_layout.setBackgroundColor(Color.WHITE);
+                my_feeds_layout.setBackgroundColor(Color.WHITE);
+                people_around_you_layout.setBackgroundColor(getResources().getColor(R.color.colorAccent1));
+
+                local_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                my_feeds_text.setTextColor(getResources().getColor(R.color.black_3));
+                peopleAroundYouTextView.setTextColor(Color.WHITE);
+
+                my_feed_parent_linearLayout.setVisibility(View.GONE);
+                empty_feed.setVisibility(View.GONE);
+                follow_people_feed.setVisibility(View.GONE);
+                local_parent_linearLayout.setVisibility(View.GONE);
+                people_parent_linearLayout.setVisibility(View.VISIBLE);
+
+//                if(peopleAroundYouListServerData.size()<=0 && !Constants.skipLogin){
+                if(Constants.skipLogin){
+                    people_parent_linearLayout.setVisibility(View.GONE);
+                    empty_feed.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -570,7 +615,7 @@ public class HomeFragment2 extends Fragment {
         User user=null;
         if(!Constants.skipLogin) {
              user= realm.where(User.class).findFirst();
-             Log.e("UT",""+user.getToken());
+            // Log.e("UT",""+user.getToken());
         }
 
 
@@ -883,6 +928,25 @@ public class HomeFragment2 extends Fragment {
 
                                 }
                             }
+
+
+                            if(localFeeds.getLocalFeedReviewRealmList().size()>0 &&localFeeds.getLocalFeedCheckInRealmList().size()>0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                            }
+                            else if(localFeeds.getLocalFeedReviewRealmList().size()==0 &&localFeeds.getLocalFeedCheckInRealmList().size()>0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                            }
+                            else if(localFeeds.getLocalFeedReviewRealmList().size()>0 &&localFeeds.getLocalFeedCheckInRealmList().size()==0)
+                            {
+                                localFeedsCheckIns=localFeeds.getLocalFeedCheckInRealmList().size();
+                                localFeedsReviews=localFeeds.getLocalFeedReviewRealmList().size();
+                            }
+
+
                             progressBar.setVisibility(View.GONE);
                             homeLocalFeedsAdapter = new HomeLocalFeedsAdapter(localFeeds,getActivity());
                             localFeedsRecyclerView.setAdapter(homeLocalFeedsAdapter);
@@ -912,7 +976,7 @@ public class HomeFragment2 extends Fragment {
         User user=null;
         if(!Constants.skipLogin) {
             user= realm.where(User.class).findFirst();
-            Log.e("UT",""+user.getToken());
+          //  Log.e("UT",""+user.getToken());
         }
 
 
@@ -1261,6 +1325,8 @@ public class HomeFragment2 extends Fragment {
 
     //
     void FetchMyFeedsData(View view){
+
+        Log.e("FetchMyFeedsData","Called");
         final ProgressBar progressBar;
         progressBar=(ProgressBar)view.findViewById(R.id.my_native_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
@@ -1269,7 +1335,7 @@ public class HomeFragment2 extends Fragment {
         // Persist your data in a transaction
         realm.beginTransaction();
         User user = realm.where(User.class).findFirst();
-        Log.e("U",""+user.getToken());
+      //  Log.e("U",""+user.getToken());
 
         realm.commitTransaction();
 
@@ -1310,6 +1376,12 @@ public class HomeFragment2 extends Fragment {
                             JSONArray jsonDataCheckInArray=jsonObj.getJSONArray("checkin");
 
                             //    realm =Realm.getDefaultInstance();
+
+
+                            if(jsonDataReviewsArray.length()==0 && jsonDataCheckInArray.length()==0){
+                                progressBar.setVisibility(View.GONE);
+                                isFollowingSomeone=false;
+                            }
 
 
                             realm.beginTransaction();

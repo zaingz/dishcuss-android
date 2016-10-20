@@ -98,6 +98,8 @@ public class PhotoUpload  extends AppCompatActivity {
         mSpinner = new ProgressDialog(this);
         mSpinner.setTitle(title);
         mSpinner.show();
+//        mSpinner.setCancelable(false);
+//        mSpinner.setCanceledOnTouchOutside(false);
     }
 
     private void DismissSpinner(){

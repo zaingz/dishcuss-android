@@ -36,7 +36,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+          //  shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,6 +48,8 @@ android {
         checkReleaseBuilds false
     }
 }
+
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

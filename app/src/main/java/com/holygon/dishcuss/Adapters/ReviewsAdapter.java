@@ -176,7 +176,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                 Intent intent=new Intent(mContext, ProfilesDetailActivity.class);
                 intent.putExtra("UserID", mReviewModels.get(position).getReview_reviewer_ID());
                 mContext.startActivity(intent);
-                ((Activity)mContext).finish();
             }
         });
 

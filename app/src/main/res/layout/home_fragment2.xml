@@ -320,6 +320,50 @@
 
             </android.support.v4.widget.NestedScrollView>
 
+
+            <android.support.v4.widget.NestedScrollView
+                android:visibility="gone"
+                android:id="@+id/follow_people_feed"
+                app:layout_scrollFlags="scroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        android:src="@drawable/empty_feed"/>
+
+                    <TextView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18dp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@color/colorAccent1"
+                        android:text="Follow peoples to Track their Dinelines"/>
+
+                    <Button
+                        android:layout_gravity="center"
+                        android:id="@+id/Follow_People_Click"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Follow"
+                        android:textColor="#fff"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/feature_button_corner"/>
+
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+
         </LinearLayout>
 
 

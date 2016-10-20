@@ -107,7 +107,6 @@ public class ExploreFragment extends Fragment{
 
         realm = Realm.getDefaultInstance();
 
-
         exploreLayoutManager = new LinearLayoutManager(activity);
         exploreRecyclerView.setLayoutManager(exploreLayoutManager);
         exploreRecyclerView.setNestedScrollingEnabled(false);

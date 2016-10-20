@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.holygon.dishcuss.Adapters.PhotosAdapter;
 import com.holygon.dishcuss.Model.PhotoModel;
@@ -41,6 +43,7 @@ public class TestFragment extends Fragment {
     private boolean loading = true;
     private int visibleThreshold = 1;
     int firstVisibleItem, visibleItemCount, totalItemCount;
+    ProgressBar progressBar;
 
     public TestFragment(int userID) {
         this.userID =userID;
@@ -55,13 +58,14 @@ public class TestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.simple_recycler_view_for_all, container, false);
+        View rootView = inflater.inflate(R.layout.photos_recyclerview, container, false);
         activity = (AppCompatActivity) getActivity();
 
         SetImageURL();
 
         gridLayout = new GridLayoutManager(getActivity(),3);
         nearbySearchRecyclerView = (RecyclerView) rootView.findViewById(R.id.simple_recycler_view_for_all);
+        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
         nearbySearchRecyclerView.setLayoutManager(gridLayout);
         nearbySearchRecyclerView.setHasFixedSize(true);
         nearbySearchRecyclerView.setNestedScrollingEnabled(false);
@@ -75,43 +79,49 @@ public class TestFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                visibleItemCount = nearbySearchRecyclerView.getChildCount();
-                totalItemCount = gridLayout.getItemCount();
-                firstVisibleItem = gridLayout.findFirstVisibleItemPosition();
+                progressBar.setVisibility(View.VISIBLE);
 
-                if (loading) {
-                    if (totalItemCount > previousTotal) {
-                        loading = false;
-                        previousTotal = totalItemCount;
-                    }
-                }
-                if (!loading && (totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)) {
-                    // End has been reached
-                    showingItemsData = new ArrayList<>();
-//                    Log.i("Yaeye!", "end called");
-                    int newLoad=totalItemCount+6;
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
 
-                    if(itemsData.size()>newLoad){
-                        for (int j = totalItemCount; j <newLoad; j++) {
-                            if (!itemsData.get(j).equals("")) {
-                                showingItemsData.add(itemsData.get(j));
+                        progressBar.setVisibility(View.GONE);
+                        visibleItemCount = nearbySearchRecyclerView.getChildCount();
+                        totalItemCount = gridLayout.getItemCount();
+                        firstVisibleItem = gridLayout.findFirstVisibleItemPosition();
+                        if (loading) {
+                            if (totalItemCount > previousTotal) {
+                                loading = false;
+                                previousTotal = totalItemCount;
                             }
                         }
-                    }
-                    else
-                    {
-                        for (int j =totalItemCount; j < itemsData.size(); j++) {
-                            if (!itemsData.get(j).equals("")) {
-                                showingItemsData.add(itemsData.get(j));
+                        if (!loading && (totalItemCount - visibleItemCount)
+                                <= (firstVisibleItem + visibleThreshold)) {
+                            // End has been reached
+                            showingItemsData = new ArrayList<>();
+                            int newLoad=totalItemCount+6;
+
+                            if(itemsData.size()>newLoad){
+                                for (int j = totalItemCount; j <newLoad; j++) {
+                                    if (!itemsData.get(j).equals("")) {
+                                        showingItemsData.add(itemsData.get(j));
+                                    }
+                                }
                             }
+                            else
+                            {
+                                for (int j =totalItemCount; j < itemsData.size(); j++) {
+                                    if (!itemsData.get(j).equals("")) {
+                                        showingItemsData.add(itemsData.get(j));
+                                    }
+                                }
+                            }
+                            // Do something
+                            adapter.UpdateList(showingItemsData);
+                            loading = true;
                         }
                     }
-                    // Do something
-
-                    adapter.UpdateList(showingItemsData);
-                    loading = true;
-                }
+                }, 10000);
             }
         });
 

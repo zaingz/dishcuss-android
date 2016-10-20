@@ -91,7 +91,6 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
                 Intent intent=new Intent(mContext, RestaurantDetailActivity.class);
                 intent.putExtra("RestaurantID", userBeenTheres.get(position).getId());
                 mContext.startActivity(intent);
-                ((Activity)mContext).finish();
             }
         });
 
