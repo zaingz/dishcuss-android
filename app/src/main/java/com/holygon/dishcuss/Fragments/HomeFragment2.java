@@ -1,16 +1,19 @@
 package com.holygon.dishcuss.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -74,7 +77,10 @@ import okhttp3.Response;
 /**
  * Created by Naeem Ibrahim on 8/29/2016.
  */
-public class HomeFragment2 extends Fragment {
+public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChangedListener  {
+
+    private AppBarLayout appBarLayout;
+    public static boolean isRefreshCalled=false;
 
     public static BadgeView badge;
     Realm realm;
@@ -98,6 +104,7 @@ public class HomeFragment2 extends Fragment {
     HomeMyFeedsAdapter homeMyFeedsAdapter;
 
 
+
     public static int localFeedsCheckIns=0;
     public static int localFeedsReviews=0;
 
@@ -113,6 +120,8 @@ public class HomeFragment2 extends Fragment {
     int myFeedCheckIns=0;
 
     boolean isFollowingSomeone=true;
+
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,6 +164,17 @@ public class HomeFragment2 extends Fragment {
         local_feeds_text=(TextView) rootView.findViewById(R.id.local_feeds_text);
         peopleAroundYouTextView=(TextView) rootView.findViewById(R.id.people_around_you);
 
+        appBarLayout = (AppBarLayout) rootView.findViewById(R.id.appbar);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                HomeFragment2.isRefreshCalled=true;
+                refreshContent(rootView);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         //Local Feed
         localFeedsLayoutManager = new LinearLayoutManager(activity);
@@ -368,6 +388,14 @@ public class HomeFragment2 extends Fragment {
                     Intent intent = new Intent(getActivity(), BookmarkActivity.class);
                     startActivity(intent);
                 }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
@@ -386,6 +414,14 @@ public class HomeFragment2 extends Fragment {
                         if(badge.isShown()) {
                             badge.hide(true);
                         }
+                }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -1733,7 +1769,7 @@ public class HomeFragment2 extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             homePeopleAroundAdapter = new HomePeopleAroundAdapter(peopleAroundYouListLoadedData,getActivity());
                             peopleAroundYouRecyclerView.setAdapter(homePeopleAroundAdapter);
-
+                            mSwipeRefreshLayout.setRefreshing(false);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -1742,6 +1778,7 @@ public class HomeFragment2 extends Fragment {
 
             }
         });
+
     }
 
 
@@ -1882,5 +1919,36 @@ public class HomeFragment2 extends Fragment {
     public void onMessageEvent(int event){
 //        notificationsArrayList=new ArrayList<>();
      //   Notifications();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        appBarLayout.removeOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if (i == 0) {
+            mSwipeRefreshLayout.setEnabled(true);
+        } else {
+            mSwipeRefreshLayout.setEnabled(false);
+        }
+    }
+
+    private void refreshContent(View view){
+
+        if(!Constants.skipLogin){
+            FetchMyFeedsData(view);
+        }
+        FetchAllLocalFeedsData(view);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

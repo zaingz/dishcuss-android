@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 
 import com.holygon.dishcuss.Activities.BookmarkActivity;
 import com.holygon.dishcuss.Activities.ExploreSelectedCategoryActivity;
+import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
@@ -222,6 +223,14 @@ public class ExploreFragment extends Fragment{
                     Intent intent = new Intent(getActivity(), BookmarkActivity.class);
                     startActivity(intent);
                 }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
@@ -246,7 +255,14 @@ public class ExploreFragment extends Fragment{
                         if(HomeFragment2.badge.isShown()) {
                             HomeFragment2.badge.hide(true);
                         }
-
+                }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

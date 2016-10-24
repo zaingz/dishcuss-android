@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,12 +83,8 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     RealmList<PhotoModel> photoModels;
     RealmList<FoodsCategory> foodsCategories;
 
-
-
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton callNow, follow, like;
-
-
 
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;  // followersCount(Likes)  commentsCount(Checkins)
 
@@ -95,6 +92,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TextView explore_restaurant_cost;
     TextView restaurantType;
     TextView restaurantCuisine;
+    TextView main_restaurant_rating;
 
 
     //*******************PROGRESS******************************
@@ -122,15 +120,17 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_restaurant_details);
         viewPager = (ViewPager) findViewById(R.id.restaurant_detail_viewpager);
-        restaurant_details_awesome_toolbar = (Toolbar) findViewById(R.id.restaurant_details_awesome_toolbar);
-        setSupportActionBar(restaurant_details_awesome_toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        restaurant_details_awesome_toolbar = (Toolbar) findViewById(R.id.toolbar_lower);
+      //  setSupportActionBar(restaurant_details_awesome_toolbar);
+    //    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         cafeName = (TextView) findViewById(R.id.restaurant_detail_restaurant_name);
         explore_restaurant_cost = (TextView) findViewById(R.id.explore_restaurant_cost);
         restaurantType = (TextView) findViewById(R.id.explore_type);
         restaurantCuisine = (TextView) findViewById(R.id.explore_restaurant_cousine);
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
+
+        main_restaurant_rating = (Button) findViewById(R.id.main_restaurant_rating);
 
 
         review_count = (TextView) findViewById(R.id.reviews_Count);
@@ -291,6 +291,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         explore_restaurant_cost.setText("  Rs "+restaurant.getPricePerHead()+"/head");
         restaurantType.setText(""+restaurant.getType());
         restaurantCuisine.setText("");
+        main_restaurant_rating.setText(""+restaurant.getRatting());
         GetFooDItems();
 
         for (int i=0;i<foodItems.size();i++) {

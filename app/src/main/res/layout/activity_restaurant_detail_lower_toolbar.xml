@@ -68,7 +68,7 @@
                 android:id="@+id/restaurant_detail_restaurant_timing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="10 AM to 12 AM"
+                android:text=""
                 android:textColor="@color/black_2"
                 android:textSize="15dp"
                 android:layout_marginTop="1dp"
@@ -101,7 +101,7 @@
                     android:id="@+id/bookmark_Count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="222"
+                    android:text=""
                     android:textColor="@color/black_1"/>
 
                 <TextView
@@ -129,7 +129,7 @@
                     android:id="@+id/reviews_Count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1211"
+                    android:text=""
                     android:textColor="@color/black_1"/>
 
                 <TextView
@@ -155,7 +155,7 @@
                     android:id="@+id/been_here_Count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1231"
+                    android:text=""
                     android:textColor="@color/black_1" />
 
                 <TextView

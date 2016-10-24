@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
 import com.holygon.dishcuss.Activities.PhotoDetailActivity;
 import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
@@ -275,6 +276,13 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                     }
                                     notifyDataSetChanged();
                                 }
+                            }else
+                            {
+                                Intent intent=new Intent(mContext, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Constants.skipLogin=false;
+                                mContext.startActivity(intent);
+                                ((Activity)mContext).finish();
                             }
                         }
                     });
@@ -296,41 +304,51 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
 
-                            if((int)holder.image_bookmark.getTag()==0) {
-                                holder.image_bookmark.setTag(1);
-                                Realm realm=Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                localFeedReview.setBookmarked(true);
+                            if (!Constants.skipLogin) {
+                                if ((int) holder.image_bookmark.getTag() == 0) {
+                                    holder.image_bookmark.setTag(1);
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    localFeedReview.setBookmarked(true);
 
-                                BookmarkSetting(localFeedReview.getReviewOnID(),true);
-                                realm.commitTransaction();
+                                    BookmarkSetting(localFeedReview.getReviewOnID(), true);
+                                    realm.commitTransaction();
 
-                                holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
-                                if (Constants.isNetworkAvailable((Activity) mContext)) {
-                                    if (!Constants.skipLogin) {
-                                        RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
+                                    holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                                    if (Constants.isNetworkAvailable((Activity) mContext)) {
+                                        if (!Constants.skipLogin) {
+                                            RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
+                                        }
                                     }
-                                }
 
 
-                            }else{
-                                holder.image_bookmark.setTag(0);
-                                Realm realm=Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                localFeedReview.setBookmarked(false);
-                                BookmarkSetting(localFeedReview.getReviewOnID(),false);
-                                realm.commitTransaction();
+                                } else {
+                                    holder.image_bookmark.setTag(0);
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    localFeedReview.setBookmarked(false);
+                                    BookmarkSetting(localFeedReview.getReviewOnID(), false);
+                                    realm.commitTransaction();
 
-                                holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
-                                if (Constants.isNetworkAvailable((Activity) mContext)) {
-                                    if (!Constants.skipLogin) {
-                                        RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
+                                    holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                                    if (Constants.isNetworkAvailable((Activity) mContext)) {
+                                        if (!Constants.skipLogin) {
+                                            RestaurantBookmarked(localFeedReview.getReviewOnID(), "restaurant");
+                                        }
                                     }
+
                                 }
+                                notifyDataSetChanged();
 
                             }
-                            notifyDataSetChanged();
-
+                            else
+                            {
+                                Intent intent=new Intent(mContext, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Constants.skipLogin=false;
+                                mContext.startActivity(intent);
+                                ((Activity)mContext).finish();
+                            }
                         }
                     });
 
@@ -386,18 +404,28 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                     holder.layout_share.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!Constants.skipLogin && Constants.isNetworkAvailable((Activity) mContext)) {
+                            if(!Constants.skipLogin) {
+                                if (!Constants.skipLogin && Constants.isNetworkAvailable((Activity) mContext)) {
 
-                                Realm realm=Realm.getDefaultInstance();
-                                realm.beginTransaction();
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
 
-                                int shareCount = Integer.parseInt(holder.review_share_count_tv.getText().toString());
-                                shareCount++;
-                                holder.review_share_count_tv.setText(""+shareCount);
-                                localFeedReview.setReviewSharesCount(shareCount);
-                                realm.commitTransaction();
-                                ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID());
-                                notifyDataSetChanged();
+                                    int shareCount = Integer.parseInt(holder.review_share_count_tv.getText().toString());
+                                    shareCount++;
+                                    holder.review_share_count_tv.setText("" + shareCount);
+                                    localFeedReview.setReviewSharesCount(shareCount);
+                                    realm.commitTransaction();
+                                    ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID());
+                                    notifyDataSetChanged();
+                                }
+                            }
+                            else
+                            {
+                                Intent intent=new Intent(mContext, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Constants.skipLogin=false;
+                                mContext.startActivity(intent);
+                                ((Activity)mContext).finish();
                             }
                         }
                     });

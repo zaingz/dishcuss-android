@@ -2,6 +2,7 @@ package com.holygon.dishcuss.Helper;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.holygon.dishcuss.Fragments.HomeFragment2;
 
@@ -32,9 +33,21 @@ public abstract class LocalFeedsRecyclerOnScrollListener extends RecyclerView.On
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
+        if(HomeFragment2.isRefreshCalled){
+            prevOffset=0;
+            previousTotal = 0;
+            currentOffset=0;
+            HomeFragment2.isRefreshCalled=false;
+        }
+
         visibleItemCount = recyclerView.getChildCount();
         totalItemCount = mLinearLayoutManager.getItemCount();
         firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+//        if(mLinearLayoutManager.findFirstCompletelyVisibleItemPosition()==0){
+//            Log.e("Reached","On Top");
+//        }
+
 
         if (loading) {
             if (totalItemCount > previousTotal) {
@@ -69,4 +82,5 @@ public abstract class LocalFeedsRecyclerOnScrollListener extends RecyclerView.On
     }
 
     public abstract void onLoadMore(int current_page, int visibleItemCount);
+
 }

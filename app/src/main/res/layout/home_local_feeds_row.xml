@@ -177,7 +177,7 @@
                     android:id="@+id/review_likes_count_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="300"
+                    android:text=""
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_toRightOf="@id/local_feeds_likes_count"/>
@@ -196,7 +196,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
-                        android:text="2" />
+                        android:text="" />
 
                     <TextView
                         android:id="@+id/comment_TextView"
@@ -208,7 +208,7 @@
                     <TextView
                         android:id="@+id/review_share_count_tv"
                         android:layout_width="wrap_content"
-                        android:text="10"
+                        android:text=""
                         android:layout_marginRight="5dp"
                         android:layout_height="wrap_content" />
 
@@ -237,7 +237,8 @@
                 <LinearLayout
                     android:id="@+id/layout_like"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -285,7 +286,8 @@
                     android:id="@+id/layout_share"
                     android:layout_width="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="4dp"
                     android:orientation="horizontal">

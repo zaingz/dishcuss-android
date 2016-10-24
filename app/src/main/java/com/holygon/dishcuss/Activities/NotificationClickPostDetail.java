@@ -1,5 +1,6 @@
 package com.holygon.dishcuss.Activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -141,11 +142,22 @@ public class NotificationClickPostDetail extends AppCompatActivity {
         layout_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                        if(typeName.equals("Post")){
-                            SharePost(specificPostModel.getCheckInImage(),specificPostModel.getCheckInStatus(),specificPostModel.getCheckInOnLat(),specificPostModel.getCheckInOnLong(),specificPostModel.getCheckInOnID());
-                        }else if(typeName.equals("Review")){
-                            ReviewShare(specificPostModel.getCheckInStatus(),specificPostModel.getCheckInOnID());
-                        }
+
+                if(!Constants.skipLogin) {
+                    if (typeName.equals("Post")) {
+                        SharePost(specificPostModel.getCheckInImage(), specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnLat(), specificPostModel.getCheckInOnLong(), specificPostModel.getCheckInOnID());
+                    } else if (typeName.equals("Review")) {
+                        ReviewShare(specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnID());
+                    }
+                }
+                else
+                {
+                    Intent intent=new Intent(NotificationClickPostDetail.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -184,6 +196,14 @@ public class NotificationClickPostDetail extends AppCompatActivity {
                             }
                         }
                     }
+                }
+                else
+                {
+                    Intent intent=new Intent(NotificationClickPostDetail.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -238,6 +258,10 @@ public class NotificationClickPostDetail extends AppCompatActivity {
         layout_share=(LinearLayout)findViewById(R.id.layout_share);
         layout_like=(LinearLayout)findViewById(R.id.layout_like);
         like_toggle_image=(ImageView)findViewById(R.id.image_like_toggle);
+
+        if(Constants.skipLogin){
+            post_add_comment_edit_text.setFocusable(false);
+        }
     }
 
 

@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.holygon.dishcuss.Activities.BookmarkActivity;
+import com.holygon.dishcuss.Activities.LoginActivity;
 import com.holygon.dishcuss.Activities.NotificationActivity;
 import com.holygon.dishcuss.Activities.PunditSelectionActivity;
 import com.holygon.dishcuss.Activities.SearchUserAndRestaurantActivity;
@@ -100,6 +101,14 @@ public class NearbyFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), BookmarkActivity.class);
                     startActivity(intent);
                 }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
@@ -127,6 +136,14 @@ public class NearbyFragment extends Fragment {
                         if(HomeFragment2.badge.isShown()) {
                             HomeFragment2.badge.hide(true);
                         }
+                }
+                else
+                {
+                    Intent intent=new Intent(getActivity(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.skipLogin=false;
+                    getActivity().startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

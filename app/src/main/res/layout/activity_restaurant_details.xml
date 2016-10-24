@@ -21,19 +21,57 @@
         <!--app:layout_scrollFlags="scroll|enterAlways|snap" />-->
 
 
-        <LinearLayout
-            android:id="@+id/restaurant_details_awesome_toolbar_parent"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:alpha="0.8"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            android:background="@drawable/sample_image">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/restaurant_details_awesome_toolbar_parent"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:alpha="0.8"-->
+            <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed"-->
+            <!--android:background="@drawable/sample_image">-->
 
-        <include layout="@layout/activity_restaurant_detail_toolbars"
-            android:id="@+id/restaurant_details_awesome_toolbar"/>
+            <!--<include layout="@layout/activity_restaurant_detail_toolbars"-->
+                <!--android:id="@+id/restaurant_details_awesome_toolbar"/>-->
+        <!--</LinearLayout>-->
 
-        </LinearLayout>
-        <include layout="@layout/activity_restaurant_detail_lower_toolbar"
+
+        <!--<LinearLayout-->
+
+            <!--app:layout_scrollFlags="scroll|enterAlwaysCollapsed"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:background="#fff">-->
+            <!--<FrameLayout-->
+                <!--android:background="#FFF"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+                <!--<LinearLayout-->
+                    <!--android:alpha="0.9"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:background="#403f3f">-->
+                <!--</LinearLayout>-->
+
+                <!--<Button-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:id="@+id/main_restaurant_rating"-->
+                    <!--android:layout_width="70dp"-->
+                    <!--android:layout_height="40dp"-->
+                    <!--android:text="4.5"-->
+                    <!--android:textColor="#fff"-->
+                    <!--android:background="@drawable/feature_button_corner"-->
+                    <!--android:layout_alignParentRight="true"/>-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:background="#fff">-->
+                <!--</LinearLayout>-->
+            <!--</FrameLayout>-->
+
+        <!--</LinearLayout>-->
+
+        <include layout="@layout/restaurant_detail_main_toolbar"
             android:id="@+id/toolbar_lower"/>
 
 
