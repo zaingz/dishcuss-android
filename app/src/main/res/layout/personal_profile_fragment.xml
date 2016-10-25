@@ -25,7 +25,10 @@
             android:id="@+id/toolbar"/>
 
         <android.support.design.widget.TabLayout
+            app:tabTextAppearance="@style/MineCustom"
             android:id="@+id/tabs"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
             android:layout_width="match_parent"
             app:tabIndicatorColor="@android:color/holo_blue_dark"
             android:layout_height="wrap_content"

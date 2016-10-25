@@ -9,6 +9,7 @@ import android.os.Build;
 import com.facebook.FacebookSdk;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.squareup.leakcanary.LeakCanary;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 
@@ -54,6 +55,13 @@ public class DishCussApplication extends Application {
         super.onCreate();
 
        // FontsOverride.setDefaultFont(this, "MONOSPACE", "Heathergreen.ttf");
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name("com.holygon.dishcuss")

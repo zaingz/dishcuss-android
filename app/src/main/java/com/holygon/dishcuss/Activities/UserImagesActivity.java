@@ -32,6 +32,7 @@ public class UserImagesActivity  extends FragmentActivity {
     ImageFragmentPagerAdapter imageFragmentPagerAdapter;
     ViewPager viewPager;
     public static ArrayList<String> imageViewArrayList=new ArrayList<>();
+    int imageNumber=0;
 
     public static final String[] IMAGE_NAME = {"eagle", "horse", "bonobo", "wolf", "owl", "bear",};
 
@@ -42,11 +43,13 @@ public class UserImagesActivity  extends FragmentActivity {
 
         Intent i = getIntent();
         imageViewArrayList = i.getStringArrayListExtra("images");
+        imageNumber=i.getIntExtra("imagenumber",0);
         NUM_ITEMS=imageViewArrayList.size();
 
         imageFragmentPagerAdapter = new ImageFragmentPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(imageFragmentPagerAdapter);
+        viewPager.setCurrentItem(imageNumber);
     }
 
     public static class ImageFragmentPagerAdapter extends FragmentPagerAdapter {

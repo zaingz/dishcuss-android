@@ -31,6 +31,9 @@ public class AccountBeenThereFragment extends Fragment {
     int userID;
     RealmList<UserBeenThere> userBeenTheres;
 
+    public AccountBeenThereFragment() {
+    }
+
     public AccountBeenThereFragment(int userID) {
         this.userID=userID;
     }

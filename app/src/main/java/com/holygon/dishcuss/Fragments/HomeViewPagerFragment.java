@@ -30,6 +30,9 @@ public class HomeViewPagerFragment extends Fragment {
     TextView cafeName,cafeAddress,cafeTrending;
     ProgressBar image_spinner;
 
+    public HomeViewPagerFragment() {
+    }
+
     public HomeViewPagerFragment(FeaturedRestaurant featuredRestaurant){
         this.featuredRestaurant=featuredRestaurant;
     }
@@ -44,9 +47,7 @@ public class HomeViewPagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.home_viewpager_fragment, container, false);
-
         parentLayout=(LinearLayout) rootView.findViewById(R.id.view_pager_parent_layout);
-
         cafeName=(TextView) rootView.findViewById(R.id.view_page_restaurant_name);
         image_spinner=(ProgressBar)rootView.findViewById(R.id.image_spinner);
         cafeAddress=(TextView) rootView.findViewById(R.id.view_page_restaurant_address);

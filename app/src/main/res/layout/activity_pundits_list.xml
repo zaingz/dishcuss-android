@@ -52,7 +52,9 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/ic_desi_pundit_selection"/>
+                    android:background="@drawable/ic_desi_pundit_selection"
+                    android:id="@+id/imageView2"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -76,13 +78,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
                     android:textSize="18dp"
-                    android:text="Desi Pundit"/>
+                    android:text="Desi Pundit"
+                    android:id="@+id/textView2" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:text="Specially for desi food guidance"/>
+                    android:text="Specially for desi food guidance            "/>
 
             </LinearLayout>
 
@@ -134,10 +137,10 @@
                     android:text="Sasta Pundit"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:text="Specially for sasti food guidance"/>
+                    android:text="Specially for sasti food guidance          "/>
 
             </LinearLayout>
 
@@ -188,10 +191,10 @@
                     android:text="Fast Food Pundit"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:text="Specially for fast food guidance"/>
+                    android:text="Specially for fast food guidance            "/>
             </LinearLayout>
 
         </LinearLayout>
@@ -241,7 +244,7 @@
                     android:text="Continental Food Pundit"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
                     android:text="Specially for Continental  food guidance           "/>
@@ -295,10 +298,10 @@
                     android:text="Foreign Food Pundit"/>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:text="Specially for foreign food guidance"/>
+                    android:text="Specially for foreign food guidance       "/>
 
             </LinearLayout>
 

@@ -44,7 +44,7 @@
                     android:id="@+id/check_in_tv"
                     android:layout_width="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="  enjoying at"
+                    android:text="  posting a review of"
                     android:textColor="@color/black_2"
                     android:layout_height="wrap_content"/>
 
@@ -62,7 +62,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_width="wrap_content"
                         android:textColor="@color/colorAccent"
-                        android:hint="Liali Cafe,Lahore"
+                        android:hint="Restaurant Name"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>

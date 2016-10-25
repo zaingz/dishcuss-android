@@ -67,6 +67,7 @@ public class PunditSelectionActivity extends Activity {
                     startActivity(intent);
             }
         });
+
         FastFood_pundit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +98,5 @@ public class PunditSelectionActivity extends Activity {
                     startActivity(intent);
                 }
         });
-
     }
 }

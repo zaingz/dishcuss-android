@@ -32,6 +32,9 @@ public class RestaurantPhotosFragment extends Fragment {
     ArrayList<String> itemsData = new ArrayList<>();
     int restaurantID;
 
+    public RestaurantPhotosFragment() {
+    }
+
     public RestaurantPhotosFragment(int restaurantID) {
         this.restaurantID=restaurantID;
     }

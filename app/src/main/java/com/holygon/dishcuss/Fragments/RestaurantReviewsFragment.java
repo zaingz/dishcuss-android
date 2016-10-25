@@ -36,6 +36,9 @@ public class RestaurantReviewsFragment extends Fragment {
     RealmList<ReviewModel> reviewModels;
 
 
+    public RestaurantReviewsFragment() {
+    }
+
     public RestaurantReviewsFragment(int restaurantID) {
         this.restaurantID=restaurantID;
     }

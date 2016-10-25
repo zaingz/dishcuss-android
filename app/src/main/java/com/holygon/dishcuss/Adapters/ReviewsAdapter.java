@@ -120,7 +120,15 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         holder.layout_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReviewShare(mReviewModels.get(position).getReview_summary(),mReviewModels.get(position).getReview_On_ID());
+                Realm realm=Realm.getDefaultInstance();
+                realm.beginTransaction();
+                int shareCount = Integer.parseInt(holder.reviewSharesCount.getText().toString());
+                shareCount++;
+                holder.reviewSharesCount.setText(""+shareCount);
+                mReviewModels.get(position).setReview_shares_count(shareCount);
+                realm.commitTransaction();
+                ReviewShare(mReviewModels.get(position).getReview_summary(),mReviewModels.get(position).getReview_On_ID(),mReviewModels.get(position).getReview_ID());
+                notifyDataSetChanged();
             }
         });
 
@@ -305,7 +313,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     }
 //*******************PROGRESS******************************
 
-    void ReviewShare(String statusStr, int restaurantID){
+    void ReviewShare(String statusStr, int restaurantID,int Rid){
         showSpinner("Please Wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
@@ -320,6 +328,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
                 .addFormDataPart("review[title]","Write Review")
                 .addFormDataPart("review[summary]",statusStr)
                 .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[share_id]", ""+Rid)
                 .addFormDataPart("review[reviewable_id]",""+restaurantID)
                 .build();
 

@@ -17,6 +17,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -177,14 +178,23 @@ public class ProfileFragment extends Fragment{
         signOut_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(isLoggedIn()){
+                    LoginManager.getInstance().logOut();
+                }
+
                 if(!Constants.skipLogin) {
+                    LoginManager.getInstance().logOut();
                     realm = Realm.getDefaultInstance();
                     User user = realm.where(User.class).findFirst();
                     SignOutRequest(user.getToken(), user.getProvider());
-                }else {
+                }
+                else
+                {
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     Constants.skipLogin=false;
+                    Constants.deleteCache(getActivity());
                     startActivity(intent);
                     getActivity().finish();
                 }
@@ -192,6 +202,11 @@ public class ProfileFragment extends Fragment{
         });
 
         return rootView;
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        return accessToken != null;
     }
 
     @Override
@@ -308,6 +323,7 @@ public class ProfileFragment extends Fragment{
                     sharedPreferences.edit().putBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER,false).apply();
                     Intent intent=new Intent(getActivity(), LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Constants.deleteCache(getActivity());
                     DismissSpinner();
                     startActivity(intent);
                     getActivity().finish();

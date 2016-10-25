@@ -46,7 +46,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder,final int position) {
 //        holder.imageView.setImageResource(imageViewArrayList.get(position));
         final String imageUri = imageViewArrayList.get(position);
 //        Log.e("ImageUri",imageUri);
@@ -79,6 +79,7 @@ public class PhotosAdapter extends RecyclerView.Adapter<PhotosAdapter.ViewHolder
 //                i.putExtra("Bitmap", bytes);
 //                i.putExtra("Type","Photo");
                 i.putStringArrayListExtra("images",imageViewArrayList);
+                i.putExtra("imagenumber",position);
                 mContext.startActivity(i);
 
             }

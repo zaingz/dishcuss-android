@@ -415,7 +415,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                     holder.review_share_count_tv.setText("" + shareCount);
                                     localFeedReview.setReviewSharesCount(shareCount);
                                     realm.commitTransaction();
-                                    ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID());
+                                    ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID(),localFeedReview.getReviewID());
                                     notifyDataSetChanged();
                                 }
                             }
@@ -640,7 +640,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                                 holder.review_share_count_tv.setText(""+shareCount);
                                 localFeedCheckIn.setReviewSharesCount(shareCount);
                                 realm.commitTransaction();
-                                SharePost(localFeedCheckIn.getCheckInImage(), localFeedCheckIn.getCheckInStatus(), localFeedCheckIn.getCheckInLat(), localFeedCheckIn.getCheckInLong(), localFeedCheckIn.getCheckInOnID());
+                                SharePost(localFeedCheckIn.getCheckInImage(), localFeedCheckIn.getCheckInStatus(), localFeedCheckIn.getCheckInLat(), localFeedCheckIn.getCheckInLong(), localFeedCheckIn.getCheckInOnID(),localFeedCheckIn.getCheckInID());
                                 notifyDataSetChanged();
                             }
                         }
@@ -1049,7 +1049,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         }
     }
 
-    void ReviewShare(String statusStr, int restaurantID){
+    void ReviewShare(String statusStr, int restaurantID,int rid){
         showSpinner("Please Wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
@@ -1064,6 +1064,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                 .addFormDataPart("review[title]","Write Review")
                 .addFormDataPart("review[summary]",statusStr)
                 .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[share_id]", ""+rid)
                 .addFormDataPart("review[reviewable_id]",""+restaurantID)
                 .build();
 
@@ -1106,7 +1107,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
         });
     }
 
-    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID){
+    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID,int checkInID){
 
         showSpinner("Please wait...");
 
@@ -1138,6 +1139,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                             RequestBody.create(MediaType.parse("text/csv"), file))
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+checkInID)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
@@ -1152,6 +1154,7 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 //                    .addFormDataPart("post[image][]", "")
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+checkInID)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)

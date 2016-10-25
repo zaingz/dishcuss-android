@@ -22,6 +22,7 @@ import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
+import com.holygon.dishcuss.Services.MyService;
 import com.holygon.dishcuss.Utils.Constants;
 import com.holygon.dishcuss.Utils.URLs;
 
@@ -60,6 +61,8 @@ public class SplashActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
+
+        FreeMemory();
 
         try{
             Thread.sleep(500);
@@ -114,6 +117,9 @@ public class SplashActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
 
         FeaturedRestaurantData();
+
+        Intent intent = new Intent(SplashActivity.this, MyService.class);
+        startService(intent);
     }
 
     @Override
@@ -163,8 +169,8 @@ public class SplashActivity extends AppCompatActivity {
         RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
         restaurantRealmResults.deleteAllFromRealm();
 
-        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
-        userProfileRealmResults.deleteAllFromRealm();
+//        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+//        userProfileRealmResults.deleteAllFromRealm();
 
         realm.commitTransaction();
     }
@@ -193,8 +199,8 @@ public class SplashActivity extends AppCompatActivity {
         RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
         restaurantRealmResults.deleteAllFromRealm();
 
-        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
-        userProfileRealmResults.deleteAllFromRealm();
+//        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
+//        userProfileRealmResults.deleteAllFromRealm();
 
         realm.commitTransaction();
     }
@@ -281,5 +287,10 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    public void FreeMemory(){
+        System.runFinalization();
+        Runtime.getRuntime().gc();
+        System.gc();
 
+    }
 }

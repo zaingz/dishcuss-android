@@ -29,6 +29,7 @@ public class LoginIntroFragment extends Fragment {
 
 
 
+
     public static LoginIntroFragment newInstance(int layoutResId, int logo, int bar) {
         LoginIntroFragment intro = new LoginIntroFragment();
 

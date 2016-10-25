@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -81,7 +82,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
     private AppBarLayout appBarLayout;
     public static boolean isRefreshCalled=false;
-
+    OkHttpClient client;
     public static BadgeView badge;
     Realm realm;
     private ViewPager viewPager;
@@ -137,10 +138,9 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
 
-
 //        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm =Realm.getDefaultInstance();
-
+        client = new OkHttpClient();
         viewPager = (ViewPager)rootView.findViewById(R.id.home_viewpager);
 
         localFeedsRecyclerView = (RecyclerView) rootView.findViewById(R.id.local_feeds_recycler_view);
@@ -370,6 +370,35 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
             }
         });
 
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        mSwipeRefreshLayout.setEnabled(false);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        mSwipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mSwipeRefreshLayout.setEnabled(false);
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                        mSwipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
+            }
+        });
 
         ImageView home_fragment_image_search=(ImageView)rootView.findViewById(R.id.home_fragment_image_search);
         home_fragment_image_search.setOnClickListener(new View.OnClickListener() {
@@ -553,7 +582,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
     void FeaturedRestaurantData(final View view){
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(URLs.Featured_Restaurant_URL)
                 .build();
@@ -656,7 +685,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
 
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request;
         if(!Constants.skipLogin && user!=null) {
             request = new Request.Builder()
@@ -762,7 +791,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedReview.setReviewLikesCount(reviewLikesArray.length());
                                     localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
-                                    localFeedReview.setReviewSharesCount(reviewShareArray.length());
+                                    localFeedReview.setReviewSharesCount(jsonDataReviewObj.getInt("shares"));
 
 
                                     realm.commitTransaction();
@@ -900,7 +929,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedCheckIn.setReviewLikesCount(checkinLikesArray.length());
                                     localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
-                                    localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
+                                    localFeedCheckIn.setReviewSharesCount(jsonDataCheckInObj.getInt("shares"));
 
 
 
@@ -1017,7 +1046,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
 
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request;
         if(!Constants.skipLogin && user!=null) {
             request = new Request.Builder()
@@ -1122,7 +1151,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedReview.setReviewLikesCount(reviewLikesArray.length());
                                     localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
-                                    localFeedReview.setReviewSharesCount(reviewShareArray.length());
+                                    localFeedReview.setReviewSharesCount(jsonDataReviewObj.getInt("shares"));
 
 
                                     realm.commitTransaction();
@@ -1261,7 +1290,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedCheckIn.setReviewLikesCount(checkinLikesArray.length());
                                     localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
-                                    localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
+                                    localFeedCheckIn.setReviewSharesCount(jsonDataCheckInObj.getInt("shares"));
 
 
 
@@ -1375,7 +1404,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
         realm.commitTransaction();
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(URLs.MyFeeds_Restaurant_URL)
                 .addHeader("Authorization", "Token token="+user.getToken())
@@ -1481,7 +1510,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedReview.setReviewLikesCount(reviewLikesArray.length());
                                     localFeedReview.setReviewCommentCount(reviewCommentsArray.length());
-                                    localFeedReview.setReviewSharesCount(reviewShareArray.length());
+                                    localFeedReview.setReviewSharesCount(jsonDataReviewObj.getInt("shares"));
 
 
                                     realm.commitTransaction();
@@ -1617,7 +1646,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     localFeedCheckIn.setReviewLikesCount(checkinLikesArray.length());
                                     localFeedCheckIn.setReviewCommentCount(checkinCommentsArray.length());
-                                    localFeedCheckIn.setReviewSharesCount(checkinPhotoArray.length());
+                                    localFeedCheckIn.setReviewSharesCount(jsonDataCheckInObj.getInt("shares"));
 
 
 
@@ -1714,7 +1743,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
         User user = realm.where(User.class).findFirst();
         Log.e("UserT",""+user.getToken());
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(URLs.PeopleAroundFeed)
                 .addHeader("Authorization", "Token token="+user.getToken())
@@ -1790,7 +1819,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
         User user = realm.where(User.class).findFirst();
 
-        OkHttpClient client = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(URLs.Get_Notification)
                 .addHeader("Authorization", "Token token="+user.getToken())

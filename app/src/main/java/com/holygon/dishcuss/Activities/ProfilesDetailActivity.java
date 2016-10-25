@@ -66,6 +66,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
     TextView userName, userLocation, review_count, follower_count, comments_count;
     Button userFollowButton;
+    boolean isDataLoaded=false;
 
 
     //*******************PROGRESS******************************
@@ -86,6 +87,15 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     }
 
 //*******************PROGRESS******************************
+
+    private int[] imageResId = {
+            R.drawable.ic_bell,
+            R.drawable.ic_item,
+            R.drawable.ic_search,
+            R.drawable.ic_item,
+            R.drawable.ic_search
+    };
+
 
 
     @Override
@@ -109,15 +119,24 @@ public class ProfilesDetailActivity extends AppCompatActivity {
                         userFollowButton.setVisibility(View.GONE);
                     }
                 }
-              //  userProfile = GetUserData(userID);
+
+                userProfile = GetUserData(userID);
 
                 if (userProfile != null) {
-//                    SetValues();
+                    SetValues();
+                    isDataLoaded=true;
                 } else {
                     Log.e("", "ELSE");
                 }
-                if (!dataAlreadyExists)
+                dataAlreadyExists=false;
+                if (!dataAlreadyExists) {
+
+                    if(!isDataLoaded){
+                        showSpinner("Loading...");
+                        isDataLoaded=true;
+                    }
                     UserData();
+                }
             }
 
         if(Constants.isNetworkAvailable(ProfilesDetailActivity.this) && !Constants.skipLogin) {
@@ -179,7 +198,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     }
 
     void SetValues(){
-
+        DismissSpinner();
         userName.setText(userProfile.getName());
         userLocation.setText(userProfile.getLocation());
 
@@ -192,6 +211,10 @@ public class ProfilesDetailActivity extends AppCompatActivity {
         }
 
         tabLayout.setupWithViewPager(viewPager);
+
+//        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+//            tabLayout.getTabAt(i).setIcon(imageResId[i]);
+//        }
     }
 
 
@@ -250,7 +273,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     void UserData() {
 
 
-        showSpinner("Loading Data...");
+      //  showSpinner("Loading Data...");
 
 
         OkHttpClient client = new OkHttpClient();
@@ -417,7 +440,7 @@ public class ProfilesDetailActivity extends AppCompatActivity {
 
                                     reviewModel.setReview_Likes_count(reviewLikesArray.length());
                                     reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+                                    reviewModel.setReview_shares_count(reviewObj.getInt("shares"));
 
 
 

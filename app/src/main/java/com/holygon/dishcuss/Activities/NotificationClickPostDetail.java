@@ -143,12 +143,24 @@ public class NotificationClickPostDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 if(!Constants.skipLogin) {
+                    Realm realm=Realm.getDefaultInstance();
+                    realm.beginTransaction();
                     if (typeName.equals("Post")) {
-                        SharePost(specificPostModel.getCheckInImage(), specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnLat(), specificPostModel.getCheckInOnLong(), specificPostModel.getCheckInOnID());
+                        int shareCount = Integer.parseInt(sharesCount.getText().toString());
+                        shareCount++;
+                        sharesCount.setText(""+shareCount);
+                        specificPostModel.setReviewSharesCount(shareCount);
+                        SharePost(specificPostModel.getCheckInImage(), specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnLat(), specificPostModel.getCheckInOnLong(), specificPostModel.getCheckInOnID(),specificPostModel.getCheckInID());
                     } else if (typeName.equals("Review")) {
-                        ReviewShare(specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnID());
+                        int shareCount = Integer.parseInt(sharesCount.getText().toString());
+                        shareCount++;
+                        sharesCount.setText(""+shareCount);
+                        specificPostModel.setReviewSharesCount(shareCount);
+                        ReviewShare(specificPostModel.getCheckInStatus(), specificPostModel.getCheckInOnID(),specificPostModel.getCheckInID());
                     }
+                    realm.commitTransaction();
                 }
                 else
                 {
@@ -365,7 +377,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
 
                                 specificPostModel.setReviewLikesCount(checkinLikesArray.length());
                                 specificPostModel.setReviewCommentCount(checkinCommentsArray.length());
-                                specificPostModel.setReviewSharesCount(checkinPhotoArray.length());
+                                specificPostModel.setReviewSharesCount(jsonDataReviewObj.getInt("shares"));
 
                                 realm.commitTransaction();
                                 realm.beginTransaction();
@@ -525,7 +537,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
 
                                     specificPostModel.setReviewLikesCount(reviewLikesArray.length());
                                     specificPostModel.setReviewCommentCount(reviewCommentsArray.length());
-                                    specificPostModel.setReviewSharesCount(reviewShareArray.length());
+                                    specificPostModel.setReviewSharesCount(jsonDataReviewObj.getInt("shares"));
 
                                     realm.commitTransaction();
                                     realm.beginTransaction();
@@ -935,7 +947,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
         });
     }
 
-    void ReviewShare(String statusStr, int restaurantID){
+    void ReviewShare(String statusStr, int restaurantID,int rid){
         showSpinner("Please Wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
@@ -950,6 +962,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
                 .addFormDataPart("review[title]","Write Review")
                 .addFormDataPart("review[summary]",statusStr)
                 .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[share_id]", ""+rid)
                 .addFormDataPart("review[reviewable_id]",""+restaurantID)
                 .build();
 
@@ -992,7 +1005,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
         });
     }
 
-    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID){
+    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID, int rid){
 
         showSpinner("Please wait...");
 
@@ -1024,6 +1037,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
                             RequestBody.create(MediaType.parse("text/csv"), file))
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+rid)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
@@ -1038,6 +1052,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
 //                    .addFormDataPart("post[image][]", "")
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+rid)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)

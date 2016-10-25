@@ -68,7 +68,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     TabLayout tabLayout;
-    int restaurantID;
+    int restaurantID=0;
     Toolbar restaurant_details_awesome_toolbar;
     LinearLayout restaurant_details_awesome_toolbar_parent;
     LinearLayout restaurant_call_now,bookmark_button_layout,follow_button_layout;
@@ -93,6 +93,16 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TextView restaurantType;
     TextView restaurantCuisine;
     TextView main_restaurant_rating;
+    boolean isDataLoaded=false;
+
+
+    private int[] imageResId = {
+            R.drawable.ic_bell,
+            R.drawable.ic_item,
+            R.drawable.ic_search,
+            R.drawable.ic_item,
+            R.drawable.ic_search
+    };
 
 
     //*******************PROGRESS******************************
@@ -154,21 +164,48 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
 
+        Intent intentShare = getIntent();
+        String action = intentShare.getAction();
+        Uri data = intentShare.getData();
+        if(data!=null) {
+            String url = data.toString();
+            String[] separated = url.split("/");
 
-            Bundle bundle = getIntent().getExtras();
+//            Log.e("DATA0", "" + separated[0]);
+//            Log.e("DATA1", "" + separated[1]);
+//            Log.e("DATA2", "" + separated[2]);
+//            Log.e("DATA3", "" + separated[3]);
+//            Log.e("DATA4", "" + separated[4]);
+
+            restaurantID= Integer.parseInt(separated[4]);
+        }
+
+
+
+        Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                restaurantID = bundle.getInt("RestaurantID");
-                Log.e("restaurantID",""+restaurantID);
-
-//                restaurant = GetRestaurantData(restaurantID);
-
-                if (restaurant != null) {
-                  //  SetValues();
-                } else {
-                    Log.e("", "ELSE");
+                if(bundle.containsKey("RestaurantID")) {
+                    restaurantID = bundle.getInt("RestaurantID");
+//                    Log.e("restaurantID", "" + restaurantID);
                 }
-                if (!dataAlreadyExists)
-                    RestaurantData();
+                restaurant = GetRestaurantData(restaurantID);
+
+                    if (restaurant != null) {
+                          SetValues();
+                          isDataLoaded=true;
+                    } else {
+                        Log.e("", "ELSE");
+                    }
+
+                    dataAlreadyExists=false;
+                    if (!dataAlreadyExists) {
+
+                        if(!isDataLoaded){
+                            showSpinner("Loading...");
+                            isDataLoaded=true;
+                        }
+                        RestaurantData();
+                    }
             }
 
 
@@ -285,6 +322,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     void SetValues() {
+        DismissSpinner();
         cafeName.setText(restaurant.getName());
         cafeAddress.setText(restaurant.getLocation());
         cafeTiming.setText(restaurant.getOpening_time()+" to "+restaurant.getClosing_time());
@@ -342,6 +380,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+//        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+//            tabLayout.getTabAt(i).setIcon(imageResId[i]);
+//        }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -395,7 +437,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
 
     void RestaurantData() {
-        showSpinner("Loading Data...");
+   //     showSpinner("Loading Data...");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_Restaurant_data+restaurantID)
@@ -404,7 +446,6 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
@@ -538,7 +579,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
                                         reviewModel.setReview_Likes_count(reviewLikesArray.length());
                                         reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                        reviewModel.setReview_shares_count(reviewShareArray.length());
+                                        reviewModel.setReview_shares_count(reviewObj.getInt("shares"));
 
 
 
@@ -683,11 +724,13 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         }
         return null;
     }
+
     private void InviteFriends(){
         Intent intent=new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Lets Enjoy on Dishcuss");
-        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss Referral code is");
+//        dishcuss.pk/r/123
+        intent.putExtra(Intent.EXTRA_TEXT, "Lets Enjoy dishcuss " + "http://dishcuss.pk/r/"+restaurantID);
         startActivity(Intent.createChooser(intent, "Share Dishcuss With Friends"));
     }
 

@@ -31,6 +31,9 @@ public class AccountPhotosFragment extends Fragment {
     ArrayList<String> itemsData = new ArrayList<>();
     int userID;
 
+    public AccountPhotosFragment() {
+    }
+
     public AccountPhotosFragment(int userID) {
         this.userID =userID;
         SetImageURL();

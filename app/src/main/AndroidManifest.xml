@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
     <!-- Pic Selection and Upload -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
@@ -118,11 +118,24 @@
 
         <activity
             android:name=".Activities.HomeActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme">
+        </activity>
 
         <activity
             android:name=".Activities.RestaurantDetailActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme">
+
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="http"
+                    android:host="dishcuss.pk"
+                    android:pathPrefix="/r/" ></data>
+            </intent-filter>
+
+            </activity>
 
         <activity
             android:name=".Activities.UpdateProfileActivity"
@@ -221,7 +234,8 @@
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value=
+                "@integer/google_play_services_version" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -272,6 +286,8 @@
             android:name=".GCM.RegistrationIntentService"
             android:exported="false"></service>
 
+
+        <service android:name=".Services.MyService"/>
 
     </application>
 

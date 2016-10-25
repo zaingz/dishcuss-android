@@ -62,7 +62,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="wrap_content"
                     android:textColor="@color/colorAccent"
-                    android:hint="Liali Cafe,Lahore"
+                    android:hint="Restaurant Name"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>

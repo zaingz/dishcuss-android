@@ -31,6 +31,9 @@ public class RestaurantMenuFragment extends Fragment{
     RealmList<FoodItems> foodItems;
 
 
+    public RestaurantMenuFragment() {
+    }
+
     public RestaurantMenuFragment(int restaurantID) {
         this.restaurantID=restaurantID;
     }

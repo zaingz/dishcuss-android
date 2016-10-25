@@ -35,6 +35,9 @@ public class AccountReviewsFragment extends Fragment {
     int userID;
     RealmList<ReviewModel> reviewModels;
 
+    public AccountReviewsFragment() {
+    }
+
     public AccountReviewsFragment(int userID) {
         this.userID=userID;
     }

@@ -42,6 +42,7 @@ public class LocalFeedCheckIn extends RealmObject implements Parcelable{
         this.checkInOnImage = checkInOnImage;
     }
 
+
     RealmList<PhotoModel> photoModels;
 
     int reviewLikesCount;

@@ -67,6 +67,15 @@ public class PersonalProfileFragment extends Fragment{
     public static boolean isCalledOnce=false;
 
 
+    private int[] imageResId = {
+            R.drawable.ic_bell,
+            R.drawable.ic_item,
+            R.drawable.ic_search,
+            R.drawable.ic_item,
+            R.drawable.ic_search
+    };
+
+
     //*******************PROGRESS******************************
     private ProgressDialog mSpinner;
 
@@ -118,7 +127,7 @@ public class PersonalProfileFragment extends Fragment{
             user= realm.where(User.class).findFirst();
             userID = user.getId();
 //        if(PersonalProfileFragment.isCalledOnce || !Constants.isNetworkAvailable(getActivity())) {
-        if(!Constants.isNetworkAvailable(getActivity())) {
+
             userProfile=GetUserData(userID);
             if(userProfile!=null)
             {
@@ -126,14 +135,22 @@ public class PersonalProfileFragment extends Fragment{
                 followersCount=userProfile.getFollowersCount();
                 commentsCount=userProfile.getCommentsCount();
                 SetValues();
+                PersonalProfileFragment.isCalledOnce=true;
             }else {
-                Log.e("","ELSE");
+//                Log.e("","ELSE");
             }
-        }
+
+            dataAlreadyExists=false;
             if(!dataAlreadyExists) {
 
-                UserData();
-                PersonalProfileFragment.isCalledOnce=true;
+
+                if(!PersonalProfileFragment.isCalledOnce) {
+                    showSpinner("Please wait...");
+                    PersonalProfileFragment.isCalledOnce = true;
+                }
+                if(Constants.isNetworkAvailable(getActivity())) {
+                    UserData();
+                }
             }
 
 
@@ -173,9 +190,41 @@ public class PersonalProfileFragment extends Fragment{
 
         tabLayout.setupWithViewPager(viewPager);
         progressBar.setVisibility(View.GONE);
+       // setupTabIcons();
+//        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+//            tabLayout.getTabAt(i).setIcon(imageResId[i]);
+//        }
         DismissSpinner();
+        dataAlreadyExists=false;
     }
 
+    private void setupTabIcons() {
+
+        TextView tabOne = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
+        tabOne.setText("Reviews");
+        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_bell, 0, 0);
+        tabLayout.getTabAt(0).setCustomView(tabOne);
+
+        TextView tabTwo = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
+        tabTwo.setText("Photo");
+        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_item, 0, 0);
+        tabLayout.getTabAt(1).setCustomView(tabTwo);
+
+        TextView tabThree = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
+        tabThree.setText("Followers");
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_search, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabThree);
+
+        TextView tabFour = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
+        tabThree.setText("Following");
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_bell, 0, 0);
+        tabLayout.getTabAt(3).setCustomView(tabFour);
+
+        TextView tabFive = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
+        tabThree.setText("Been There");
+        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_search, 0, 0);
+        tabLayout.getTabAt(4).setCustomView(tabFive);
+    }
 
     private void setupViewPager(ViewPager viewPager) {
         DismissSpinner();
@@ -189,6 +238,8 @@ public class PersonalProfileFragment extends Fragment{
         adapter.addFragment(new AccountFollowingFragment(userID), "Following");
         adapter.addFragment(new AccountBeenThereFragment(userID), "Been There");
         viewPager.setAdapter(adapter);
+
+       // setupTabIcons();
     }
 
 
@@ -232,7 +283,7 @@ public class PersonalProfileFragment extends Fragment{
     void UserData() {
 
 
-        showSpinner("Loading Data...");
+       // showSpinner("Loading Data...");
 
 
         OkHttpClient client = new OkHttpClient();
@@ -407,7 +458,7 @@ public class PersonalProfileFragment extends Fragment{
 
                                     reviewModel.setReview_Likes_count(reviewLikesArray.length());
                                     reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewShareArray.length());
+                                    reviewModel.setReview_shares_count(reviewObj.getInt("shares"));
 
 
 

@@ -395,7 +395,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
                         holder.review_share_count_tv.setText(""+shareCount);
                         localFeedReview.setReviewSharesCount(shareCount);
                         realm.commitTransaction();
-                        ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID());
+                        ReviewShare(localFeedReview.getSummary(), localFeedReview.getReviewOnID(),localFeedReview.getReviewID());
                         notifyDataSetChanged();
                     }
                 }
@@ -607,7 +607,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
                         holder.review_share_count_tv.setText(""+shareCount);
                         localFeedCheckIn.setReviewSharesCount(shareCount);
                         realm.commitTransaction();
-                        SharePost(localFeedCheckIn.getCheckInImage(), localFeedCheckIn.getCheckInStatus(), localFeedCheckIn.getCheckInLat(), localFeedCheckIn.getCheckInLong(), localFeedCheckIn.getCheckInOnID());
+                        SharePost(localFeedCheckIn.getCheckInImage(), localFeedCheckIn.getCheckInStatus(), localFeedCheckIn.getCheckInLat(), localFeedCheckIn.getCheckInLong(), localFeedCheckIn.getCheckInOnID(),localFeedCheckIn.getCheckInID());
                         notifyDataSetChanged();
                     }
                 }
@@ -1015,7 +1015,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
         }
     }
 
-    void ReviewShare(String statusStr, int restaurantID){
+    void ReviewShare(String statusStr, int restaurantID,int Rid){
         showSpinner("Please Wait...");
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
@@ -1030,6 +1030,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
                 .addFormDataPart("review[title]","Write Review")
                 .addFormDataPart("review[summary]",statusStr)
                 .addFormDataPart("review[rating]", "")
+                .addFormDataPart("review[share_id]", ""+Rid)
                 .addFormDataPart("review[reviewable_id]",""+restaurantID)
                 .build();
 
@@ -1072,7 +1073,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
         });
     }
 
-    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID){
+    void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID,int checkInID){
 
         showSpinner("Please wait...");
 
@@ -1104,6 +1105,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
                             RequestBody.create(MediaType.parse("text/csv"), file))
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+checkInID)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)
@@ -1118,6 +1120,7 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
 //                    .addFormDataPart("post[image][]", "")
                     .addFormDataPart("post[title]","Post")
                     .addFormDataPart("post[status]",statusStr)
+                    .addFormDataPart("post[share_id]",""+checkInID)
                     .addFormDataPart("post[checkin_attributes][address]", ""+user.getLocation())
                     .addFormDataPart("post[checkin_attributes][lat]",""+restaurantLatitude)
                     .addFormDataPart("post[checkin_attributes][long]",""+restaurantLongitude)

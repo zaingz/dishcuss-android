@@ -45,6 +45,9 @@ public class TestFragment extends Fragment {
     int firstVisibleItem, visibleItemCount, totalItemCount;
     ProgressBar progressBar;
 
+    public TestFragment() {
+    }
+
     public TestFragment(int userID) {
         this.userID =userID;
         SetImageURL();

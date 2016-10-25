@@ -31,6 +31,9 @@ public class AccountFollowingFragment extends Fragment {
     int userID;
     RealmList<UserFollowing> userFollowings;
 
+    public AccountFollowingFragment() {
+    }
+
     public AccountFollowingFragment(int userID) {
         this.userID=userID;
     }
