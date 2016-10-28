@@ -1,4 +1,4 @@
-package com.holygon.dishcuss.Posts;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;

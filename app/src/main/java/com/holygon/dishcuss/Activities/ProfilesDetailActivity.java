@@ -1,6 +1,7 @@
 package com.holygon.dishcuss.Activities;
 
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -198,23 +199,38 @@ public class ProfilesDetailActivity extends AppCompatActivity {
     }
 
     void SetValues(){
-        DismissSpinner();
-        userName.setText(userProfile.getName());
-        userLocation.setText(userProfile.getLocation());
 
-        review_count.setText(""+userProfile.getReviewsCount());
-        comments_count.setText(""+userProfile.getCommentsCount());
-        follower_count.setText(""+userProfile.getFollowersCount());
-        Constants.PicassoImageSrc(userProfile.getAvatar(),profileImage,this);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
+
+        boolean isDes=true;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            if (!isDestroyed()) {
+                isDes=false;
+            }
+        }
+        else
+        {
+            isDes=false;
         }
 
-        tabLayout.setupWithViewPager(viewPager);
+        if(!isDes) {
+            DismissSpinner();
+            userName.setText(userProfile.getName());
+            userLocation.setText(userProfile.getLocation());
+
+            review_count.setText("" + userProfile.getReviewsCount());
+            comments_count.setText("" + userProfile.getCommentsCount());
+            follower_count.setText("" + userProfile.getFollowersCount());
+            Constants.PicassoImageSrc(userProfile.getAvatar(), profileImage, this);
+            if (viewPager != null) {
+                setupViewPager(viewPager);
+            }
+
+            tabLayout.setupWithViewPager(viewPager);
 
 //        for (int i = 0; i < tabLayout.getTabCount(); i++) {
 //            tabLayout.getTabAt(i).setIcon(imageResId[i]);
 //        }
+        }
     }
 
 

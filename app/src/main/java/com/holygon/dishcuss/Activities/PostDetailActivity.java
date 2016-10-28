@@ -136,7 +136,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 commentsCount.setText("" + localFeedReview.getReviewCommentCount());
                 sharesCount.setText("" + localFeedReview.getReviewSharesCount());
 
-                Constants.PicassoImageBackground(localFeedReview.getReviewerAvatar(), userProfile, PostDetailActivity.this);
+                Constants.PicassoImageSrc(localFeedReview.getReviewerAvatar(), userProfile, PostDetailActivity.this);
                 postImage.setVisibility(View.GONE);
 
 //            if(localFeedReview.getReviewImage().equals("")){
@@ -271,7 +271,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 commentsCount.setText("" + reviewModel.getReview_comments_count());
                 sharesCount.setText("" + reviewModel.getReview_shares_count());
 
-                Constants.PicassoImageBackground(reviewModel.getReview_reviewer_Avatar(), userProfile, PostDetailActivity.this);
+                Constants.PicassoImageSrc(reviewModel.getReview_reviewer_Avatar(), userProfile, PostDetailActivity.this);
                 postImage.setVisibility(View.GONE);
 
 //            if(localFeedReview.getReviewImage().equals("")){
@@ -400,7 +400,7 @@ public class PostDetailActivity extends AppCompatActivity {
             commentsCount.setText(""+localFeedCheckIn.getReviewCommentCount());
             sharesCount.setText(""+localFeedCheckIn.getReviewSharesCount());
 
-            Constants.PicassoImageBackground(""+localFeedCheckIn.getCheckInWriterAvatar(),userProfile,PostDetailActivity.this);
+            Constants.PicassoImageSrc(""+localFeedCheckIn.getCheckInWriterAvatar(),userProfile,PostDetailActivity.this);
 
             if(localFeedCheckIn.getCheckInImage()!=null)
             {

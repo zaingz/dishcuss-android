@@ -175,16 +175,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/local_feeds_recycler_view"
-                        android:scrollbars="vertical"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                        android:layout_width="match_parent"
-                        app:layout_scrollFlags="scroll"
-                        android:visibility="visible"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="70dp"/>
-
                         <ProgressBar
                             android:id="@+id/local_native_progress_below"
                             android:layout_width="20dp"
@@ -195,6 +185,16 @@
                             android:indeterminate="true"
                             android:layout_marginBottom="-160dp"
                             android:visibility="visible"/>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/local_feeds_recycler_view"
+                            android:scrollbars="vertical"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                            android:layout_width="match_parent"
+                            app:layout_scrollFlags="scroll"
+                            android:visibility="visible"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="70dp"/>
 
                     </FrameLayout>
 

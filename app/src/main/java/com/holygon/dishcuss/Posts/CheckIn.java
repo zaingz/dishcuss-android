@@ -23,12 +23,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.holygon.dishcuss.Activities.SplashActivity;
+import com.holygon.dishcuss.Helper.RestaurantNameAdapter;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.RestaurantForStatus;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.SearchRestaurant;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserBeenThere;
 import com.holygon.dishcuss.Model.UserFollowing;
@@ -62,7 +66,7 @@ import okhttp3.Response;
 /**
  * Created by Naeem Ibrahim on 9/29/2016.
  */
-public class CheckIn extends AppCompatActivity {
+public class CheckIn extends AppCompatActivity{
 
     OkHttpClient client;
     AutoCompleteTextView userLocation;
@@ -72,21 +76,25 @@ public class CheckIn extends AppCompatActivity {
     ImageView imageView;
     ImageView select_photo_layout;
     String loc="";
-    double restaurantLongitude=0.0;
-    double restaurantLatitude=0.0;
-    int restaurantID=0;
     File file=null;
     UserProfile userProfile=new UserProfile();
     Realm realm;
 
     TextView headerName,postClick;
 
+
     ArrayList<String> places=new ArrayList<>();
-    ArrayList<Integer> resID;
-    ArrayList<Double> placeLat;
-    ArrayList<Double> placeLong;
+    ArrayList<Integer> resID=new ArrayList<>();
+    ArrayList<Double> placeLat=new ArrayList<>();
+    ArrayList<Double> placeLong=new ArrayList<>();
 
     ArrayAdapter<String> placeAdapter;
+
+    double restaurantLongitude=0.0;
+    double restaurantLatitude=0.0;
+    int restaurantID=0;
+
+    RestaurantNameAdapter restaurantNameAdapter;
     TextView write_reviewer_user_name;
     de.hdodenhof.circleimageview.CircleImageView write_reviewer_user_profile_image;
 
@@ -166,10 +174,39 @@ public class CheckIn extends AppCompatActivity {
             }
         });
 
-        userLocation.addTextChangedListener(new CheckPercentage());
-        userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
 
+        RealmResults<RestaurantForStatus> restaurantForStatusRealmResults=GetRestaurants();
+        ArrayList<SearchRestaurant> searchRestaurantArrayList=new ArrayList<>();
+        for(int i=0;i<restaurantForStatusRealmResults.size();i++){
+            SearchRestaurant searchRestaurant=new SearchRestaurant();
+            realm.beginTransaction();
+            searchRestaurant.setName(restaurantForStatusRealmResults.get(i).getName());
+            searchRestaurant.setId(restaurantForStatusRealmResults.get(i).getId());
+            searchRestaurant.setRestaurantLat(restaurantForStatusRealmResults.get(i).getRestaurantLat());
+            searchRestaurant.setRestaurantLong(restaurantForStatusRealmResults.get(i).getRestaurantLong());
+            realm.commitTransaction();
+            searchRestaurantArrayList.add(searchRestaurant);
+        }
+
+        userLocation.setThreshold(1);
+        restaurantNameAdapter = new RestaurantNameAdapter(this,R.layout.crop_image, R.id.lbl_name,searchRestaurantArrayList);
+        userLocation.setAdapter(restaurantNameAdapter);
+        userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
     }
+
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+
+            SearchRestaurant searchRestaurant = (SearchRestaurant) parent.getItemAtPosition(position);
+
+            restaurantID=searchRestaurant.getId();
+            restaurantLatitude=searchRestaurant.getRestaurantLat();
+            restaurantLongitude=searchRestaurant.getRestaurantLong();
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -183,18 +220,6 @@ public class CheckIn extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
-
-            restaurantID=resID.get(position);
-            restaurantLatitude=placeLat.get(position);
-            restaurantLongitude=placeLong.get(position);
-        }
-    };
-
 
     void SendDataOnServer(){
         showSpinner("Please wait...");
@@ -557,7 +582,6 @@ public class CheckIn extends AppCompatActivity {
     UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
         RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
-        Log.e("Count",""+userProfiles.size());
         if(userProfiles.size()>0){
             realm.beginTransaction();
             realm.commitTransaction();
@@ -834,5 +858,14 @@ public class CheckIn extends AppCompatActivity {
         return bitmapFile;
     }
 
+
+    RealmResults<RestaurantForStatus> GetRestaurants(){
+        realm = Realm.getDefaultInstance();
+        RealmResults<RestaurantForStatus> restaurants = realm.where(RestaurantForStatus.class).findAll();
+        if(restaurants.size()>0){
+            return restaurants;
+        }
+        return null;
+    }
 
 }

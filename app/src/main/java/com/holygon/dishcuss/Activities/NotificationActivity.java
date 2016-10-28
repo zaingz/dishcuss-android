@@ -350,7 +350,7 @@ public class NotificationActivity extends AppCompatActivity {
                 userViewHolder.notifierName.setText(notificationsShowing.get(position).getUsername());
                 userViewHolder.body.setText(notificationsShowing.get(position).getBody());
 
-                Constants.PicassoImageBackground(notificationsShowing.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationActivity.this);
+                Constants.PicassoImageSrc(notificationsShowing.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationActivity.this);
 
                 userViewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

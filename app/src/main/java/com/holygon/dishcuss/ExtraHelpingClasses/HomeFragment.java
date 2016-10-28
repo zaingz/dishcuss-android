@@ -1,4 +1,4 @@
-package com.holygon.dishcuss.ExtraClasses;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
 import android.content.Intent;
 import android.content.res.Resources;

@@ -212,13 +212,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
 
 
-//                    if(!localFeedReview.getReviewImage().equals("")){
-//
-//                        holder.feeds_post_image.setVisibility(View.VISIBLE);
-//                        Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.feeds_post_image,mContext);
-//                    }
-
-                    Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image,mContext);
+//                    Constants.PicassoImageBackground(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image,mContext);
+                    Constants.PicassoImageSrc(localFeedReview.getReviewImage(),holder.local_feeds_restaurant_image,mContext);
                     Constants.PicassoImageSrc(localFeedReview.getReviewerAvatar(),holder.profileImage,mContext);
 
                     holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {
@@ -509,7 +504,8 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
 
                     });
 
-                    Constants.PicassoImageBackground(localFeedCheckIn.getCheckInOnImage(),holder.local_feeds_restaurant_image,mContext);
+//                    Constants.PicassoImageBackground(localFeedCheckIn.getCheckInOnImage(),holder.local_feeds_restaurant_image,mContext);
+                    Constants.PicassoImageSrc(localFeedCheckIn.getCheckInOnImage(),holder.local_feeds_restaurant_image,mContext);
                     Constants.PicassoImageSrc(localFeedCheckIn.getCheckInWriterAvatar(),holder.profileImage,mContext);
 
                     holder.local_feeds_restaurant_relative_layout.setOnClickListener(new View.OnClickListener() {

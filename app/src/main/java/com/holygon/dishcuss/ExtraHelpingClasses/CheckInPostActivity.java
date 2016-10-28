@@ -1,27 +1,30 @@
-package com.holygon.dishcuss.Fragments;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
-import android.app.ProgressDialog;
-import android.os.Build;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.holygon.dishcuss.Activities.SplashActivity;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.PhotoModel;
-import com.holygon.dishcuss.Model.Reply;
 import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserBeenThere;
@@ -35,9 +38,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -48,264 +54,254 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Naeem Ibrahim on 8/30/2016.
+ * Created by Naeem Ibrahim on 8/15/2016.
  */
-public class PersonalProfileFragment extends Fragment{
+public class CheckInPostActivity extends AppCompatActivity{
 
-    private ViewPager viewPager;
-    TabLayout tabLayout;
-    int userID;
-    Realm realm;
-    AppCompatActivity activity;
+    OkHttpClient client;
+    AutoCompleteTextView userLocation;
+    EditText status;
+    String statusStr="";
+    String imagePath="";
+    ImageView imageView;
+    ImageView select_photo_layout;
+    String loc="";
+    double restaurantLongitude=0.0;
+    double restaurantLatitude=0.0;
+    int restaurantID=0;
+    File file=null;
     UserProfile userProfile=new UserProfile();
-    boolean dataAlreadyExists = false;
-    User user;
+    Realm realm;
 
-    int reviewsCount=0, followersCount =0, commentsCount =0;
-    de.hdodenhof.circleimageview.CircleImageView profileImage;
-    TextView userName, userLocation, review_count, follower_count, comments_count;
-    ProgressBar progressBar;
-    public static boolean isCalledOnce=false;
+    TextView headerName,postClick;
+
+    ArrayList<String> places=new ArrayList<>();
+    ArrayList<Integer> resID=new ArrayList<>();
+    ArrayList<Double> placeLat=new ArrayList<>();
+    ArrayList<Double> placeLong=new ArrayList<>();
+
+    ArrayAdapter<String> placeAdapter;
+    TextView write_reviewer_user_name;
+    de.hdodenhof.circleimageview.CircleImageView write_reviewer_user_profile_image;
 
 
-    private int[] imageResId = {
-            R.drawable.ic_bell,
-            R.drawable.ic_item,
-            R.drawable.ic_search,
-            R.drawable.ic_item,
-            R.drawable.ic_search
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.post_activity_photo_post);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        client = new OkHttpClient();
+        realm = Realm.getDefaultInstance();
+        User user = realm.where(User.class).findFirst();
+        userProfile=GetUserData(user.getId());
+
+
+        userLocation=(AutoCompleteTextView) findViewById(R.id.write_reviewer_address_auto);
+        imageView= (ImageView) findViewById(R.id.imageView_pic_upload_photo);
+        select_photo_layout= (ImageView) findViewById(R.id.select_photo);
+        status=(EditText)findViewById(R.id.post_status);
+        headerName=(TextView)findViewById(R.id.toolbar_name);
+        postClick=(TextView)findViewById(R.id.click_post);
+        headerName.setText("Check In");
+
+
+        write_reviewer_user_name=(TextView)findViewById(R.id.write_reviewer_user_name);
+        write_reviewer_user_profile_image=(de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.write_reviewer_user_profile_image);
+
+        if(userProfile==null){
+            UserData(user.getId());
+        }else {
+            write_reviewer_user_name.setText(userProfile.getName());
+            if (!userProfile.getAvatar().equals(""))
+            {
+                Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
+            }
+        }
+
+        postClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!status.getText().toString().equals("")){
+                    statusStr=status.getText().toString();
+                }
+                if( restaurantID!=0) {
+
+                }else {
+                    Toast.makeText(CheckInPostActivity.this,"Data Missing",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        select_photo_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setVisibility(View.VISIBLE);
+                SelectImage();
+            }
+        });
+
+
+
+//        for (int i=0;i< SplashActivity.restaurantForStatusArrayList.size();i++){
+//            places.add(SplashActivity.restaurantForStatusArrayList.get(i).getName());
+//            resID.add(SplashActivity.restaurantForStatusArrayList.get(i).getId());
+//            placeLat.add(SplashActivity.restaurantForStatusArrayList.get(i).getRestaurantLat());
+//            placeLong.add(SplashActivity.restaurantForStatusArrayList.get(i).getRestaurantLong());
+//            Log.e("Place "+i,""+SplashActivity.restaurantForStatusArrayList.get(i).getName());
+//        }
+
+
+
+        placeAdapter = new ArrayAdapter<String>(CheckInPostActivity.this, android.R.layout.simple_list_item_1, places);
+        userLocation.setThreshold(1);
+        userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
+        userLocation.setAdapter(placeAdapter);
+
+
+//        userLocation.addTextChangedListener(new CheckPercentage());
+//        userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
+
+    }
+
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+
+            restaurantID=resID.get(position);
+            restaurantLatitude=placeLat.get(position);
+            restaurantLongitude=placeLong.get(position);
+            Log.e("","ok");
+        }
     };
 
-
-    //*******************PROGRESS******************************
-    private ProgressDialog mSpinner;
-
-    private void showSpinner(String title) {
-        mSpinner = new ProgressDialog(getActivity());
-        mSpinner.setTitle(title);
-        mSpinner.show();
-//        mSpinner.setCancelable(false);
-//        mSpinner.setCanceledOnTouchOutside(false);
+    private void SelectImage() {
+        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(CheckInPostActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (options[item].equals("Take Photo"))
+                {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    startActivityForResult(intent, 1);
+                }
+                else if (options[item].equals("Choose from Gallery"))
+                {
+                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, 2);
+                }
+                else if (options[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
-    private void DismissSpinner(){
-        if(mSpinner!=null){
-            mSpinner.dismiss();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+
+                File f = new File(Environment.getExternalStorageDirectory().toString());
+                for (File temp : f.listFiles()) {
+                    if (temp.getName().equals("temp.jpg")) {
+                        f = temp;
+                        break;
+                    }
+                }
+                try
+                {
+                    Bitmap bitmap;
+                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
+
+
+                    imageView.setImageBitmap(bitmap);
+                    String path = android.os.Environment
+                            .getExternalStorageDirectory()
+                            + File.separator
+                            + "Phoenix" + File.separator + "default";
+
+                    f.delete();
+                    OutputStream outFile = null;
+                    file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
+                    try {
+                        outFile = new FileOutputStream(file);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outFile);
+                        outFile.flush();
+                        outFile.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else if (requestCode == 2) {
+
+                Uri selectedImageUri = data.getData();
+                String[] projection = { MediaStore.MediaColumns.DATA };
+                Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
+                        null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+
+                String selectedImagePath = cursor.getString(column_index);
+                Log.e("path", selectedImagePath);
+                file=new File(selectedImagePath);
+
+                Bitmap bm;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(selectedImagePath, options);
+                final int REQUIRED_SIZE = 200;
+                int scale = 1;
+                while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+                        && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                    scale *= 2;
+                options.inSampleSize = scale;
+                options.inJustDecodeBounds = false;
+                bm = BitmapFactory.decodeFile(selectedImagePath, options);
+
+                imageView.setImageBitmap(bm);
+            }
         }
     }
 
-//*******************PROGRESS******************************
 
-
-    public PersonalProfileFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.personal_profile_fragment, container, false);
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-        activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
+    UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
-
-        TextView header=(TextView) rootView.findViewById(R.id.toolbar_name);
-        progressBar=(ProgressBar)rootView.findViewById(R.id.native_progress_bar);
-        header.setText("   Profile");
-
-        GetUI(rootView);
-
-
-
-            user= realm.where(User.class).findFirst();
-            userID = user.getId();
-//        if(PersonalProfileFragment.isCalledOnce || !Constants.isNetworkAvailable(getActivity())) {
-
-            userProfile=GetUserData(userID);
-            if(userProfile!=null)
-            {
-                reviewsCount=userProfile.getReviewsCount();
-                followersCount=userProfile.getFollowersCount();
-                commentsCount=userProfile.getCommentsCount();
-                SetValues();
-                PersonalProfileFragment.isCalledOnce=true;
-            }else {
-//                Log.e("","ELSE");
-            }
-
-            dataAlreadyExists=false;
-            if(!dataAlreadyExists) {
-
-
-                if(!PersonalProfileFragment.isCalledOnce) {
-                    showSpinner("Please wait...");
-                    PersonalProfileFragment.isCalledOnce = true;
-                }
-                if(Constants.isNetworkAvailable(getActivity())) {
-                    UserData();
-                }
-            }
-
-
-        return rootView;
+        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
+        Log.e("Count",""+userProfiles.size());
+        if(userProfiles.size()>0){
+            realm.beginTransaction();
+            realm.commitTransaction();
+            return userProfiles.get(userProfiles.size()-1);
+        }
+        return null;
     }
 
-    void GetUI(View rootView){
-        progressBar.setVisibility(View.VISIBLE);
-        userName = (TextView)rootView.findViewById(R.id.user_profile_user_name);
-        userLocation = (TextView) rootView.findViewById(R.id.user_profile_user_location);
-        profileImage=(de.hdodenhof.circleimageview.CircleImageView)rootView.findViewById(R.id.user_detail_profile_image);
-        review_count = (TextView) rootView.findViewById(R.id.user_profile_review_count);
-        comments_count = (TextView) rootView.findViewById(R.id.user_profile_comments_count);
-        follower_count = (TextView) rootView.findViewById(R.id.user_profile_followers_count);
+    void UserData(int userID) {
 
-        viewPager = (ViewPager)rootView.findViewById(R.id.viewpager);
-
-        tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
-
-        Button user_profile_follow_button=(Button)rootView.findViewById(R.id.user_profile_follow_button);
-        user_profile_follow_button.setVisibility(View.INVISIBLE);
-    }
-
-    void SetValues(){
-
-        boolean isDes=true;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
-            if (!getActivity().isDestroyed()) {
-                isDes=false;
-            }
-        }
-        else
-        {
-            isDes=false;
-        }
-
-
-        if(!isDes) {
-
-            DismissSpinner();
-            userName.setText(userProfile.getName());
-            userLocation.setText(userProfile.getLocation());
-
-            review_count.setText("" + reviewsCount);
-            comments_count.setText("" + commentsCount);
-            follower_count.setText("" + followersCount);
-            Constants.PicassoImageSrc(userProfile.getAvatar(), profileImage, getActivity());
-            if (viewPager != null) {
-                setupViewPager(viewPager);
-            }
-
-            tabLayout.setupWithViewPager(viewPager);
-            progressBar.setVisibility(View.GONE);
-            // setupTabIcons();
-//        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-//            tabLayout.getTabAt(i).setIcon(imageResId[i]);
-//        }
-            DismissSpinner();
-            dataAlreadyExists = false;
-        }
-    }
-
-    private void setupTabIcons() {
-
-        TextView tabOne = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
-        tabOne.setText("Reviews");
-        tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_bell, 0, 0);
-        tabLayout.getTabAt(0).setCustomView(tabOne);
-
-        TextView tabTwo = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
-        tabTwo.setText("Photo");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_item, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
-
-        TextView tabThree = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
-        tabThree.setText("Followers");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_search, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
-
-        TextView tabFour = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
-        tabThree.setText("Following");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_bell, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabFour);
-
-        TextView tabFive = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.custom_tab, null);
-        tabThree.setText("Been There");
-        tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_search, 0, 0);
-        tabLayout.getTabAt(4).setCustomView(tabFive);
-    }
-
-    private void setupViewPager(ViewPager viewPager) {
-        DismissSpinner();
-        Adapter adapter = new Adapter(activity.getSupportFragmentManager());
-        adapter.clearAll();
-        viewPager.setAdapter(null);
-        adapter = new Adapter(activity.getSupportFragmentManager());
-        adapter.addFragment(new AccountReviewsFragment(userID), "Reviews");
-        adapter.addFragment(new TestFragment(userID), "Photo");
-        adapter.addFragment(new AccountFollowersFragment(userID), "Followers");
-        adapter.addFragment(new AccountFollowingFragment(userID), "Following");
-        adapter.addFragment(new AccountBeenThereFragment(userID), "Been There");
-        viewPager.setAdapter(adapter);
-
-       // setupTabIcons();
-    }
-
-
-    static class Adapter extends FragmentStatePagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
-        FragmentManager fragmentManager;
-
-        public Adapter(FragmentManager fm) {
-            super(fm);
-            fragmentManager=fm;
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-        public void clearAll() //Clear all page
-        {
-            for(int i=0; i<mFragments.size(); i++)
-                fragmentManager.beginTransaction().remove(mFragments.get(i)).commit();
-            mFragments.clear();
-        }
-    }
-
-    void UserData() {
-
-
-       // showSpinner("Loading Data...");
-
-
+//        Log.e("User","Post Selection");
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLs.Get_User_data+userID)
-                .addHeader("Authorization", "Token token="+user.getToken())
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -319,25 +315,12 @@ public class PersonalProfileFragment extends Fragment{
 
                 final String objStr = response.body().string();
 
-                Log.e("Object",""+objStr);
-
-                if (getActivity()==null) {
-                    return;
-                }
-
-                getActivity().runOnUiThread(new Runnable() {
+                runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
 
                             JSONObject jsonObj = new JSONObject(objStr);
-
-                            realm.beginTransaction();
-                            RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).equalTo("id", userID).findAll();
-                            userProfileRealmResults.deleteAllFromRealm();
-                            realm.commitTransaction();
-
-
 
                             if(jsonObj.has("user"))
                             {
@@ -361,13 +344,10 @@ public class PersonalProfileFragment extends Fragment{
                                 JSONArray jsonDataPostsArray = userObj.getJSONArray("posts");
                                 JSONArray jsonDataReviewsArray = userObj.getJSONArray("reviews");
 
-                                reviewsCount=jsonDataReviewsArray.length();
-                                followersCount =jsonDataFollowersArray.length();
+
 
                                 for(int p=0;p<jsonDataPostsArray.length();p++){
-
                                     JSONObject postObj=jsonDataPostsArray.getJSONObject(p);
-
                                     JSONObject checkinObj = postObj.getJSONObject("checkin");
 
                                     if(checkinObj.has("restaurant")) {
@@ -383,6 +363,7 @@ public class PersonalProfileFragment extends Fragment{
                                         userProfileRealm.getUserBeenThereRealmList().add(beenThere);
                                     }
 
+
                                     JSONArray jsonDataPhotosArray = postObj.getJSONArray("photos");
                                     for (int ph = 0; ph < jsonDataPhotosArray.length(); ph++) {
                                         JSONObject photo = jsonDataPhotosArray.getJSONObject(ph);
@@ -394,10 +375,9 @@ public class PersonalProfileFragment extends Fragment{
                                     }
 
                                     JSONArray jsonDataCommentsArray = postObj.getJSONArray("comments");
-                                    commentsCount =jsonDataCommentsArray.length();
                                     for (int c = 0; c < jsonDataCommentsArray.length(); c++) {
                                         JSONObject commentObj = jsonDataCommentsArray.getJSONObject(c);
-                                        Comment comment= realm.createObject(Comment.class);
+                                        Comment comment= new Comment();
                                         comment.setCommentID(commentObj.getInt("id"));
                                         comment.setCommentTitle(commentObj.getString("title"));
                                         comment.setCommentUpdated_at(commentObj.getString("created_at"));
@@ -408,35 +388,6 @@ public class PersonalProfileFragment extends Fragment{
                                         comment.setCommentatorImage(commentatorObj.getString("avatar"));
                                         JSONArray commentLikeArray=commentObj.getJSONArray("likes");
                                         comment.setCommentLikesCount(commentLikeArray.length());
-
-
-                                        JSONArray replyArray=commentObj.getJSONArray("replies");
-                                        realm.commitTransaction();
-                                        realm.beginTransaction();
-
-                                        for(int r=0;r<replyArray.length();r++){
-                                            JSONObject replyObj=replyArray.getJSONObject(r);
-
-                                            Reply reply=realm.createObject(Reply.class);
-
-                                            reply.setCommentID(replyObj.getInt("id"));
-                                            reply.setCommentTitle(replyObj.getString("title"));
-                                            reply.setCommentUpdated_at(replyObj.getString("created_at"));
-                                            reply.setCommentSummary(replyObj.getString("comment"));
-
-                                            JSONObject replyCommentatorObj = replyObj.getJSONObject("commentor");
-                                            reply.setCommentatorID(replyCommentatorObj.getInt("id"));
-                                            reply.setCommentatorName(replyCommentatorObj.getString("name"));
-                                            reply.setCommentatorImage(replyCommentatorObj.getString("avatar"));
-
-                                            JSONArray replyCommentLikeArray=replyObj.getJSONArray("likes");
-                                            reply.setCommentLikesCount(replyCommentLikeArray.length());
-
-                                            final Reply manageReply = realm.copyToRealm(reply);
-                                            comment.getReplyRealmList().add(manageReply);
-
-                                        }
-
                                         final Comment managedComment = realm.copyToRealm(comment);
                                         userProfileRealm.getCommentRealmList().add(managedComment);
                                     }
@@ -463,18 +414,13 @@ public class PersonalProfileFragment extends Fragment{
                                     reviewModel.setReview_reviewer_Avatar(reviewObjReviewer.getString("avatar"));
                                     reviewModel.setReview_reviewer_time(reviewObjReviewer.getString("location"));
 
-                                    JSONObject reviewOnObj=reviewObj.getJSONObject("review_on");
-                                    if(reviewOnObj.has("id")) {
-                                        reviewModel.setReview_On_ID(reviewOnObj.getInt("id"));
-                                    }
-
                                     JSONArray reviewLikesArray = reviewObj.getJSONArray("likes");
                                     JSONArray reviewCommentsArray = reviewObj.getJSONArray("comments");
                                     JSONArray reviewShareArray = reviewObj.getJSONArray("reports");
 
                                     reviewModel.setReview_Likes_count(reviewLikesArray.length());
                                     reviewModel.setReview_comments_count(reviewCommentsArray.length());
-                                    reviewModel.setReview_shares_count(reviewObj.getInt("shares"));
+                                    reviewModel.setReview_shares_count(reviewShareArray.length());
 
 
 
@@ -506,9 +452,6 @@ public class PersonalProfileFragment extends Fragment{
 
                                 }
 
-                                userProfileRealm.setReviewsCount(reviewsCount);
-                                userProfileRealm.setFollowersCount(followersCount);
-                                userProfileRealm.setCommentsCount(commentsCount);
 
                                 for(int fs=0;fs<jsonDataFollowingArray.length();fs++){
                                     JSONObject jsonFollowingObject = jsonDataFollowingArray.getJSONObject(fs);
@@ -525,7 +468,7 @@ public class PersonalProfileFragment extends Fragment{
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("role"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
@@ -548,18 +491,22 @@ public class PersonalProfileFragment extends Fragment{
                                     userFollowing.setLocation(jsonFollowingObject.getString("location"));
                                     userFollowing.setEmail(jsonFollowingObject.getString("email"));
                                     userFollowing.setGender(jsonFollowingObject.getString("gender"));
-                                    userFollowing.setRole(jsonFollowingObject.getString("role"));
+                                    userFollowing.setRole(jsonFollowingObject.getString("name"));
                                     userFollowing.setReferral_code(jsonFollowingObject.getString("referal_code"));
 
                                     final UserFollowing managedUserFollowing = realm.copyToRealm(userFollowing);
                                     userProfileRealm.getUserFollowersRealmList().add(managedUserFollowing);
                                 }
 
-
                                 userProfile=userProfileRealm;
+
+                                write_reviewer_user_name.setText(userProfile.getName());
+                                if (!userProfile.getAvatar().equals(""))
+                                {
+                                    Constants.PicassoImageSrc(userProfile.getAvatar(),write_reviewer_user_profile_image ,CheckInPostActivity.this);
+                                }
                                 realm.commitTransaction();
-                                SetValues();
-                                DismissSpinner();
+
                             }
 
                         } catch (JSONException e) {
@@ -572,14 +519,4 @@ public class PersonalProfileFragment extends Fragment{
         });
     }
 
-    UserProfile GetUserData(int uid){
-        realm = Realm.getDefaultInstance();
-        RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
-        Log.e("Count",""+userProfiles.size());
-        if(userProfiles.size()>0){
-            dataAlreadyExists=true;
-            return userProfiles.get(userProfiles.size()-1);
-        }
-        return null;
-    }
 }

@@ -130,7 +130,7 @@
                 android:layout_marginLeft="3dp"
                 android:id="@+id/explore_restaurant_cousine"
                 android:layout_width="wrap_content"
-                android:text="Chinees,Italian"
+                android:text=""
                 android:layout_height="wrap_content" />
         </LinearLayout>
 

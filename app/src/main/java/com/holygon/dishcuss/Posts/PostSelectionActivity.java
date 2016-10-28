@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.R;
 

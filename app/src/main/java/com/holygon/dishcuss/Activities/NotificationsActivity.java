@@ -334,7 +334,7 @@ public class NotificationsActivity extends AppCompatActivity {
 //        }
                 userViewHolder.body.setText(notificationsArrayList.get(position).getBody());
 
-                Constants.PicassoImageBackground(notificationsArrayList.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationsActivity.this);
+                Constants.PicassoImageSrc(notificationsArrayList.get(position).getAvatarPic(),userViewHolder.userAvatar,NotificationsActivity.this);
 
 
 

@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.FoodItems;
+import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
@@ -41,7 +42,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView restaurantName,restaurantAddress,ratting,explore_restaurant_cost;
+        public TextView restaurantName,restaurantAddress,ratting,explore_restaurant_cost,explore_restaurant_cousine;
         public TextView explore_restaurant_photos_count,explore_restaurant_likes_count;
         public ImageView explore_restaurant_image_1,explore_restaurant_image_2,explore_restaurant_image_3,explore_restaurant_image_4;
         public CardView CardView_explore_restaurant_image_1,CardView_explore_restaurant_image_2,CardView_explore_restaurant_image_3,CardView_explore_restaurant_image_4;
@@ -53,6 +54,7 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
 
             restaurantName = (TextView) v.findViewById(R.id.explore_restaurant_name);
             explore_restaurant_cost = (TextView) v.findViewById(R.id.explore_restaurant_cost);
+            explore_restaurant_cousine = (TextView) v.findViewById(R.id.explore_restaurant_cousine);
             restaurantAddress = (TextView) v.findViewById(R.id.explore_restaurant_address);
             ratting = (TextView) v.findViewById(R.id.explore_restaurant_rating);
             explore_restaurant_photos_count = (TextView) v.findViewById(R.id.explore_restaurant_photos_count);
@@ -102,10 +104,20 @@ public class ExploreAdapter extends RecyclerView.Adapter<ExploreAdapter.ViewHold
         holder.explore_restaurant_likes_count.setText(""+restaurantRealmList.get(position).getBookmark_count());
         holder.explore_restaurant_photos_count.setText(""+itemsData.size());
 
+        for (int i = 0; i < restaurantRealmList.get(position).getFoodItemsArrayList().size(); i++) {
+            RealmList<FoodsCategory> foodsCategoryRealmList = restaurantRealmList.get(position).getFoodItemsArrayList().get(i).getFoodsCategories();
+            if (foodsCategoryRealmList.size() > 0) {
+                if (holder.explore_restaurant_cousine.getText().toString().equals("")) {
+                    holder.explore_restaurant_cousine.setText(foodsCategoryRealmList.get(0).getCategoryName());
+                } else {
+                    holder.explore_restaurant_cousine.setText("," + foodsCategoryRealmList.get(0).getCategoryName());
+                }
+            }
+        }
 
         HidesImages(holder,itemsData.size());
 
-        Constants.PicassoImageBackground(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
+        Constants.PicassoImageSrc(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
 
         if(itemsData.size()>0)
             Constants.PicassoImageBackground(itemsData.get(0),holder.explore_restaurant_image_1,context);

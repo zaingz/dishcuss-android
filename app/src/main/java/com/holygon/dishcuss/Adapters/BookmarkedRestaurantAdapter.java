@@ -61,7 +61,7 @@ public class BookmarkedRestaurantAdapter extends RecyclerView.Adapter<Bookmarked
         holder.restaurantName.setText(restaurantRealmList.get(position).getName());
         holder.restaurantAddress.setText(restaurantRealmList.get(position).getLocation());
 
-        Constants.PicassoImageBackground(restaurantRealmList.get(position).getCover_image(),holder.coverImage,context);
+        Constants.PicassoImageSrc(restaurantRealmList.get(position).getCover_image(),holder.coverImage,context);
 
 
 

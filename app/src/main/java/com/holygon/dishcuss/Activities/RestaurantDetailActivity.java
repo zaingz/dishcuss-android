@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -49,7 +51,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -61,6 +66,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static java.util.Calendar.AM_PM;
+
 /**
  * Created by Naeem Ibrahim on 7/27/2016.
  */
@@ -69,6 +76,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     private ViewPager viewPager;
     TabLayout tabLayout;
     int restaurantID=0;
+    Target target;
     Toolbar restaurant_details_awesome_toolbar;
     LinearLayout restaurant_details_awesome_toolbar_parent;
     LinearLayout restaurant_call_now,bookmark_button_layout,follow_button_layout;
@@ -88,7 +96,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
     int reviewsCount=0,bookmarksCount=0,beenHereCount=0;  // followersCount(Likes)  commentsCount(Checkins)
 
-    TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count;
+    TextView cafeName, cafeAddress, cafeTiming, review_count,bookmark_count,been_here_count,cafeOpenClosed;
     TextView explore_restaurant_cost;
     TextView restaurantType;
     TextView restaurantCuisine;
@@ -139,9 +147,9 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         restaurantCuisine = (TextView) findViewById(R.id.explore_restaurant_cousine);
         cafeAddress = (TextView) findViewById(R.id.restaurant_detail_restaurant_address);
         cafeTiming = (TextView) findViewById(R.id.restaurant_detail_restaurant_timing);
+        cafeOpenClosed = (TextView) findViewById(R.id.cafeOpenClosed_tv);
 
         main_restaurant_rating = (Button) findViewById(R.id.main_restaurant_rating);
-
 
         review_count = (TextView) findViewById(R.id.reviews_Count);
         bookmark_count = (TextView) findViewById(R.id.bookmark_Count);
@@ -322,68 +330,90 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     }
 
     void SetValues() {
-        DismissSpinner();
-        cafeName.setText(restaurant.getName());
-        cafeAddress.setText(restaurant.getLocation());
-        cafeTiming.setText(restaurant.getOpening_time()+" to "+restaurant.getClosing_time());
-        explore_restaurant_cost.setText("  Rs "+restaurant.getPricePerHead()+"/head");
-        restaurantType.setText(""+restaurant.getType());
-        restaurantCuisine.setText("");
-        main_restaurant_rating.setText(""+restaurant.getRatting());
-        GetFooDItems();
 
-        for (int i=0;i<foodItems.size();i++) {
-            RealmList<FoodsCategory> foodsCategoryRealmList = foodItems.get(i).getFoodsCategories();
-            if (foodsCategoryRealmList.size() > 0) {
+        boolean isDes=true;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1){
+            if (!isDestroyed()) {
+                isDes=false;
+            }
+        }
+        else
+        {
+            isDes=false;
+        }
+
+        if(!isDes) {
+            DismissSpinner();
+            cafeName.setText(restaurant.getName());
+            cafeAddress.setText(restaurant.getLocation());
+            cafeTiming.setText(restaurant.getOpening_time() + " to " + restaurant.getClosing_time());
+
+            if(!CheckTime(restaurant.getOpening_time(),restaurant.getClosing_time())){
+                cafeOpenClosed.setText("Open Now");
+            }else {
+                cafeOpenClosed.setText("Close Now");
+            }
+
+            explore_restaurant_cost.setText("  Rs " + restaurant.getPricePerHead() + "/head");
+            restaurantType.setText("" + restaurant.getType());
+            main_restaurant_rating.setText("" + restaurant.getRatting());
+            GetFooDItems();
+
+            for (int i = 0; i < foodItems.size(); i++) {
+                RealmList<FoodsCategory> foodsCategoryRealmList = foodItems.get(i).getFoodsCategories();
+                if (foodsCategoryRealmList.size() > 0) {
                     if (restaurantCuisine.getText().toString().equals("")) {
                         restaurantCuisine.setText(foodsCategoryRealmList.get(0).getCategoryName());
-                    }else {
-                        restaurantCuisine.setText(","+foodsCategoryRealmList.get(0).getCategoryName());
+                    } else {
+                        restaurantCuisine.setText("," + foodsCategoryRealmList.get(0).getCategoryName());
                     }
-            }
-        }
-
-        if(restaurant.getReview_count()>0){
-            reviewsCount=restaurant.getReview_count();
-        }
-        if(restaurant.getBookmark_count()>0){
-            bookmarksCount=restaurant.getBookmark_count();
-        }
-        if(restaurant.getBeen_here_count()>0){
-            beenHereCount=restaurant.getBeen_here_count();
-        }
-        review_count.setText(""+reviewsCount);
-        bookmark_count.setText(""+bookmarksCount);
-        been_here_count.setText(""+beenHereCount);
-
-        String imageUri = restaurant.getCover_image_url();
-        Picasso.with(RestaurantDetailActivity.this).load(imageUri).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                restaurant_details_awesome_toolbar_parent.setBackground(new BitmapDrawable(bitmap));
+                }
             }
 
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-//                Log.d("TAG", "FAILED");
+            if (restaurant.getReview_count() > 0) {
+                reviewsCount = restaurant.getReview_count();
+            }
+            if (restaurant.getBookmark_count() > 0) {
+                bookmarksCount = restaurant.getBookmark_count();
+            }
+            if (restaurant.getBeen_here_count() > 0) {
+                beenHereCount = restaurant.getBeen_here_count();
             }
 
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-//                Log.d("TAG", "Prepare Load");
-            }
-        });
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
+            review_count.setText("" + reviewsCount);
+            bookmark_count.setText("" + bookmarksCount);
+            been_here_count.setText("" + beenHereCount);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+            String imageUri = restaurant.getCover_image_url();
+
+            target=new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    restaurant_details_awesome_toolbar_parent.setBackground(new BitmapDrawable(bitmap));
+                }
+
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                }
+            };
+
+            Picasso.with(RestaurantDetailActivity.this).load(imageUri).into(target);
+
+            if (viewPager != null) {
+                setupViewPager(viewPager);
+            }
+
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
 
 //        for (int i = 0; i < tabLayout.getTabCount(); i++) {
 //            tabLayout.getTabAt(i).setIcon(imageResId[i]);
 //        }
-
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -463,10 +493,10 @@ public class RestaurantDetailActivity extends AppCompatActivity {
 
                             realm = Realm.getDefaultInstance();
 
-                            realm.beginTransaction();
-                            RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
-                            restaurantRealmResults.deleteAllFromRealm();
-                            realm.commitTransaction();
+//                            realm.beginTransaction();
+//                            RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).equalTo("id", restaurantID).findAll();
+//                            restaurantRealmResults.deleteAllFromRealm();
+//                            realm.commitTransaction();
 
 //                            for (int i = 0; i < jsonDataArray.length(); i++)
                             if(jsonObj.has("restaurant"))
@@ -789,5 +819,73 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             });
             }
         });
+    }
+
+    boolean CompareTime(int openHour, int closeHour){
+        int hour,min;
+        String AM_PM;
+
+        Calendar c = Calendar.getInstance();
+        hour = c.get(Calendar.HOUR_OF_DAY);
+        min = c.get(Calendar.MINUTE);
+        int ds = c.get(Calendar.AM_PM);
+        if(ds==0)
+            AM_PM="am";
+        else
+            AM_PM="pm";
+
+        Toast.makeText(RestaurantDetailActivity.this, ""+hour+":"+min+AM_PM, Toast.LENGTH_SHORT).show();
+        if((hour>=openHour&&AM_PM.matches("am")) || (hour<=closeHour&&AM_PM.matches("pm")))
+        {
+            Toast.makeText(RestaurantDetailActivity.this, "Time is between the range", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        else {
+            Toast.makeText(RestaurantDetailActivity.this, "Time is not between the range", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
+
+
+    private Calendar fromTime;
+    private Calendar toTime;
+    private Calendar currentTime;
+
+    public boolean CheckTime(String timeFrom,String timeUntil) {
+        try {
+
+            SimpleDateFormat displayFormat = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat parseFormat = new SimpleDateFormat("hh:mm a");
+
+            Date From = parseFormat.parse(timeFrom);
+            Date Until = parseFormat.parse(timeUntil);
+
+            String newFromTime=displayFormat.format(From).toString();
+            String newUntilTime=displayFormat.format(Until).toString();
+//            String[] times = time.split("-");
+            String[] from = newFromTime.split(":");
+            String[] until = newUntilTime.split(":");
+
+            fromTime = Calendar.getInstance();
+            fromTime.set(Calendar.HOUR_OF_DAY, Integer.valueOf(from[0]));
+            fromTime.set(Calendar.MINUTE, Integer.valueOf(from[1]));
+
+            toTime = Calendar.getInstance();
+            toTime.set(Calendar.HOUR_OF_DAY, Integer.valueOf(until[0]));
+            toTime.set(Calendar.MINUTE, Integer.valueOf(until[1]));
+
+            currentTime = Calendar.getInstance();
+            currentTime.set(Calendar.HOUR_OF_DAY, Calendar.HOUR_OF_DAY);
+            currentTime.set(Calendar.MINUTE, Calendar.MINUTE);
+
+            if(currentTime.after(fromTime) && currentTime.before(toTime)){
+                return true;
+            }
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        return false;
     }
 }

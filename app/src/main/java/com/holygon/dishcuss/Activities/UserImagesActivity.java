@@ -83,26 +83,30 @@ public class UserImagesActivity  extends FragmentActivity {
             if(imageFileNames!=null && !imageFileNames.equals("")){
                 imageView.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
+
+                Target target=new Target(){
+
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        imageView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        imageView.setBackground(new BitmapDrawable(getResources(), bitmap));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(final Drawable errorDrawable) {
+                    }
+
+                    @Override
+                    public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                    }
+                };
+
                 Picasso.with(getActivity()).load(imageFileNames)
                         .placeholder(imageView.getDrawable())
-                        .into(new Target(){
-
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                imageView.setVisibility(View.VISIBLE);
-                                progressBar.setVisibility(View.GONE);
-                                imageView.setBackground(new BitmapDrawable(getResources(), bitmap));
-                            }
-
-                            @Override
-                            public void onBitmapFailed(final Drawable errorDrawable) {
-                            }
-
-                            @Override
-                            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                            }
-                        });
+                        .into(target);
             }
+
             return swipeView;
         }
 

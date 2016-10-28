@@ -36,7 +36,7 @@ android {
     buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "com.holygon.dishcuss"
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -56,6 +56,11 @@ android {
 android {
     lintOptions {
         checkReleaseBuilds false
+    }
+}
+android {
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -100,6 +105,11 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
+
 }
 allprojects {
     repositories {

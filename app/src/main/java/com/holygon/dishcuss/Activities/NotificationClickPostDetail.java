@@ -630,7 +630,7 @@ public class NotificationClickPostDetail extends AppCompatActivity {
         commentsCount.setText("" + specificPostModel.getReviewCommentCount());
         sharesCount.setText("" + specificPostModel.getReviewSharesCount());
 
-        Constants.PicassoImageBackground(specificPostModel.getCheckInWriterAvatar(), userProfile, NotificationClickPostDetail.this);
+        Constants.PicassoImageSrc(specificPostModel.getCheckInWriterAvatar(), userProfile, NotificationClickPostDetail.this);
 
         if(typeName.equals("Review")) {
             postImage.setVisibility(View.GONE);

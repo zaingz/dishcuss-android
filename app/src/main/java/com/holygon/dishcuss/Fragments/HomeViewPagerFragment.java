@@ -6,6 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class HomeViewPagerFragment extends Fragment {
     TextView cafeName,cafeAddress,cafeTrending;
     ProgressBar image_spinner;
 
+    Target target;
     public HomeViewPagerFragment() {
     }
 
@@ -55,24 +57,6 @@ public class HomeViewPagerFragment extends Fragment {
         image_spinner.setVisibility(View.VISIBLE);
 
         String imageUri = featuredRestaurant.getCover_image_url();
-        Picasso.with(getActivity()).load(imageUri)
-                .into(new Target(){
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                image_spinner.setVisibility(View.GONE);
-                parentLayout.setBackground(new BitmapDrawable(bitmap));
-            }
-
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-//                Log.d("TAG", "FAILED");
-            }
-
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-//                Log.d("TAG", "Prepare Load");
-            }
-        });
 
         cafeName.setText(featuredRestaurant.getName());
         cafeAddress.setText(featuredRestaurant.getLocation());
@@ -86,6 +70,29 @@ public class HomeViewPagerFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        target = new Target()
+        {
+            @Override
+            public void onPrepareLoad(Drawable drawable)
+            {
+            }
+
+            @Override
+            public void onBitmapLoaded(Bitmap photo, Picasso.LoadedFrom from)
+            {
+                image_spinner.setVisibility(View.GONE);
+                parentLayout.setBackground(new BitmapDrawable(photo));
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable arg0)
+            {
+            }
+        };
+
+        Picasso.with(getActivity()).load(imageUri)
+                .into(target);
 
         return rootView;
     }

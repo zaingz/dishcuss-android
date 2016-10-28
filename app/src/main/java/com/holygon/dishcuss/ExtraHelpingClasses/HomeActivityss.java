@@ -1,4 +1,4 @@
-package com.holygon.dishcuss.ExtraClasses;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

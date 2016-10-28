@@ -182,11 +182,8 @@ public final class Constants{
 
     public static void PicassoImageBackground(String URL, final ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
-            Picasso.with(context).load(URL)
-                    .resize(60,60)
-                    .onlyScaleDown()
-                    .centerCrop()
-                    .into(new Target(){
+
+            Target target=new Target(){
 
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -202,16 +199,20 @@ public final class Constants{
                 public void onPrepareLoad(final Drawable placeHolderDrawable) {
 //                    Log.d("TAG", "Prepare Load");
                 }
-            });
+            };
+
+            Picasso.with(context).load(URL)
+//                    .resize(60,60)
+//                    .onlyScaleDown()
+//                    .centerCrop()
+                    .into(target);
         }
     }
 
     public static void PicassoLargeImageBackground(String URL, final ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
-            Picasso.with(context).load(URL)
-                    .resize(400,250)
-                    .onlyScaleDown()
-                    .into(new Target(){
+
+            Target target=new Target(){
 
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -227,58 +228,68 @@ public final class Constants{
                 public void onPrepareLoad(final Drawable placeHolderDrawable) {
 //                    Log.d("TAG", "Prepare Load");
                 }
-            });
+            };
+
+            Picasso.with(context).load(URL)
+                    .resize(400,250)
+                    .onlyScaleDown()
+                    .into(target);
         }
     }
 
     public static void PicassoLargeImageBackgroundNewsFeed(String URL, final ImageView imageView, final ProgressBar pb, final Context context){
         if(URL!=null && !URL.equals("")){
+
+            Target target=new Target(){
+
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    imageView.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
+                    imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                }
+
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                }
+            };
+
             Picasso.with(context).load(URL)
                     .placeholder(imageView.getDrawable())
-                    .into(new Target(){
-
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            imageView.setVisibility(View.VISIBLE);
-                            pb.setVisibility(View.GONE);
-                            imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-                        }
-
-                        @Override
-                        public void onBitmapFailed(final Drawable errorDrawable) {
-//                    Log.d("TAG", "FAILED");
-                        }
-
-                        @Override
-                        public void onPrepareLoad(final Drawable placeHolderDrawable) {
-//                    Log.d("TAG", "Prepare Load");
-                        }
-                    });
+                    .into(target);
         }
     }
 
     public static void PicassoLargeImageBackgroundPhotoDetail(String URL, final ImageView imageView, final Context context){
         if(URL!=null && !URL.equals("")){
+
+            Target target=new Target(){
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+                }
+
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+//                    Log.d("TAG", "FAILED");
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+//                    Log.d("TAG", "Prepare Load");
+                }
+            };
+
             Picasso.with(context).load(URL)
                     .placeholder(imageView.getDrawable())
-                    .into(new Target(){
-
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            imageView.setVisibility(View.VISIBLE);
-                            imageView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
-                        }
-
-                        @Override
-                        public void onBitmapFailed(final Drawable errorDrawable) {
-//                    Log.d("TAG", "FAILED");
-                        }
-
-                        @Override
-                        public void onPrepareLoad(final Drawable placeHolderDrawable) {
-//                    Log.d("TAG", "Prepare Load");
-                        }
-                    });
+                    .into(target);
         }
     }
 

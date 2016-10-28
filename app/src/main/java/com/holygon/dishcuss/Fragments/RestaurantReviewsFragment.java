@@ -81,7 +81,7 @@ public class RestaurantReviewsFragment extends Fragment {
         if(restaurants.size()>0){
             realm.beginTransaction();
             realm.commitTransaction();
-            return restaurants.get(0);
+            return restaurants.get(restaurants.size()-1);
         }
         return null;
     }

@@ -154,6 +154,7 @@
                 android:gravity="center">
 
                 <TextView
+                    android:id="@+id/cafeOpenClosed_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Open Now"

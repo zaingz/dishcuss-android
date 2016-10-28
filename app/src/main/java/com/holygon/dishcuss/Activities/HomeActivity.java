@@ -68,7 +68,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 import okhttp3.Call;
@@ -114,8 +113,8 @@ public class HomeActivity extends RuntimePermissionsActivity implements
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION}, R.string.runtime_permissions_txt
                 , REQUEST_PERMISSIONS);
-        setContentView(R.layout.activity_home);
 
+        setContentView(R.layout.activity_home);
         if(!Constants.skipLogin) {
             realm =Realm.getDefaultInstance();
             user = realm.where(User.class).findFirst();
@@ -369,6 +368,7 @@ public class HomeActivity extends RuntimePermissionsActivity implements
 //                    fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                 }
+
                 return true;
             }
 

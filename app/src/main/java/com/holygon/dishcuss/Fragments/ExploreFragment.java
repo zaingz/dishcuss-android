@@ -119,37 +119,35 @@ public class ExploreFragment extends Fragment{
             @Override
             public void onLoadMore(int current_page,int current_item) {
 
-                Log.e("Current Item",""+current_item);
-
               //  progressBar.setVisibility(View.VISIBLE);
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }, 2*1000);
-
-                // do something...
-
-                restaurantRealmListVisibleData=new ArrayList<>();
-                int newLoad=current_item+10;
-
-                if(restaurantRealmListServerData.size()>=newLoad)
-                {
-                    for (int j = current_item; j <newLoad; j++) {
-                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
-                    }
-                }
-                else
-                {
-                    for (int j = current_item; j<restaurantRealmListServerData.size() ; j++) {
-                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
-                    }
-                }
-
-                adapter.UpdateList(restaurantRealmListVisibleData);
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        progressBar.setVisibility(View.GONE);
+//                    }
+//                }, 2*1000);
+//
+//                // do something...
+//
+//                restaurantRealmListVisibleData=new ArrayList<>();
+//                int newLoad=current_item+10;
+//
+//                if(restaurantRealmListServerData.size()>=newLoad)
+//                {
+//                    for (int j = current_item; j <newLoad; j++) {
+//                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
+//                    }
+//                }
+//                else
+//                {
+//                    for (int j = current_item; j<restaurantRealmListServerData.size() ; j++) {
+//                        restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(j));
+//                    }
+//                }
+//
+//                adapter.UpdateList(restaurantRealmListVisibleData);
             }
         });
 
@@ -457,19 +455,19 @@ public class ExploreFragment extends Fragment{
                                 restaurantRealmListServerData.add(realmRestaurant);
                             }
 
-                            Log.e("ExpSize",""+restaurantRealmListServerData.size());
-
-                            if(restaurantRealmListServerData.size()>=10) {
-                                for (int i = 0; i < 10; i++) {
-                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
-                                }
-                            }else {
-                                for (int i = 0; i < restaurantRealmListServerData.size(); i++) {
-                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
-                                }
-                            }
+//                            Log.e("ExpSize",""+restaurantRealmListServerData.size());
+//
+//                            if(restaurantRealmListServerData.size()>=10) {
+//                                for (int i = 0; i < 10; i++) {
+//                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+//                                }
+//                            }else {
+//                                for (int i = 0; i < restaurantRealmListServerData.size(); i++) {
+//                                    restaurantRealmListVisibleData.add(restaurantRealmListServerData.get(i));
+//                                }
+//                            }
                            progressBar.setVisibility(View.GONE);
-                           adapter = new ExploreAdapter(restaurantRealmListVisibleData,getActivity());
+                           adapter = new ExploreAdapter(restaurantRealmListServerData,getActivity());
                            exploreRecyclerView.setAdapter(adapter);
                            realm.close();
 

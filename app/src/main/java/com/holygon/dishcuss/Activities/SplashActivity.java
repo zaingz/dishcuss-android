@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -14,11 +15,15 @@ import android.widget.ImageView;
 
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FeaturedRestaurant;
+import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
+import com.holygon.dishcuss.Model.MyFeeds;
 import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.RestaurantForStatus;
+import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
@@ -31,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -117,6 +123,7 @@ public class SplashActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
 
         FeaturedRestaurantData();
+        StatusRestaurantsData();
 
         Intent intent = new Intent(SplashActivity.this, MyService.class);
         startService(intent);
@@ -146,29 +153,26 @@ public class SplashActivity extends AppCompatActivity {
 
         Realm realm= Realm.getDefaultInstance();
         realm.beginTransaction();
-
-        RealmResults<User> users = realm.where(User.class).findAll();
-        users.deleteAllFromRealm();
-
-
-        RealmResults<Comment> comments = realm.where(Comment.class).findAll();
-        comments.deleteAllFromRealm();
-
-        RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
-        khabaHistoryModelRealmResults.deleteAllFromRealm();
-
-        RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
-        localFeedCheckInRealmResults.deleteAllFromRealm();
-
-        RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
-        localFeedReviewRealmResults.deleteAllFromRealm();
-
-        RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
-        localFeedsRealmResults.deleteAllFromRealm();
-
-        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
-        restaurantRealmResults.deleteAllFromRealm();
-
+        realm.deleteAll();
+//        RealmResults<User> users = realm.where(User.class).findAll();
+//        users.deleteAllFromRealm();
+//        RealmResults<Comment> comments = realm.where(Comment.class).findAll();
+//        comments.deleteAllFromRealm();
+//
+//        RealmResults<KhabaHistoryModel> khabaHistoryModelRealmResults = realm.where(KhabaHistoryModel.class).findAll();
+//        khabaHistoryModelRealmResults.deleteAllFromRealm();
+//
+//        RealmResults<LocalFeedCheckIn> localFeedCheckInRealmResults = realm.where(LocalFeedCheckIn.class).findAll();
+//        localFeedCheckInRealmResults.deleteAllFromRealm();
+//
+//        RealmResults<LocalFeedReview> localFeedReviewRealmResults = realm.where(LocalFeedReview.class).findAll();
+//        localFeedReviewRealmResults.deleteAllFromRealm();
+//
+//        RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
+//        localFeedsRealmResults.deleteAllFromRealm();
+//
+//        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+//        restaurantRealmResults.deleteAllFromRealm();
 //        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
 //        userProfileRealmResults.deleteAllFromRealm();
 
@@ -198,6 +202,12 @@ public class SplashActivity extends AppCompatActivity {
 
         RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
         restaurantRealmResults.deleteAllFromRealm();
+
+        RealmResults<ReviewModel> reviewModels = realm.where(ReviewModel.class).findAll();
+        reviewModels.deleteAllFromRealm();
+
+        RealmResults<FoodItems> foodItemsRealmResults = realm.where(FoodItems.class).findAll();
+        foodItemsRealmResults.deleteAllFromRealm();
 
 //        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
 //        userProfileRealmResults.deleteAllFromRealm();
@@ -278,6 +288,77 @@ public class SplashActivity extends AppCompatActivity {
                             }
 
                             isFeatureRestaurantsLoaded=true;
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+    void StatusRestaurantsData(){
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Restaurants)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+                /** check if activity still exist */
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            JSONArray jsonDataArray=jsonObj.getJSONArray("restaurants");
+
+
+                            realm =Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            RealmResults<RestaurantForStatus> result = realm.where(RestaurantForStatus.class).findAll();
+                            result.deleteAllFromRealm();
+                            realm.commitTransaction();
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                realm =Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                RestaurantForStatus restaurantForStatus=realm.createObject(RestaurantForStatus.class);
+                                restaurantForStatus.setId(c.getInt("id"));
+                                restaurantForStatus.setName(c.getString("name"));
+                                if(!c.isNull("lat")) {
+                                    restaurantForStatus.setRestaurantLat(c.getDouble("lat"));
+                                } else {
+                                    restaurantForStatus.setRestaurantLat(0.0);
+                                }
+                                if(!c.isNull("long")) {
+                                    restaurantForStatus.setRestaurantLong(c.getDouble("long"));
+                                } else {
+                                    restaurantForStatus.setRestaurantLong(0.0);
+                                }
+
+                                realm.commitTransaction();
+//                                SplashActivity.restaurantForStatusArrayList.add(restaurantForStatus);
+
+                            }
+
+
                         }catch (JSONException e) {
                             e.printStackTrace();
                         }

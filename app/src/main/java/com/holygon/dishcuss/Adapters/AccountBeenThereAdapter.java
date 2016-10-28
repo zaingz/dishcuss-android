@@ -77,7 +77,7 @@ public class AccountBeenThereAdapter extends RecyclerView.Adapter<AccountBeenThe
         holder.user_profile_been_there_restaurant_address.setText(userBeenTheres.get(position).getRestaurantLocation());
         if(userBeenTheres.get(position).getCover_image_url()!=null) {
             if (!userBeenTheres.get(position).getCover_image_url().equals("")) {
-                Constants.PicassoImageBackground(userBeenTheres.get(position).getCover_image_url(), holder.user_profile_been_there_restaurant_image, mContext);
+                Constants.PicassoImageSrc(userBeenTheres.get(position).getCover_image_url(), holder.user_profile_been_there_restaurant_image, mContext);
             }
         }
 

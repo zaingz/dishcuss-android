@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.holygon.dishcuss.Activities.RestaurantDetailActivity;
 import com.holygon.dishcuss.Model.FoodItems;
+import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
 import com.holygon.dishcuss.R;
@@ -40,7 +41,7 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView,nearby_search_restaurant_distance;
-        public TextView restaurantName,restaurantAddress,ratting,nearby_search_restaurant_cost;
+        public TextView restaurantName,restaurantAddress,ratting,nearby_search_restaurant_cost,nearby_search_restaurant_cousine;
         public TextView nearby_search_photos_count, nearby_search_likes_count;
         public LinearLayout callLayout;
         public RelativeLayout nearby_search_layout_recycler_view;
@@ -52,6 +53,7 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
             restaurantName = (TextView) v.findViewById(R.id.nearby_search_restaurant_name);
             nearby_search_restaurant_distance = (TextView) v.findViewById(R.id.nearby_search_restaurant_distance);
             nearby_search_restaurant_cost = (TextView) v.findViewById(R.id.nearby_search_restaurant_cost);
+            nearby_search_restaurant_cousine = (TextView) v.findViewById(R.id.nearby_search_restaurant_cousine);
             restaurantAddress = (TextView) v.findViewById(R.id.nearby_search_restaurant_address);
             ratting = (TextView) v.findViewById(R.id.nearby_search_restaurant_rating);
             nearby_search_photos_count = (TextView) v.findViewById(R.id.nearby_search_photos_count);
@@ -89,11 +91,23 @@ public class NearbySearchAdapter extends RecyclerView.Adapter<NearbySearchAdapte
         holder.nearby_search_likes_count.setText(""+restaurantRealmList.get(position).getBookmark_count());
         holder.nearby_search_photos_count.setText(""+itemsData.size());
 
-        Constants.PicassoImageBackground(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
 
+        for (int i = 0; i < restaurantRealmList.get(position).getFoodItemsArrayList().size(); i++) {
+            RealmList<FoodsCategory> foodsCategoryRealmList = restaurantRealmList.get(position).getFoodItemsArrayList().get(i).getFoodsCategories();
+            if (foodsCategoryRealmList.size() > 0) {
+                if (holder.nearby_search_restaurant_cousine.getText().toString().equals("")) {
+                    holder.nearby_search_restaurant_cousine.setText(foodsCategoryRealmList.get(0).getCategoryName());
+                } else {
+                    holder.nearby_search_restaurant_cousine.setText("," + foodsCategoryRealmList.get(0).getCategoryName());
+                }
+            }
+        }
 
-        Log.e("Lat",""+restaurantRealmList.get(position).getRestaurantLat());
-        Log.e("Long",""+restaurantRealmList.get(position).getRestaurantLong());
+        Constants.PicassoImageSrc(restaurantRealmList.get(position).getCover_image_thumbnail(),holder.coverImage,context);
+
+//
+//        Log.e("Lat",""+restaurantRealmList.get(position).getRestaurantLat());
+//        Log.e("Long",""+restaurantRealmList.get(position).getRestaurantLong());
 
 
         holder.callLayout.setOnClickListener(new View.OnClickListener() {

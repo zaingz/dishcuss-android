@@ -12,6 +12,8 @@ public class URLs {
 
     public static String UPDATE_PROFILE="http://dishcuss-api.herokuapp.com/user";
 
+    public static String Get_Restaurants="http://dishcuss-api.herokuapp.com/get_restaurants";
+
     public static String USER_IMAGE_UPLOAD="http://dishcuss-api.herokuapp.com/user/profile_picture";
 
     public static String Featured_Restaurant_URL="http://dishcuss-api.herokuapp.com/restaurants/featured";

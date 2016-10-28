@@ -127,7 +127,6 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -137,7 +136,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
         activity= (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
-
+        activity.getSupportActionBar().setTitle("");
 //        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm =Realm.getDefaultInstance();
         client = new OkHttpClient();
@@ -183,7 +182,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
             @Override
             public void onLoadMore(int current_page,int current_item) {
                 // do something...
-                Log.e("Current Item",""+current_item);
+//                Log.e("Current Item",""+current_item);
                 FetchAllLocalFeedsDataOnScroll(current_item,rootView);
             }
         });
@@ -194,7 +193,9 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
         }
         else
         {
-            GetFeedsData();
+            if(!Constants.skipLogin) {
+                GetFeedsData();
+            }
         }
 
 
@@ -646,14 +647,14 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
 
                                     featuredRestaurant.setOwnerID(featureRestaurantOwner.getInt("id"));
 
-                                    Log.e("Loop","Loop"+i);
+//                                    Log.e("Loop","Loop"+i);
                                     featuredRestaurantArrayList.add(featuredRestaurant);
                                     realm.commitTransaction();
                                 }
                             }
 
                             realm.close();
-                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
+//                            Log.e("feaResArrayList",""+featuredRestaurantArrayList.size());
                             NUM_PAGES=featuredRestaurantArrayList.size();
                             addDots(view);
                             setupViewPager(viewPager,featuredRestaurantArrayList);
@@ -909,7 +910,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
                                     }
 
                                     if (checkinObj.has("restaurant_image")) {
-                                        if(checkinObj.isNull("restaurant_image")) {
+                                        if(!checkinObj.isNull("restaurant_image")) {
                                             localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
                                         }
                                     }
@@ -1270,7 +1271,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
                                     }
 
                                     if (checkinObj.has("restaurant_image")) {
-                                        if(checkinObj.isNull("restaurant_image")) {
+                                        if(!checkinObj.isNull("restaurant_image")) {
                                             localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
                                         }
                                     }
@@ -1391,7 +1392,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
     //
     void FetchMyFeedsData(View view){
 
-        Log.e("FetchMyFeedsData","Called");
+//        Log.e("FetchMyFeedsData","Called");
         final ProgressBar progressBar;
         progressBar=(ProgressBar)view.findViewById(R.id.my_native_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
@@ -1627,7 +1628,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
                                     }
 
                                     if (checkinObj.has("restaurant_image")) {
-                                        if(checkinObj.isNull("restaurant_image")) {
+                                        if(!checkinObj.isNull("restaurant_image")) {
                                             localFeedCheckIn.setCheckInOnImage(checkinObj.getString("restaurant_image"));
                                         }
                                     }
@@ -1741,7 +1742,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
         // Persist your data in a transaction
 
         User user = realm.where(User.class).findFirst();
-        Log.e("UserT",""+user.getToken());
+//        Log.e("UserT",""+user.getToken());
 
 
         Request request = new Request.Builder()
@@ -1759,7 +1760,7 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
             public void onResponse(Call call, Response response) throws IOException {
 
                 final String objStr=response.body().string();
-                Log.e("ObjStr",""+objStr);
+//                Log.e("ObjStr",""+objStr);
 
                 /** check if activity still exist */
                 if (getActivity() == null) {

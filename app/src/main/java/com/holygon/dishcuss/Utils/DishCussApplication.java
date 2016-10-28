@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -26,7 +27,7 @@ import io.realm.RealmConfiguration;
 public class DishCussApplication extends Application {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-    private static final String TWITTER_KEY = " fhRjMr0bKs82EfLrrgKfASg8l";
+    private static final String TWITTER_KEY = "fhRjMr0bKs82EfLrrgKfASg8l";
     private static final String TWITTER_SECRET = "9TtBWmEoE7KSKCdKschugrGwtq2ztkDQxGAJ3ocfm9BJefXqZE";
 
 
@@ -56,12 +57,12 @@ public class DishCussApplication extends Application {
 
        // FontsOverride.setDefaultFont(this, "MONOSPACE", "Heathergreen.ttf");
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
 
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name("com.holygon.dishcuss")
@@ -70,7 +71,7 @@ public class DishCussApplication extends Application {
         Realm.setDefaultConfiguration(realmConfiguration);
 
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
+        Fabric.with(this, new Twitter(authConfig), new Crashlytics());
         mInstance = this;
 
 

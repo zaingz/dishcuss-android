@@ -28,12 +28,16 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.holygon.dishcuss.Activities.SplashActivity;
+import com.holygon.dishcuss.Helper.RestaurantNameAdapter;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.FoodsCategory;
 import com.holygon.dishcuss.Model.PhotoModel;
 import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.RestaurantForStatus;
 import com.holygon.dishcuss.Model.ReviewModel;
+import com.holygon.dishcuss.Model.SearchRestaurant;
 import com.holygon.dishcuss.Model.User;
 import com.holygon.dishcuss.Model.UserBeenThere;
 import com.holygon.dishcuss.Model.UserFollowing;
@@ -85,14 +89,14 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     TextView headerName,postClick;
 
     ArrayList<String> places=new ArrayList<>();
-    ArrayList<Integer> resID;
-    ArrayList<Double> placeLat;
-    ArrayList<Double> placeLong;
+    ArrayList<Integer> resID=new ArrayList<>();
+    ArrayList<Double> placeLat=new ArrayList<>();
+    ArrayList<Double> placeLong=new ArrayList<>();
 
     ArrayAdapter<String> placeAdapter;
 
     Realm realm;
-
+    RestaurantNameAdapter restaurantNameAdapter;
     TextView write_reviewer_user_name;
     de.hdodenhof.circleimageview.CircleImageView write_reviewer_user_profile_image;
 
@@ -176,8 +180,22 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         });
 
 
+        RealmResults<RestaurantForStatus> restaurantForStatusRealmResults=GetRestaurants();
+        ArrayList<SearchRestaurant> searchRestaurantArrayList=new ArrayList<>();
+        for(int i=0;i<restaurantForStatusRealmResults.size();i++){
+            SearchRestaurant searchRestaurant=new SearchRestaurant();
+            realm.beginTransaction();
+            searchRestaurant.setName(restaurantForStatusRealmResults.get(i).getName());
+            searchRestaurant.setId(restaurantForStatusRealmResults.get(i).getId());
+            searchRestaurant.setRestaurantLat(restaurantForStatusRealmResults.get(i).getRestaurantLat());
+            searchRestaurant.setRestaurantLong(restaurantForStatusRealmResults.get(i).getRestaurantLong());
+            realm.commitTransaction();
+            searchRestaurantArrayList.add(searchRestaurant);
+        }
 
-        userLocation.addTextChangedListener(new CheckPercentage());
+        userLocation.setThreshold(1);
+        restaurantNameAdapter = new RestaurantNameAdapter(this,R.layout.post_activity_write_review_post, R.id.lbl_name, searchRestaurantArrayList);
+        userLocation.setAdapter(restaurantNameAdapter);
         userLocation.setOnItemClickListener(mAutocompleteClickListenerLocationSelection);
 
         rattingDialog.setOnClickListener(new View.OnClickListener() {
@@ -201,17 +219,20 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         }
     }
 
+
     private AdapterView.OnItemClickListener mAutocompleteClickListenerLocationSelection
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id){
 
-            restaurantID=resID.get(position);
-            Log.e("Restaurant",""+restaurantID);
-            restaurantLatitude=placeLat.get(position);
-            restaurantLongitude=placeLong.get(position);
+            SearchRestaurant restaurantForStatus = (SearchRestaurant) parent.getItemAtPosition(position);
+            restaurantID=restaurantForStatus.getId();
+            restaurantLatitude=restaurantForStatus.getRestaurantLat();
+            restaurantLongitude=restaurantForStatus.getRestaurantLong();
+
         }
     };
+
     void SendDataOnServer(){
         showSpinner("Please wait...");
         // Get a Realm instance for this thread
@@ -636,7 +657,6 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     UserProfile GetUserData(int uid){
         realm = Realm.getDefaultInstance();
         RealmResults<UserProfile> userProfiles = realm.where(UserProfile.class).equalTo("id", uid).findAll();
-        Log.e("Count",""+userProfiles.size());
         if(userProfiles.size()>0){
             realm.beginTransaction();
             realm.commitTransaction();
@@ -897,6 +917,16 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         AlertDialog alertD = alertDialogBuilder.create();
 
         alertD.show();
+    }
+
+
+    RealmResults<RestaurantForStatus> GetRestaurants(){
+        realm = Realm.getDefaultInstance();
+        RealmResults<RestaurantForStatus> restaurants = realm.where(RestaurantForStatus.class).findAll();
+        if(restaurants.size()>0){
+            return restaurants;
+        }
+        return null;
     }
 
 }

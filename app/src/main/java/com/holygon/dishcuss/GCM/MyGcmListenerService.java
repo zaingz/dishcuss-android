@@ -30,6 +30,10 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.holygon.dishcuss.Activities.HomeActivity;
+import com.holygon.dishcuss.Activities.MyWalletActivity;
+import com.holygon.dishcuss.Activities.NotificationActivity;
+import com.holygon.dishcuss.Activities.NotificationClickPostDetail;
+import com.holygon.dishcuss.Activities.ProfilesDetailActivity;
 import com.holygon.dishcuss.Helper.BusProvider;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.DishCussApplication;
@@ -53,13 +57,19 @@ public class MyGcmListenerService extends GcmListenerService {
 
         String message = data.getString("message");
         String title = data.getString("title");
+        String redirect_type=data.getString("redirect_type");
+        String redirect_id=data.getString("redirect_id");
         Log.d(TAG, "DATA: " + data.toString());
         Log.d(TAG, "From: " + from);
         Log.d(TAG, "Message: " + message);
         Log.d(TAG, "App: " + title);
+        Log.d(TAG, "redirect_type: " + redirect_type);
+
         handler = new Handler(Looper.getMainLooper());
 
-        sendNotification(message,title);
+        int id= Integer.parseInt(redirect_id);
+        Log.d(TAG, "redirect_id: " +id);
+        sendNotification(message,title,redirect_type,id);
         DishCussApplication app = (DishCussApplication) this.getApplication();
         if (!app.isAppIsInBackground(getApplicationContext()))
         {
@@ -75,9 +85,41 @@ public class MyGcmListenerService extends GcmListenerService {
         }
     }
 
-    private void sendNotification(String message,String title) {
+    private void sendNotification(String message,String title,String type,int id) {
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent=new Intent(this,HomeActivity.class);
+
+
+
+
+        if(type.equals("Credit")){
+            intent=new Intent(this, MyWalletActivity.class);
+        }
+
+        if(type.equals("User")){
+            if(id!=0) {
+                intent = new Intent(this, ProfilesDetailActivity.class);
+                intent.putExtra("UserID", id);
+            }
+        }
+
+        if(type.equals("Post")){
+            intent = new Intent(this, NotificationClickPostDetail.class);
+            intent.putExtra("TypeID", id);
+            intent.putExtra("Type", "Post");
+        }
+
+        if(type.equals("Review"))
+        {
+            intent = new Intent(this, NotificationClickPostDetail.class);
+            intent.putExtra("TypeID", id);
+            intent.putExtra("Type", "Review");
+        }
+
+
+
+
+
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

@@ -39,7 +39,8 @@
 
 
         <activity android:name=".Activities.SplashActivity"
-            android:theme="@style/MySplashTheme">
+            android:theme="@style/MySplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,81 +50,100 @@
 
         <activity
             android:name=".Activities.FindEatBuddiesLoginFirstActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.FriendsList"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.LoginActivity"
-            android:theme="@style/MySplashTheme"/>
+            android:theme="@style/MySplashTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activities.SignInActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Activities.SignupActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
          <activity
             android:name=".Activities.EmailConfirmationActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+             android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.SelectRestaurantActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.PostDetailActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.NotificationClickPostDetail"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.ReplyActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.BookmarkActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.ExploreSelectedCategoryActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.SelectRestaurantSearchActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ExtraClasses.SearchMainActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:name=".ExtraHelpingClasses.SearchMainActivity"
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.SearchUserAndRestaurantActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Chat.ChatScreenActivity"
             android:theme="@style/MyMaterialTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
 
 
         <activity
             android:name=".Activities.NotificationActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.HomeActivity"
-            android:theme="@style/MyMaterialTheme">
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".Activities.RestaurantDetailActivity"
-            android:theme="@style/MyMaterialTheme">
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -139,75 +159,93 @@
 
         <activity
             android:name=".Activities.UpdateProfileActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.UserImagesActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.GetFreeFoodActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.ScanQRCodeActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.ProfilesDetailActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.UserOffersActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.FindYourEatBuddiesActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.KhabaHistoryActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.MyWalletActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.StatusActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Posts.WriteReviewPostActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.CheckInPostActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:name=".ExtraHelpingClasses.CheckInPostActivity"
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Posts.CheckIn"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Posts.PhotoUpload"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Posts.SelectAndCropPictureActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.SelectImage"
-            android:theme="@style/MyMaterialTheme" />
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.CheckInPostGoogleApiActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:name=".ExtraHelpingClasses.CheckInPostGoogleApiActivity"
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.PhotoPostActivity"
-            android:theme="@style/MyMaterialTheme" />
+            android:name=".ExtraHelpingClasses.PhotoPostActivity"
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
         <!--<activity-->
             <!--android:name=".Activities.StatusActivity"-->
@@ -215,15 +253,18 @@
 
         <activity
             android:name=".Posts.PostSelectionActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.PhotoDetailActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".Activities.PunditSelectionActivity"
-            android:theme="@style/MyMaterialTheme"/>
+            android:theme="@style/MyMaterialTheme"
+            android:screenOrientation="portrait"/>
 
 
         <activity android:name="com.facebook.FacebookActivity"

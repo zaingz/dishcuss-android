@@ -80,7 +80,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 //        }
         holder.body.setText(notificationsArrayList.get(position).getBody());
 
-        Constants.PicassoImageBackground(notificationsArrayList.get(position).getAvatarPic(),holder.userAvatar,context);
+        Constants.PicassoImageSrc(notificationsArrayList.get(position).getAvatarPic(),holder.userAvatar,context);
 
 
 

@@ -75,7 +75,7 @@ public class RestaurantMenuAdapter extends RecyclerView.Adapter<RestaurantMenuAd
         RealmList<PhotoModel> photoModelRealmList=foodItemsRealmList.get(position).getPhotoModels();
         if(photoModelRealmList.size()>0) {
             for (int j = 0; j < photoModelRealmList.size(); j++) {
-                Constants.PicassoImageBackground(photoModelRealmList.get(0).getUrl(),holder.menuItemImage,context);
+                Constants.PicassoImageSrc(photoModelRealmList.get(0).getUrl(),holder.menuItemImage,context);
             }
         }
 

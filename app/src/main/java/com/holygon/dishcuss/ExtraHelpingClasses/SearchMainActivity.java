@@ -1,4 +1,4 @@
-package com.holygon.dishcuss.ExtraClasses;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
 import android.Manifest;
 import android.content.IntentSender;

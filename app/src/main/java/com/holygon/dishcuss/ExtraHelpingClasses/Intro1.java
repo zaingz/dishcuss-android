@@ -1,4 +1,4 @@
-package com.holygon.dishcuss.ExtraClasses;
+package com.holygon.dishcuss.ExtraHelpingClasses;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +10,9 @@ import android.widget.ImageView;
 import com.holygon.dishcuss.R;
 
 /**
- * Created by Naeem Ibrahim on 7/19/2016.
+ * Created by Naeem Ibrahim on 7/18/2016.
  */
-public class Intro5 extends Fragment {
+public class Intro1 extends Fragment {
 
     ImageView imageViewLogo,imageViewBar;
 
@@ -29,9 +29,9 @@ public class Intro5 extends Fragment {
         View fragmentView = inflater.inflate(R.layout.login_intro_fragment, container, false);
         imageViewLogo=(ImageView)fragmentView.findViewById(R.id.intro_image_logo);
         imageViewBar=(ImageView)fragmentView.findViewById(R.id.intro_image_bar);
-        imageViewLogo.setImageResource(R.drawable.intro5_logo);
+        imageViewLogo.setImageResource(R.drawable.intro1_logo);
         imageViewBar.setImageDrawable(null);
         imageViewBar.setImageResource(R.drawable.ic_bell);
-        return fragmentView;
+        return  fragmentView;
     }
 }

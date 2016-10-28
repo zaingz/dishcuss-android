@@ -44,12 +44,14 @@ import com.google.android.gms.common.api.Status;
 import com.holygon.dishcuss.Fragments.LoginIntroFragment;
 import com.holygon.dishcuss.Model.Comment;
 import com.holygon.dishcuss.Model.FbDataModel;
+import com.holygon.dishcuss.Model.FoodItems;
 import com.holygon.dishcuss.Model.KhabaHistoryModel;
 import com.holygon.dishcuss.Model.LocalFeedCheckIn;
 import com.holygon.dishcuss.Model.LocalFeedReview;
 import com.holygon.dishcuss.Model.LocalFeeds;
 import com.holygon.dishcuss.Model.Notifications;
 import com.holygon.dishcuss.Model.Restaurant;
+import com.holygon.dishcuss.Model.ReviewModel;
 import com.holygon.dishcuss.Model.UserProfile;
 import com.holygon.dishcuss.R;
 import com.holygon.dishcuss.Utils.Constants;
@@ -792,10 +794,20 @@ public class LoginActivity extends AppCompatActivity implements
         RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
         restaurantRealmResults.deleteAllFromRealm();
 
+        RealmResults<ReviewModel> reviewModels = realm.where(ReviewModel.class).findAll();
+        reviewModels.deleteAllFromRealm();
+
+        RealmResults<FoodItems> foodItemsRealmResults = realm.where(FoodItems.class).findAll();
+        foodItemsRealmResults.deleteAllFromRealm();
+
+
+
         RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
         userProfileRealmResults.deleteAllFromRealm();
 
         realm.commitTransaction();
+
+         SplashActivity.isFeatureRestaurantsLoaded=false;
     }
 
     void AlertDialog(final String token){
