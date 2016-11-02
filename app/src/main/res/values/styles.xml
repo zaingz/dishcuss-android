@@ -92,7 +92,7 @@
     </style>
 
     <style name="MineCustom" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">8sp</item>
     </style>
 
 </resources>

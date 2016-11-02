@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.holygon.dishcuss">
+    package="com.dishcuss.foodies">
 
 
     <!-- Maps API needs OpenGL ES 2.0. -->
@@ -9,7 +9,7 @@
         android:required="true" />
 
     <permission
-        android:name="com.holygon.dishcuss.permission.MAPS_RECEIVE"
+        android:name="com.dishcuss.foodies.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
     <uses-permission android:name="com.holygon.dishcuss.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -33,12 +33,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
-        android:name=".Utils.DishCussApplication"
+        android:name="com.dishcuss.foodies.Utils.DishCussApplication"
         android:supportsRtl="true"
         android:theme="@style/MyMaterialTheme">
 
 
-        <activity android:name=".Activities.SplashActivity"
+        <activity android:name="com.dishcuss.foodies.Activities.SplashActivity"
             android:theme="@style/MySplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -49,99 +49,99 @@
 
 
         <activity
-            android:name=".Activities.FindEatBuddiesLoginFirstActivity"
+            android:name="com.dishcuss.foodies.Activities.FindEatBuddiesLoginFirstActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.FriendsList"
+            android:name="com.dishcuss.foodies.Activities.FriendsList"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name="com.dishcuss.foodies.Activities.LoginActivity"
             android:theme="@style/MySplashTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Activities.SignInActivity"
+            android:name="com.dishcuss.foodies.Activities.SignInActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Activities.SignupActivity"
+            android:name="com.dishcuss.foodies.Activities.SignupActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
          <activity
-            android:name=".Activities.EmailConfirmationActivity"
+            android:name="com.dishcuss.foodies.Activities.EmailConfirmationActivity"
             android:theme="@style/MyMaterialTheme"
              android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.SelectRestaurantActivity"
+            android:name="com.dishcuss.foodies.Activities.SelectRestaurantActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.PostDetailActivity"
+            android:name="com.dishcuss.foodies.Activities.PostDetailActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.NotificationClickPostDetail"
+            android:name="com.dishcuss.foodies.Activities.NotificationClickPostDetail"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.ReplyActivity"
+            android:name="com.dishcuss.foodies.Activities.ReplyActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.BookmarkActivity"
+            android:name="com.dishcuss.foodies.Activities.BookmarkActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.ExploreSelectedCategoryActivity"
+            android:name="com.dishcuss.foodies.Activities.ExploreSelectedCategoryActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.SelectRestaurantSearchActivity"
+            android:name="com.dishcuss.foodies.Activities.SelectRestaurantSearchActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ExtraHelpingClasses.SearchMainActivity"
+            android:name="com.dishcuss.foodies.ExtraHelpingClasses.SearchMainActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.SearchUserAndRestaurantActivity"
+            android:name="com.dishcuss.foodies.Activities.SearchUserAndRestaurantActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Chat.ChatScreenActivity"
+            android:name="com.dishcuss.foodies.Chat.ChatScreenActivity"
             android:theme="@style/MyMaterialTheme"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
 
 
         <activity
-            android:name=".Activities.NotificationActivity"
+            android:name="com.dishcuss.foodies.Activities.NotificationActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.HomeActivity"
+            android:name="com.dishcuss.foodies.Activities.HomeActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".Activities.RestaurantDetailActivity"
+            android:name="com.dishcuss.foodies.Activities.RestaurantDetailActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait">
 
@@ -158,92 +158,92 @@
             </activity>
 
         <activity
-            android:name=".Activities.UpdateProfileActivity"
+            android:name="com.dishcuss.foodies.Activities.UpdateProfileActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.UserImagesActivity"
+            android:name="com.dishcuss.foodies.Activities.UserImagesActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.GetFreeFoodActivity"
+            android:name="com.dishcuss.foodies.Activities.GetFreeFoodActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.ScanQRCodeActivity"
+            android:name="com.dishcuss.foodies.Activities.ScanQRCodeActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.ProfilesDetailActivity"
+            android:name="com.dishcuss.foodies.Activities.ProfilesDetailActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.UserOffersActivity"
+            android:name="com.dishcuss.foodies.Activities.UserOffersActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.FindYourEatBuddiesActivity"
+            android:name="com.dishcuss.foodies.Activities.FindYourEatBuddiesActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.KhabaHistoryActivity"
+            android:name="com.dishcuss.foodies.Activities.KhabaHistoryActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.MyWalletActivity"
+            android:name="com.dishcuss.foodies.Activities.MyWalletActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.StatusActivity"
+            android:name="com.dishcuss.foodies.Activities.StatusActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.WriteReviewPostActivity"
+            android:name="com.dishcuss.foodies.Posts.WriteReviewPostActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ExtraHelpingClasses.CheckInPostActivity"
+            android:name="com.dishcuss.foodies.ExtraHelpingClasses.CheckInPostActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.CheckIn"
+            android:name="com.dishcuss.foodies.Posts.CheckIn"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.PhotoUpload"
+            android:name="com.dishcuss.foodies.Posts.PhotoUpload"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Posts.SelectAndCropPictureActivity"
+            android:name="com.dishcuss.foodies.Posts.SelectAndCropPictureActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.SelectImage"
+            android:name="com.dishcuss.foodies.Activities.SelectImage"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ExtraHelpingClasses.CheckInPostGoogleApiActivity"
+            android:name="com.dishcuss.foodies.ExtraHelpingClasses.CheckInPostGoogleApiActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ExtraHelpingClasses.PhotoPostActivity"
+            android:name="com.dishcuss.foodies.ExtraHelpingClasses.PhotoPostActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
@@ -252,17 +252,17 @@
             <!--android:theme="@style/Theme.Transparent"/>-->
 
         <activity
-            android:name=".Posts.PostSelectionActivity"
+            android:name="com.dishcuss.foodies.Posts.PostSelectionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.PhotoDetailActivity"
+            android:name="com.dishcuss.foodies.Activities.PhotoDetailActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".Activities.PunditSelectionActivity"
+            android:name="com.dishcuss.foodies.Activities.PunditSelectionActivity"
             android:theme="@style/MyMaterialTheme"
             android:screenOrientation="portrait"/>
 
@@ -307,7 +307,7 @@
 
         <!-- [START gcm_listener] -->
         <service
-            android:name=".GCM.MyGcmListenerService"
+            android:name="com.dishcuss.foodies.GCM.MyGcmListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -316,7 +316,7 @@
         <!-- [END gcm_listener] -->
         <!-- [START instanceId_listener] -->
         <service
-            android:name=".GCM.MyInstanceIDListenerService"
+            android:name="com.dishcuss.foodies.GCM.MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
@@ -324,11 +324,11 @@
         </service>
         <!-- [END instanceId_listener] -->
         <service
-            android:name=".GCM.RegistrationIntentService"
+            android:name="com.dishcuss.foodies.GCM.RegistrationIntentService"
             android:exported="false"></service>
 
 
-        <service android:name=".Services.MyService"/>
+        <service android:name="com.dishcuss.foodies.Services.MyService"/>
 
     </application>
 

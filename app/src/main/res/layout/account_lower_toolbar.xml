@@ -213,7 +213,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Comments"
+                    android:text="Following"
                     android:textColor="@android:color/black"
                     android:layout_marginRight="20dp"
                     android:layout_marginLeft="3dp"
