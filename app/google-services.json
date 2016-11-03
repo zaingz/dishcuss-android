@@ -42,6 +42,76 @@
           "status": 1
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289789351313:android:bf7383d3ffa9590f",
+        "android_client_info": {
+          "package_name": "com.dishcuss.foodies.hub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289789351313-9sbsf7si9sa1q8jevhe26p4g0mft12kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGPqZ1_7nWpopteAEPhiRZ5F02v_-KC-g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289789351313:android:a891d5f41d4f1f8e",
+        "android_client_info": {
+          "package_name": "com.dishcuss.foodie.hub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289789351313-6be0s6v8f2ot4q4bq9tpbo00gnnea6pv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dishcuss.foodie.hub",
+            "certificate_hash": "AE48C4CF97AE24C36008CCF5982A44B25496739B"
+          }
+        },
+        {
+          "client_id": "289789351313-9sbsf7si9sa1q8jevhe26p4g0mft12kv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGPqZ1_7nWpopteAEPhiRZ5F02v_-KC-g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
     }
   ],
   "configuration_version": "1"

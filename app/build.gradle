@@ -35,7 +35,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
     defaultConfig {
-        applicationId "com.dishcuss.foodies"
+        applicationId "com.dishcuss.foodie.hub"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
