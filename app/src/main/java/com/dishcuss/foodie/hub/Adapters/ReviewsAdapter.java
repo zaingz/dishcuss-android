@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.NotificationClickPostDetail;
 import com.dishcuss.foodie.hub.Activities.ProfilesDetailActivity;
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.ReviewModel;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.ReviewModel;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.GenericRoutes;

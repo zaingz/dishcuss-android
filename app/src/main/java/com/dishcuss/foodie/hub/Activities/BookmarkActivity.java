@@ -12,8 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Adapters.BookmarkedRestaurantAdapter;
-import com.dishcuss.foodie.Model.BookmarkData;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.BookmarkData;
+import com.dishcuss.foodie.hub.Models.User;
 
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.URLs;

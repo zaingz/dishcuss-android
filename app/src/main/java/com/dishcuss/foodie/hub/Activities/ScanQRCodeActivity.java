@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.RuntimePermissionsActivity;
 import com.dishcuss.foodie.hub.Utils.URLs;

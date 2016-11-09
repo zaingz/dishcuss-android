@@ -23,8 +23,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.dishcuss.foodie.Model.LocalFeedCheckIn;
-import com.dishcuss.foodie.Model.LocalFeedReview;
+import com.dishcuss.foodie.hub.Models.LocalFeedCheckIn;
+import com.dishcuss.foodie.hub.Models.LocalFeedReview;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 

@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.ProfilesDetailActivity;
-import com.dishcuss.foodie.Model.UserFollowing;
+import com.dishcuss.foodie.hub.Models.UserFollowing;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 

@@ -18,13 +18,13 @@ import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.PhotoModel;
-import com.dishcuss.foodie.Model.ReviewModel;
-import com.dishcuss.foodie.Model.User;
-import com.dishcuss.foodie.Model.UserBeenThere;
-import com.dishcuss.foodie.Model.UserFollowing;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.PhotoModel;
+import com.dishcuss.foodie.hub.Models.ReviewModel;
+import com.dishcuss.foodie.hub.Models.User;
+import com.dishcuss.foodie.hub.Models.UserBeenThere;
+import com.dishcuss.foodie.hub.Models.UserFollowing;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.DishCussApplication;
@@ -82,6 +82,8 @@ public class ChatScreenActivity extends AppCompatActivity {
 
         DishCussApplication app = (DishCussApplication) this.getApplication();
         mSocket = app.getSocket();
+
+        Log.e("Socket",""+mSocket.id());
 
         guestEmail=getDeviceName()+"@gmail.com";
         guestEmail = guestEmail.replaceAll(" ", "_");

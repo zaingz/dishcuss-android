@@ -1,4 +1,4 @@
-package com.dishcuss.foodie.Model;
+package com.dishcuss.foodie.hub.Models;
 
 /**
  * Created by Naeem Ibrahim on 9/6/2016.

@@ -23,10 +23,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.Reply;
-import com.dishcuss.foodie.Model.SpecificPostModel;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.Reply;
+import com.dishcuss.foodie.hub.Models.SpecificPostModel;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

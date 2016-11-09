@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dishcuss.foodie.Model.User;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.User;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

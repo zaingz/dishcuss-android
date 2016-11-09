@@ -11,10 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dishcuss.foodie.Model.LocalFeedCheckIn;
-import com.dishcuss.foodie.Model.LocalFeedReview;
-import com.dishcuss.foodie.Model.ReviewModel;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.LocalFeedCheckIn;
+import com.dishcuss.foodie.hub.Models.LocalFeedReview;
+import com.dishcuss.foodie.hub.Models.ReviewModel;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

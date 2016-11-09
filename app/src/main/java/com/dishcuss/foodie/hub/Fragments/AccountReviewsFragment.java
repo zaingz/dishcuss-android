@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dishcuss.foodie.hub.Adapters.ReviewsAdapter;
-import com.dishcuss.foodie.Model.ReviewModel;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.ReviewModel;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 
 import java.text.ParseException;

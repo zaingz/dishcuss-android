@@ -4,7 +4,7 @@ package com.dishcuss.foodie.hub.Utils;
 import android.app.Activity;
 import android.util.Log;
 
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

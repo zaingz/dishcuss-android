@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.ScanQRCodeActivity;
-import com.dishcuss.foodie.Model.UserOffersModel;
+import com.dishcuss.foodie.hub.Models.UserOffersModel;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.squareup.picasso.Picasso;

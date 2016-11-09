@@ -7,7 +7,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.URLs;
 

@@ -25,11 +25,11 @@ import com.dishcuss.foodie.hub.Activities.NotificationClickPostDetail;
 import com.dishcuss.foodie.hub.Activities.PhotoDetailActivity;
 import com.dishcuss.foodie.hub.Activities.ProfilesDetailActivity;
 import com.dishcuss.foodie.hub.Activities.RestaurantDetailActivity;
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.LocalFeedCheckIn;
-import com.dishcuss.foodie.Model.LocalFeedReview;
-import com.dishcuss.foodie.Model.LocalFeeds;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.LocalFeedCheckIn;
+import com.dishcuss.foodie.hub.Models.LocalFeedReview;
+import com.dishcuss.foodie.hub.Models.LocalFeeds;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.GenericRoutes;
@@ -583,42 +583,51 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
                         @Override
                         public void onClick(View v) {
 
-                            if((int)holder.image_bookmark.getTag()==0) {
-                                holder.image_bookmark.setTag(1);
-                                holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
-                                Realm realm=Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                localFeedCheckIn.setBookmarked(true);
+                            if (!Constants.skipLogin) {
 
-                                BookmarkSetting(localFeedCheckIn.getCheckInOnID(),true);
-                                realm.commitTransaction();
+                                if ((int) holder.image_bookmark.getTag() == 0) {
+                                    holder.image_bookmark.setTag(1);
+                                    holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmarked));
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    localFeedCheckIn.setBookmarked(true);
 
-                                if (!Constants.skipLogin) {
-                                    if (Constants.isNetworkAvailable((Activity) mContext)) {
-                                        RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
+                                    BookmarkSetting(localFeedCheckIn.getCheckInOnID(), true);
+                                    realm.commitTransaction();
+
+                                    if (!Constants.skipLogin) {
+                                        if (Constants.isNetworkAvailable((Activity) mContext)) {
+                                            RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
+                                        }
                                     }
+
+                                } else {
+                                    holder.image_bookmark.setTag(0);
+                                    holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
+                                    Realm realm = Realm.getDefaultInstance();
+                                    realm.beginTransaction();
+                                    localFeedCheckIn.setBookmarked(false);
+                                    BookmarkSetting(localFeedCheckIn.getCheckInOnID(), false);
+                                    realm.commitTransaction();
+
+                                    if (!Constants.skipLogin) {
+                                        if (Constants.isNetworkAvailable((Activity) mContext)) {
+                                            RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
+                                        }
+                                    }
+
                                 }
 
+                                notifyDataSetChanged();
                             }
                             else
                             {
-                                holder.image_bookmark.setTag(0);
-                                holder.image_bookmark.setBackground(mContext.getResources().getDrawable(R.drawable.icon_bookmark));
-                                Realm realm=Realm.getDefaultInstance();
-                                realm.beginTransaction();
-                                localFeedCheckIn.setBookmarked(false);
-                                BookmarkSetting(localFeedCheckIn.getCheckInOnID(),false);
-                                realm.commitTransaction();
-
-                                if (!Constants.skipLogin) {
-                                    if (Constants.isNetworkAvailable((Activity) mContext)) {
-                                        RestaurantBookmarked(localFeedCheckIn.getCheckInOnID(), "restaurant");
-                                    }
-                                }
-
+                                Intent intent=new Intent(mContext, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Constants.skipLogin=false;
+                                mContext.startActivity(intent);
+                                ((Activity)mContext).finish();
                             }
-
-                            notifyDataSetChanged();
                         }
                     });
 

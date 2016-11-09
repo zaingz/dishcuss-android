@@ -13,8 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Adapters.FindYourEatBuddiesAdapter;
-import com.dishcuss.foodie.Model.MyFeeds;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.MyFeeds;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;
-
 import org.json.JSONObject;
 
 import java.io.IOException;

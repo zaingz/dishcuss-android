@@ -42,18 +42,18 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.dishcuss.foodie.hub.Fragments.LoginIntroFragment;
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.FbDataModel;
-import com.dishcuss.foodie.Model.FoodItems;
-import com.dishcuss.foodie.Model.KhabaHistoryModel;
-import com.dishcuss.foodie.Model.LocalFeedCheckIn;
-import com.dishcuss.foodie.Model.LocalFeedReview;
-import com.dishcuss.foodie.Model.LocalFeeds;
-import com.dishcuss.foodie.Model.Notifications;
-import com.dishcuss.foodie.Model.Restaurant;
-import com.dishcuss.foodie.Model.RestaurantForStatus;
-import com.dishcuss.foodie.Model.ReviewModel;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.FbDataModel;
+import com.dishcuss.foodie.hub.Models.FoodItems;
+import com.dishcuss.foodie.hub.Models.KhabaHistoryModel;
+import com.dishcuss.foodie.hub.Models.LocalFeedCheckIn;
+import com.dishcuss.foodie.hub.Models.LocalFeedReview;
+import com.dishcuss.foodie.hub.Models.LocalFeeds;
+import com.dishcuss.foodie.hub.Models.Notifications;
+import com.dishcuss.foodie.hub.Models.Restaurant;
+import com.dishcuss.foodie.hub.Models.RestaurantForStatus;
+import com.dishcuss.foodie.hub.Models.ReviewModel;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;
@@ -392,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements
                                 if(object.has("email")){
                                     email=object.getString("email").toString();
                                 }else {
-                                    email=newUrlString+"@facebook.com";
+                                    email=object.getString("id").toString()+"@facebook.com";
                                 }
                                 name= object.getString("name").toString();
                                 uid=object.getString("id").toString();
@@ -713,7 +713,7 @@ public class LoginActivity extends AppCompatActivity implements
                         realm = Realm.getDefaultInstance();
                         // Persist your data in a transaction
                         realm.beginTransaction();
-                        com.dishcuss.foodie.Model.User user = realm.createObject(com.dishcuss.foodie.Model.User.class); // Create managed objects directly
+                        com.dishcuss.foodie.hub.Models.User user = realm.createObject(com.dishcuss.foodie.hub.Models.User.class); // Create managed objects directly
                         user.setId(usersJsonObject.getInt("id"));
                         user.setName(usersJsonObject.getString("name"));
                         user.setDob(usersJsonObject.getString("date_of_birth"));
@@ -770,7 +770,7 @@ public class LoginActivity extends AppCompatActivity implements
         Realm realm= Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        RealmResults<com.dishcuss.foodie.Model.User> users = realm.where(com.dishcuss.foodie.Model.User.class).findAll();
+        RealmResults<com.dishcuss.foodie.hub.Models.User> users = realm.where(com.dishcuss.foodie.hub.Models.User.class).findAll();
         users.deleteAllFromRealm();
 
         RealmResults<Notifications> notificationsRealmResults = realm.where(Notifications.class).findAll();

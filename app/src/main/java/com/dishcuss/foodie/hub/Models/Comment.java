@@ -1,14 +1,16 @@
-package com.dishcuss.foodie.Model;
+package com.dishcuss.foodie.hub.Models;
+
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
- * Created by Naeem Ibrahim on 10/13/2016.
+ * Created by Naeem Ibrahim on 8/16/2016.
  */
-public class Reply  extends RealmObject implements Parcelable {
+public class Comment extends RealmObject implements Parcelable {
 
     int commentID;
     String commentUpdated_at;
@@ -21,9 +23,20 @@ public class Reply  extends RealmObject implements Parcelable {
 
     int commentLikesCount;
 
-    public Reply() {
+
+    RealmList<Reply> replyRealmList;
+
+    public Comment() {
     }
 
+
+    public RealmList<Reply> getReplyRealmList() {
+        return replyRealmList;
+    }
+
+    public void setReplyRealmList(RealmList<Reply> replyRealmList) {
+        this.replyRealmList = replyRealmList;
+    }
 
     public int getCommentID() {
         return commentID;
@@ -89,7 +102,7 @@ public class Reply  extends RealmObject implements Parcelable {
         this.commentLikesCount = commentLikesCount;
     }
 
-    public Reply(Parcel in) {
+    public Comment(Parcel in) {
         this.commentID = in.readInt();
         this.commentUpdated_at = in.readString();
         this.commentTitle = in.readString();
@@ -98,6 +111,8 @@ public class Reply  extends RealmObject implements Parcelable {
         this.commentatorName = in.readString();
         this.commentatorImage = in.readString();
         this.commentLikesCount = in.readInt();
+        this.replyRealmList=new RealmList<Reply>();
+        in.readTypedList(this.replyRealmList,Reply.CREATOR);
     }
 
     @Override
@@ -115,15 +130,16 @@ public class Reply  extends RealmObject implements Parcelable {
         dest.writeString(commentatorName);
         dest.writeString(commentatorImage);
         dest.writeInt(commentLikesCount);
+        dest.writeTypedList(replyRealmList);
     }
 
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public Reply createFromParcel(Parcel in) {
-            return new Reply(in);
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
         }
 
-        public Reply[] newArray(int size) {
-            return new Reply[size];
+        public Comment[] newArray(int size) {
+            return new Comment[size];
         }
     };
 }

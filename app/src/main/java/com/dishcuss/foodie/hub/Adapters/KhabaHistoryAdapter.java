@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dishcuss.foodie.Model.KhabaHistoryModel;
+import com.dishcuss.foodie.hub.Models.KhabaHistoryModel;
 import com.dishcuss.foodie.hub.R;
 import com.squareup.picasso.Picasso;
 

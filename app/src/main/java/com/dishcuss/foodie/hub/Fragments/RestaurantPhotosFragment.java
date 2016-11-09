@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dishcuss.foodie.hub.Adapters.PhotosAdapter;
-import com.dishcuss.foodie.Model.FoodItems;
-import com.dishcuss.foodie.Model.PhotoModel;
-import com.dishcuss.foodie.Model.Restaurant;
+import com.dishcuss.foodie.hub.Models.FoodItems;
+import com.dishcuss.foodie.hub.Models.PhotoModel;
+import com.dishcuss.foodie.hub.Models.Restaurant;
 import com.dishcuss.foodie.hub.R;
 
 import java.util.ArrayList;

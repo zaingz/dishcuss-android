@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dishcuss.foodie.hub.Adapters.AccountBeenThereAdapter;
-import com.dishcuss.foodie.Model.UserBeenThere;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.UserBeenThere;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 
 

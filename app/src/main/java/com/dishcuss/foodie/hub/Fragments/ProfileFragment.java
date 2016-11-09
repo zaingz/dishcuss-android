@@ -33,7 +33,7 @@ import com.dishcuss.foodie.hub.Activities.SplashActivity;
 import com.dishcuss.foodie.hub.Activities.UpdateProfileActivity;
 import com.dishcuss.foodie.hub.Activities.UserOffersActivity;
 import com.dishcuss.foodie.hub.GCM.QuickstartPreferences;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

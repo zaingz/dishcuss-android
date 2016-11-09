@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.ProfilesDetailActivity;
-import com.dishcuss.foodie.Model.MyFeeds;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.MyFeeds;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

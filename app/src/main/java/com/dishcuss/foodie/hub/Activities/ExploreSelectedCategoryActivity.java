@@ -13,10 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Adapters.ExploreAdapter;
-import com.dishcuss.foodie.Model.FoodItems;
-import com.dishcuss.foodie.Model.FoodsCategory;
-import com.dishcuss.foodie.Model.PhotoModel;
-import com.dishcuss.foodie.Model.Restaurant;
+import com.dishcuss.foodie.hub.Models.FoodItems;
+import com.dishcuss.foodie.hub.Models.FoodsCategory;
+import com.dishcuss.foodie.hub.Models.PhotoModel;
+import com.dishcuss.foodie.hub.Models.Restaurant;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.URLs;
 

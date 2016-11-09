@@ -1,23 +1,24 @@
-package com.dishcuss.foodie.Model;
+package com.dishcuss.foodie.hub.Models;
 
 import io.realm.RealmObject;
 
 /**
- * Created by Naeem Ibrahim on 8/25/2016.
+ * Created by Naeem Ibrahim on 8/26/2016.
  */
-public class UserOffersModel extends RealmObject {
+public class KhabaHistoryModel extends RealmObject {
 
     int id;
-    int points;
-    String description;
-    String img;
+    int price;
+    String credit_time;
+
     int restaurantID;
     String restaurantName;
     String restaurantOpeningTime;
     String restaurantClosingTime;
     String restaurantLocation;
+    String restaurantImage;
 
-    public UserOffersModel() {
+    public KhabaHistoryModel() {
     }
 
     public int getId() {
@@ -28,28 +29,20 @@ public class UserOffersModel extends RealmObject {
         this.id = id;
     }
 
-    public int getPoints() {
-        return points;
+    public int getPrice() {
+        return price;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCredit_time() {
+        return credit_time;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
+    public void setCredit_time(String credit_time) {
+        this.credit_time = credit_time;
     }
 
     public int getRestaurantID() {
@@ -90,5 +83,13 @@ public class UserOffersModel extends RealmObject {
 
     public void setRestaurantLocation(String restaurantLocation) {
         this.restaurantLocation = restaurantLocation;
+    }
+
+    public String getRestaurantImage() {
+        return restaurantImage;
+    }
+
+    public void setRestaurantImage(String restaurantImage) {
+        this.restaurantImage = restaurantImage;
     }
 }

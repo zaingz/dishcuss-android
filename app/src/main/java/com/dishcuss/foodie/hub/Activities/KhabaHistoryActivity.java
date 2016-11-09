@@ -15,8 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Adapters.KhabaHistoryAdapter;
-import com.dishcuss.foodie.Model.KhabaHistoryModel;
-import com.dishcuss.foodie.Model.User;
+import com.dishcuss.foodie.hub.Models.KhabaHistoryModel;
+import com.dishcuss.foodie.hub.Models.User;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;

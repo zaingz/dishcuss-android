@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.RestaurantDetailActivity;
-import com.dishcuss.foodie.Model.FeaturedRestaurant;
+import com.dishcuss.foodie.hub.Models.FeaturedRestaurant;
 import com.dishcuss.foodie.hub.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;

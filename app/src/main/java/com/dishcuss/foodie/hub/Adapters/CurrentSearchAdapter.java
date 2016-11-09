@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.ProfilesDetailActivity;
 import com.dishcuss.foodie.hub.Activities.RestaurantDetailActivity;
-import com.dishcuss.foodie.Model.RecentSearchModel;
-import com.dishcuss.foodie.Model.Restaurant;
-import com.dishcuss.foodie.Model.SearchModel;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.RecentSearchModel;
+import com.dishcuss.foodie.hub.Models.Restaurant;
+import com.dishcuss.foodie.hub.Models.SearchModel;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 

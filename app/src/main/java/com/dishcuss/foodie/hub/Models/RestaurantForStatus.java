@@ -1,10 +1,12 @@
-package com.dishcuss.foodie.Model;
+package com.dishcuss.foodie.hub.Models;
+
+import io.realm.RealmObject;
 
 /**
  * Created by Naeem Ibrahim on 10/28/2016.
  */
 
-public class SearchRestaurant {
+public class RestaurantForStatus extends RealmObject {
 
 
     int id;
@@ -13,7 +15,7 @@ public class SearchRestaurant {
     double restaurantLong;
 
 
-    public SearchRestaurant() {
+    public RestaurantForStatus() {
     }
 
     public int getId() {

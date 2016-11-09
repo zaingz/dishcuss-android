@@ -1,4 +1,4 @@
-package com.dishcuss.foodie.Model;
+package com.dishcuss.foodie.hub.Models;
 
 import io.realm.RealmObject;
 

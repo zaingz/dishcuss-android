@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dishcuss.foodie.hub.Activities.RestaurantDetailActivity;
-import com.dishcuss.foodie.Model.BookmarkData;
+import com.dishcuss.foodie.hub.Models.BookmarkData;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 

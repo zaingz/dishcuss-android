@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
 
-import com.dishcuss.foodie.Model.SearchRestaurant;
+import com.dishcuss.foodie.hub.Models.SearchRestaurant;
 import com.dishcuss.foodie.hub.R;
 
 import java.util.ArrayList;

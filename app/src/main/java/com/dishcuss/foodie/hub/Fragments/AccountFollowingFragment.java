@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dishcuss.foodie.hub.Adapters.AccountFollowerAdapter;
-import com.dishcuss.foodie.Model.UserFollowing;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.UserFollowing;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 
 import io.realm.Realm;

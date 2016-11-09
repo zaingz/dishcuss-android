@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dishcuss.foodie.hub.Models.User;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -24,15 +25,14 @@ import com.facebook.HttpMethod;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.dishcuss.foodie.Model.Comment;
-import com.dishcuss.foodie.Model.KhabaHistoryModel;
-import com.dishcuss.foodie.Model.LocalFeedCheckIn;
-import com.dishcuss.foodie.Model.LocalFeedReview;
-import com.dishcuss.foodie.Model.LocalFeeds;
-import com.dishcuss.foodie.Model.Notifications;
-import com.dishcuss.foodie.Model.Restaurant;
-import com.dishcuss.foodie.Model.User;
-import com.dishcuss.foodie.Model.UserProfile;
+import com.dishcuss.foodie.hub.Models.Comment;
+import com.dishcuss.foodie.hub.Models.KhabaHistoryModel;
+import com.dishcuss.foodie.hub.Models.LocalFeedCheckIn;
+import com.dishcuss.foodie.hub.Models.LocalFeedReview;
+import com.dishcuss.foodie.hub.Models.LocalFeeds;
+import com.dishcuss.foodie.hub.Models.Notifications;
+import com.dishcuss.foodie.hub.Models.Restaurant;
+import com.dishcuss.foodie.hub.Models.UserProfile;
 import com.dishcuss.foodie.hub.R;
 import com.dishcuss.foodie.hub.Utils.Constants;
 import com.dishcuss.foodie.hub.Utils.URLs;
@@ -357,7 +357,7 @@ public class FindEatBuddiesLoginFirstActivity extends AppCompatActivity {
                         Realm realm = Realm.getDefaultInstance();
                         // Persist your data in a transaction
                         realm.beginTransaction();
-                        com.dishcuss.foodie.Model.User user = realm.createObject(com.dishcuss.foodie.Model.User.class); // Create managed objects directly
+                        User user = realm.createObject(User.class); // Create managed objects directly
                         user.setId(usersJsonObject.getInt("id"));
                         user.setName(usersJsonObject.getString("name"));
                         user.setDob(usersJsonObject.getString("date_of_birth"));
@@ -430,7 +430,7 @@ public class FindEatBuddiesLoginFirstActivity extends AppCompatActivity {
         Realm realm= Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        RealmResults<User> users = realm.where(com.dishcuss.foodie.Model.User.class).findAll();
+        RealmResults<User> users = realm.where(User.class).findAll();
         users.deleteAllFromRealm();
 
         RealmResults<Notifications> notificationsRealmResults = realm.where(Notifications.class).findAll();

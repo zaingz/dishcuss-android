@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dishcuss.foodie.hub.Adapters.RestaurantMenuAdapter;
-import com.dishcuss.foodie.Model.FoodItems;
-import com.dishcuss.foodie.Model.Restaurant;
+import com.dishcuss.foodie.hub.Models.FoodItems;
+import com.dishcuss.foodie.hub.Models.Restaurant;
 import com.dishcuss.foodie.hub.R;
 
 import io.realm.Realm;

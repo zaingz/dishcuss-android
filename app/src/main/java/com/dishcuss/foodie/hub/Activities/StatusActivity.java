@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.dishcuss.foodie.Model.FoodItems;
-import com.dishcuss.foodie.Model.FoodsCategory;
-import com.dishcuss.foodie.Model.Restaurant;
+import com.dishcuss.foodie.hub.Models.FoodItems;
+import com.dishcuss.foodie.hub.Models.FoodsCategory;
+import com.dishcuss.foodie.hub.Models.Restaurant;
 import com.dishcuss.foodie.hub.R;
 
 import io.realm.Realm;
