@@ -32,6 +32,7 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.github.javiersantos.appupdater.AppUpdater;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -143,6 +144,9 @@ public class LoginActivity extends AppCompatActivity implements
         alert = new AlertDialog.Builder(this);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         TextView skipLogin=(TextView)findViewById(R.id.skip_login_tv);
+
+        AppUpdater appUpdater = new AppUpdater(this);
+        appUpdater.start();
 
         facebookLoginButton = (Button) findViewById(R.id.facebook_login_button);
         googleLoginButton = (Button) findViewById(R.id.google_login_button);
