@@ -3,6 +3,7 @@ package com.dishcuss.foodie.hub.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,9 +61,9 @@ public class UserOffersAdapter extends RecyclerView.Adapter<UserOffersAdapter.Vi
         holder.offer_price.setText("PKR "+imageViewArrayList.get(position).getPoints());
         String imageUri = imageViewArrayList.get(position).getImg();
         String newUrlString = imageUri.replaceAll(" ", "%20");
-//      Log.e("ImageUri",newUrlString);
+//        Log.e("ImageUri",newUrlString);
         if(!newUrlString.equals(""))
-            Picasso.with(mContext).load(newUrlString).into(holder.imageView);
+            Picasso.with(mContext).load(newUrlString).fit().centerCrop().into(holder.imageView);
 
         holder.offers_parent_layout.setOnClickListener(new View.OnClickListener() {
             @Override

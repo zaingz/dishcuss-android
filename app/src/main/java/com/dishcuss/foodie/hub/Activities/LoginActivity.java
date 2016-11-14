@@ -400,7 +400,7 @@ public class LoginActivity extends AppCompatActivity implements
                                 }
                                 name= object.getString("name").toString();
                                 uid=object.getString("id").toString();
-                                username=object.getString("name").toString();
+                                username=newUrlString;
                                 profilePicURL="https://graph.facebook.com/"+ uid +"/picture?type=large";
                                 if(object.has("location")){
                                     location=object.getString("location").toString();
@@ -829,6 +829,13 @@ public class LoginActivity extends AppCompatActivity implements
 //                SocialLoginSendDataOnServer();
 //                Constants.SetReferral(LoginActivity.this,true);
                     SendReferralOnServer(Str_Referral_Code, token);
+                    Notifications(token);
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    Constants.SetUserLoginStatus(LoginActivity.this, true);
+                    finish();
+                    dialog.cancel();
+                }else {
                     Notifications(token);
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     startActivity(intent);

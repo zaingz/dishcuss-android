@@ -90,7 +90,7 @@
                         android:gravity="center"
                         android:textColor="@color/black_3"
                         android:textSize="20dp"
-                        android:text="Local Feeds"/>
+                        android:text="Global Feed"/>
 
                 </RelativeLayout>
 
@@ -113,7 +113,7 @@
                         android:gravity="center"
                         android:textSize="20dp"
                         android:textColor="@color/black_3"
-                        android:text="My Feeds"/>
+                        android:text="My Feed"/>
 
                 </RelativeLayout>
 
@@ -136,7 +136,7 @@
                         android:gravity="center"
                         android:textSize="20dp"
                         android:textColor="@color/black_3"
-                        android:text="Peoples"/>
+                        android:text="People"/>
 
                 </RelativeLayout>
 

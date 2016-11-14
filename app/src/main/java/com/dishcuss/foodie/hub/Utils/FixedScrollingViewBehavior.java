@@ -47,15 +47,12 @@ public class FixedScrollingViewBehavior  extends AppBarLayout.ScrollingViewBehav
 
     private static AppBarLayout findFirstAppBarLayout(List<View> views) {
         int i = 0;
-
         for(int z = views.size(); i < z; ++i) {
             View view = views.get(i);
             if(view instanceof AppBarLayout) {
                 return (AppBarLayout)view;
             }
         }
-
         return null;
     }
 }
-

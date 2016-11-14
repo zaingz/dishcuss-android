@@ -103,7 +103,7 @@ public class WriteReviewPostActivity extends AppCompatActivity {
     String rattingValue="";
     RatingBar rate;
 
-
+    ArrayList<SearchRestaurant> searchRestaurantArrayList=new ArrayList<>();
 
 
     //*******************PROGRESS******************************
@@ -181,16 +181,23 @@ public class WriteReviewPostActivity extends AppCompatActivity {
 
 
         RealmResults<RestaurantForStatus> restaurantForStatusRealmResults=GetRestaurants();
-        ArrayList<SearchRestaurant> searchRestaurantArrayList=new ArrayList<>();
-        for(int i=0;i<restaurantForStatusRealmResults.size();i++){
-            SearchRestaurant searchRestaurant=new SearchRestaurant();
-            realm.beginTransaction();
-            searchRestaurant.setName(restaurantForStatusRealmResults.get(i).getName());
-            searchRestaurant.setId(restaurantForStatusRealmResults.get(i).getId());
-            searchRestaurant.setRestaurantLat(restaurantForStatusRealmResults.get(i).getRestaurantLat());
-            searchRestaurant.setRestaurantLong(restaurantForStatusRealmResults.get(i).getRestaurantLong());
-            realm.commitTransaction();
-            searchRestaurantArrayList.add(searchRestaurant);
+
+        if(restaurantForStatusRealmResults!=null) {
+            for (int i = 0; i < restaurantForStatusRealmResults.size(); i++) {
+                SearchRestaurant searchRestaurant = new SearchRestaurant();
+                realm.beginTransaction();
+                searchRestaurant.setName(restaurantForStatusRealmResults.get(i).getName());
+                searchRestaurant.setId(restaurantForStatusRealmResults.get(i).getId());
+                searchRestaurant.setRestaurantLat(restaurantForStatusRealmResults.get(i).getRestaurantLat());
+                searchRestaurant.setRestaurantLong(restaurantForStatusRealmResults.get(i).getRestaurantLong());
+                realm.commitTransaction();
+                searchRestaurantArrayList.add(searchRestaurant);
+            }
+        }
+        else {
+            if(Constants.isNetworkAvailable(this)) {
+                StatusRestaurantsData();
+            }
         }
 
         userLocation.setThreshold(1);
@@ -943,4 +950,84 @@ public class WriteReviewPostActivity extends AppCompatActivity {
         return null;
     }
 
+
+
+    void StatusRestaurantsData(){
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(URLs.Get_Restaurants)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                final String objStr=response.body().string();
+
+                /** check if activity still exist */
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            JSONObject jsonObj = new JSONObject(objStr);
+
+                            JSONArray jsonDataArray=jsonObj.getJSONArray("restaurants");
+
+
+                            realm =Realm.getDefaultInstance();
+                            realm.beginTransaction();
+                            RealmResults<RestaurantForStatus> result = realm.where(RestaurantForStatus.class).findAll();
+                            result.deleteAllFromRealm();
+                            realm.commitTransaction();
+
+                            for (int i = 0; i < jsonDataArray.length(); i++) {
+                                JSONObject c = jsonDataArray.getJSONObject(i);
+
+                                realm =Realm.getDefaultInstance();
+                                realm.beginTransaction();
+                                RestaurantForStatus restaurantForStatus=realm.createObject(RestaurantForStatus.class);
+                                SearchRestaurant searchRestaurant = new SearchRestaurant();
+                                restaurantForStatus.setId(c.getInt("id"));
+                                searchRestaurant.setId(c.getInt("id"));
+                                restaurantForStatus.setName(c.getString("name"));
+                                searchRestaurant.setName(c.getString("name"));
+                                if(!c.isNull("lat")) {
+                                    restaurantForStatus.setRestaurantLat(c.getDouble("lat"));
+                                    searchRestaurant.setRestaurantLat(c.getDouble("lat"));
+                                } else {
+                                    restaurantForStatus.setRestaurantLat(0.0);
+                                    searchRestaurant.setRestaurantLat(0.0);
+                                }
+                                if(!c.isNull("long")) {
+                                    restaurantForStatus.setRestaurantLong(c.getDouble("long"));
+                                    searchRestaurant.setRestaurantLong(c.getDouble("long"));
+                                } else {
+                                    restaurantForStatus.setRestaurantLong(0.0);
+                                    searchRestaurant.setRestaurantLong(0.0);
+                                }
+
+                                realm.commitTransaction();
+                                searchRestaurantArrayList.add(searchRestaurant);
+
+//                                SplashActivity.restaurantForStatusArrayList.add(restaurantForStatus);
+                                searchRestaurantArrayList.add(searchRestaurant);
+                            }
+
+
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+    }
 }

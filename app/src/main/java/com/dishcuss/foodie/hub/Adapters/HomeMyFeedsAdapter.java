@@ -1073,20 +1073,23 @@ public class HomeMyFeedsAdapter  extends RecyclerView.Adapter<HomeMyFeedsAdapter
 
         showSpinner("Please wait...");
 
-        Picasso.with(mContext).load(imageURL).into(new Target(){
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                file=bitmapConvertToFile(bitmap);
-            }
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-            }
+        if(!imageURL.isEmpty() && imageURL!=null) {
+            Picasso.with(mContext).load(imageURL).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    file = bitmapConvertToFile(bitmap);
+                }
 
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-            }
-        });
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+                }
 
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                }
+            });
+
+        }
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
         // Persist your data in a transaction

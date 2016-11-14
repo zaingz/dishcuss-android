@@ -1008,19 +1008,23 @@ public class NotificationClickPostDetail extends AppCompatActivity {
 
         showSpinner("Please wait...");
 
-        Picasso.with(this).load(imageURL).into(new Target(){
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                file=bitmapConvertToFile(bitmap);
-            }
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-            }
+        if(!imageURL.isEmpty() && imageURL!=null) {
 
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-            }
-        });
+            Picasso.with(this).load(imageURL).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    file = bitmapConvertToFile(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                }
+            });
+        }
 
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();

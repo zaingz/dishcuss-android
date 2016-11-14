@@ -1790,8 +1790,14 @@ public class HomeFragment2 extends Fragment implements AppBarLayout.OnOffsetChan
                                     peopleAroundYouListServerData.add(myFeeds);
                                 }
 
-                            for(int i=0;i<15;i++){
-                                peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(i));
+                            if(peopleAroundYouListServerData.size()>15) {
+                                for (int i = 0; i < 15; i++) {
+                                    peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(i));
+                                }
+                            }else {
+                                for (int i = 0; i < peopleAroundYouListServerData.size(); i++) {
+                                    peopleAroundYouListLoadedData.add(peopleAroundYouListServerData.get(i));
+                                }
                             }
 
                             progressBar.setVisibility(View.GONE);

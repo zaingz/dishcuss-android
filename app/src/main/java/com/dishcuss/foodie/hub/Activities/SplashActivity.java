@@ -2,9 +2,12 @@ package com.dishcuss.foodie.hub.Activities;
 
 import android.animation.AnimatorSet;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,10 +66,22 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash);
 
+        PackageManager manager = getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(getPackageName(), 0);
+            String version = info.versionName;
+            int ver=info.versionCode;
+//            Log.e("Version Name",version);
+//            Log.e("Version Code",""+ver);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         FreeMemory();
 
         try{
-            Thread.sleep(500);
+            Thread.sleep(100);
         }catch(InterruptedException e){
 
         }
@@ -195,14 +210,14 @@ public class SplashActivity extends AppCompatActivity {
         RealmResults<LocalFeeds> localFeedsRealmResults = realm.where(LocalFeeds.class).findAll();
         localFeedsRealmResults.deleteAllFromRealm();
 
-        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
-        restaurantRealmResults.deleteAllFromRealm();
+//        RealmResults<Restaurant> restaurantRealmResults = realm.where(Restaurant.class).findAll();
+//        restaurantRealmResults.deleteAllFromRealm();
 
-        RealmResults<ReviewModel> reviewModels = realm.where(ReviewModel.class).findAll();
-        reviewModels.deleteAllFromRealm();
+//        RealmResults<ReviewModel> reviewModels = realm.where(ReviewModel.class).findAll();
+//        reviewModels.deleteAllFromRealm();
 
-        RealmResults<FoodItems> foodItemsRealmResults = realm.where(FoodItems.class).findAll();
-        foodItemsRealmResults.deleteAllFromRealm();
+//        RealmResults<FoodItems> foodItemsRealmResults = realm.where(FoodItems.class).findAll();
+//        foodItemsRealmResults.deleteAllFromRealm();
 
 //        RealmResults<UserProfile> userProfileRealmResults = realm.where(UserProfile.class).findAll();
 //        userProfileRealmResults.deleteAllFromRealm();
@@ -369,4 +384,6 @@ public class SplashActivity extends AppCompatActivity {
         System.gc();
 
     }
+
+
 }

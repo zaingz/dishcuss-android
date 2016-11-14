@@ -52,11 +52,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -102,7 +104,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
     TextView restaurantCuisine;
     TextView main_restaurant_rating;
     boolean isDataLoaded=false;
-
+    String date;
 
     private int[] imageResId = {
             R.drawable.ic_bell,
@@ -195,7 +197,7 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             if (bundle != null) {
                 if(bundle.containsKey("RestaurantID")) {
                     restaurantID = bundle.getInt("RestaurantID");
-//                    Log.e("restaurantID", "" + restaurantID);
+                    Log.e("restaurantID", "" + restaurantID);
                 }
                 restaurant = GetRestaurantData(restaurantID);
 
@@ -360,11 +362,26 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             cafeAddress.setText(restaurant.getLocation());
             cafeTiming.setText(restaurant.getOpening_time() + " to " + restaurant.getClosing_time());
 
-            if(!CheckTime(restaurant.getOpening_time(),restaurant.getClosing_time())){
+
+
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat df = new SimpleDateFormat("hh:mm a");
+            String formattedDate = df.format(c.getTime());
+
+            DateFormat currentDate = new SimpleDateFormat("EEE, d MMM yyyy");
+            date= currentDate.format(Calendar.getInstance().getTime());
+
+            if(isTimeWithinInterval(restaurant.getOpening_time(),restaurant.getClosing_time(),formattedDate)){
                 cafeOpenClosed.setText("Open Now");
             }else {
                 cafeOpenClosed.setText("Close Now");
             }
+
+//            if(CheckTime(restaurant.getOpening_time(),restaurant.getClosing_time())){
+//                cafeOpenClosed.setText("Open Now");
+//            }else {
+//                cafeOpenClosed.setText("Close Now");
+//            }
 
             explore_restaurant_cost.setText("  Rs " + restaurant.getPricePerHead() + "/head");
             restaurantType.setText("" + restaurant.getType());
@@ -893,7 +910,12 @@ public class RestaurantDetailActivity extends AppCompatActivity {
             currentTime.set(Calendar.HOUR_OF_DAY, Calendar.HOUR_OF_DAY);
             currentTime.set(Calendar.MINUTE, Calendar.MINUTE);
 
+            Log.e("OTime",""+fromTime.toString());
+            Log.e("CTime",""+toTime.toString());
+            Log.e("CUime",""+currentTime.toString());
+
             if(currentTime.after(fromTime) && currentTime.before(toTime)){
+
                 return true;
             }
         }
@@ -901,6 +923,71 @@ public class RestaurantDetailActivity extends AppCompatActivity {
         {
             return false;
         }
+        return false;
+    }
+
+
+    public boolean isTimeWithinInterval(String lwrLimit, String uprLimit, String time){
+
+        try {
+            Calendar now = Calendar.getInstance();
+            int year = now.get(Calendar.YEAR);
+            int month = now.get(Calendar.MONTH); // Note: zero based!
+            int day = now.get(Calendar.DAY_OF_MONTH);
+
+
+
+
+            Date time_1 = new SimpleDateFormat("hh:mm a").parse(lwrLimit);
+            Calendar calendar_1 = Calendar.getInstance();
+            calendar_1.setTime(time_1);
+            calendar_1.set(year,month,day);
+//            int hourOpen = calendar_1.get(Calendar.HOUR_OF_DAY);
+//            int minuteOpen = calendar_1.get(Calendar.MINUTE);
+//            int secondOpen = calendar_1.get(Calendar.SECOND);
+//
+
+            // Time 2 in string - Upper limit
+            Date time_2 = new SimpleDateFormat("hh:mm a").parse(uprLimit);
+            Calendar calendar_2 = Calendar.getInstance();
+            calendar_2.setTime(time_2);
+            int hourClose = calendar_2.get(Calendar.HOUR_OF_DAY);
+            int minuteClose = calendar_2.get(Calendar.MINUTE);
+            int secondClose = calendar_2.get(Calendar.SECOND);
+            if(hourClose>=0 && hourClose<6){
+                int d=day+1;
+                calendar_2.set(year,month,d);
+            }else {
+                calendar_2.set(year,month,day);
+            }
+
+
+            // Time 3 in String - to be checked
+            Date d = new SimpleDateFormat("hh:mm a").parse(time);
+            Calendar calendar_3 = Calendar.getInstance();
+            calendar_3.setTime(d);
+            calendar_3.set(year,month,day);
+            int hourCurrent = calendar_1.get(Calendar.HOUR_OF_DAY);
+            int minuteCurrent = calendar_1.get(Calendar.MINUTE);
+            int secondCurrent = calendar_1.get(Calendar.SECOND);
+
+
+
+            Log.e("TlwrLimit",""+calendar_1.getTime());
+            Log.e("TUperLimit",""+calendar_2.getTime());
+            Log.e("Tcurrent",""+calendar_3.getTime());
+
+            Date x = calendar_3.getTime();
+            if (x.after(calendar_1.getTime()) && x.before(calendar_2.getTime())) {
+                //checkes whether the current time is between two times
+                return true;
+            }
+
+        }catch (Exception e)
+            {
+                return false;
+            }
+
         return false;
     }
 }

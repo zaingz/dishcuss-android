@@ -264,7 +264,7 @@ public class UpdateProfileActivity extends AppCompatActivity implements
         strUserConfirmPassword = userConfirmPassword.getText().toString().trim();
         strUserGender = userGender.getText().toString().trim();
         strUserDOB = userDOB.getText().toString().trim();
-        strUserLocation = userLocation.getText().toString().trim();
+        strUserLocation = loc;
 
 
         if(!strUserName.isEmpty() && !strUserName.equals("")){

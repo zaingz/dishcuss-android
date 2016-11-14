@@ -1115,20 +1115,23 @@ public class HomeLocalFeedsAdapter extends RecyclerView.Adapter<HomeLocalFeedsAd
     void SharePost(String imageURL,String statusStr, double restaurantLatitude,double restaurantLongitude, int restaurantID,int checkInID){
 
         showSpinner("Please wait...");
+        if(!imageURL.isEmpty() && imageURL!=null) {
 
-        Picasso.with(mContext).load(imageURL).into(new Target(){
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                file=bitmapConvertToFile(bitmap);
-            }
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-            }
+            Picasso.with(mContext).load(imageURL).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    file = bitmapConvertToFile(bitmap);
+                }
 
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-            }
-        });
+                @Override
+                public void onBitmapFailed(final Drawable errorDrawable) {
+                }
+
+                @Override
+                public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                }
+            });
+        }
 
         // Get a Realm instance for this thread
         Realm realm = Realm.getDefaultInstance();
